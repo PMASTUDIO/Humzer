@@ -32,7 +32,7 @@ project "Humzer"
         }
 
         postbuildcommands {
-            ("copy %{cfg.buildtarget.relpath} ../bin/" .. output_dir .. "/Tester")
+            ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. output_dir .. "/Tester")
         }
 
 
