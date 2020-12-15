@@ -6,18 +6,22 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Humzer.h" />
-    <ClInclude Include="src\Humzer\Application.h">
+    <ClInclude Include="src\Humzer\Core\Application.h">
       <Filter>Humzer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Humzer\Core.h">
+    <ClInclude Include="src\Humzer\Core\Core.h">
       <Filter>Humzer</Filter>
     </ClInclude>
-    <ClInclude Include="src\Humzer\EntryPoint.h" />
+    <ClInclude Include="src\Humzer\Core\EntryPoint.h">
+      <Filter>Humzer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Humzer.h" />
+    <ClInclude Include="src\Humzer\Core\Log.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Humzer\Application.cpp">
+    <ClCompile Include="src\Humzer\Core\Application.cpp">
       <Filter>Humzer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Humzer\Core\Log.cpp" />
   </ItemGroup>
 </Project>

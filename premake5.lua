@@ -1,6 +1,7 @@
 workspace "HumzerWorkspace"
     architecture "x64"
     configurations { "Debug", "Release", "Dist" }
+    startproject "Tester"
 
 output_dir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -18,7 +19,8 @@ project "Humzer"
     objdir ("bin-int/" .. output_dir .. "/${prj.name}")
 
     includedirs { 
-        "%{prj.name}/include"
+        "%{prj.name}/include",
+        "%{prj.name}/vendor/spdlog/include"
     }
 
     filter { "system:windows" }
@@ -65,6 +67,7 @@ project "Tester"
 
     includedirs { 
         "%{prj.name}/include",
+        "Humzer/vendor/spdlog/include",
         "Humzer/src"
     }
 

@@ -1,4 +1,4 @@
-#include <Humzer.h>
+#include <Humzer/Humzer.h>
 
 class Tester : public Humzer::Application {
 public:

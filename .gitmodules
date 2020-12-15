@@ -1,0 +1,3 @@
+[submodule "Humzer/vendor/spdlog"]
+	path = Humzer/vendor/spdlog
+	url = https://github.com/gabime/spdlog.git
