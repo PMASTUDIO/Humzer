@@ -4,11 +4,15 @@
 
 namespace Humzer {
 
-    Application::Application(){}
+    Application::Application(){
+        m_Window = std::unique_ptr<Window>(Window::Create(1280, 720, "Humzer Game Engine"));
+	}
     Application::~Application(){}
 
     void Application::Run(){
-        while(true);
+        while (m_Running) {
+            m_Window->OnUpdate();
+        }
     }
     
 }

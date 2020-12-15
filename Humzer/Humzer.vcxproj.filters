@@ -4,6 +4,12 @@
     <Filter Include="Core">
       <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Platform">
+      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Platform\Windows">
+      <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Humzer\Core\Application.h">
@@ -18,7 +24,13 @@
     <ClInclude Include="src\Humzer\Core\Log.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Humzer\Core\Window.h">
+      <Filter>Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Humzer\Humzer.h" />
+    <ClInclude Include="src\Humzer\Platform\Windows\WindowsWindow.h">
+      <Filter>Platform\Windows</Filter>
+    </ClInclude>
     <ClInclude Include="src\Humzer\humpch.h" />
   </ItemGroup>
   <ItemGroup>
@@ -27,6 +39,9 @@
     </ClCompile>
     <ClCompile Include="src\Humzer\Core\Log.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\Platform\Windows\WindowsWindow.cpp">
+      <Filter>Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Humzer\humpch.cpp" />
   </ItemGroup>
