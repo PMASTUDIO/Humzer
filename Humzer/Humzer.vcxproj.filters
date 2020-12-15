@@ -1,48 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Core">
-      <UniqueIdentifier>{2EB4837C-1AEB-840D-C3D7-6A10AFED000F}</UniqueIdentifier>
+    <Filter Include="Humzer">
+      <UniqueIdentifier>{C07E55B8-AC20-808E-95DB-93E2811C07DF}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform">
-      <UniqueIdentifier>{2AC788B4-1694-E3BF-3FAD-D1672BD9184E}</UniqueIdentifier>
+    <Filter Include="Humzer\Core">
+      <UniqueIdentifier>{18DBCBE2-8490-44D8-0D85-3EAF79393BDC}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Platform\Windows">
-      <UniqueIdentifier>{64FBD71A-50F4-F66C-7926-DCF1657ED678}</UniqueIdentifier>
+    <Filter Include="Humzer\Platform">
+      <UniqueIdentifier>{1453FEBE-80DE-6B83-89EF-EE77F5F9C783}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Humzer\Platform\Windows">
+      <UniqueIdentifier>{4ED167D5-BA08-B06C-C312-14902FC9D665}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Humzer\Core\Application.h">
-      <Filter>Core</Filter>
+      <Filter>Humzer\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Core\Core.h">
-      <Filter>Core</Filter>
+      <Filter>Humzer\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Core\EntryPoint.h">
-      <Filter>Core</Filter>
+      <Filter>Humzer\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Core\Log.h">
-      <Filter>Core</Filter>
+      <Filter>Humzer\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Core\Window.h">
-      <Filter>Core</Filter>
+      <Filter>Humzer\Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Humzer\Humzer.h" />
+    <ClInclude Include="src\Humzer\Humzer.h">
+      <Filter>Humzer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Humzer\Platform\Windows\WindowsWindow.h">
-      <Filter>Platform\Windows</Filter>
+      <Filter>Humzer\Platform\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="src\Humzer\humpch.h" />
+    <ClInclude Include="src\humpch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Humzer\Core\Application.cpp">
-      <Filter>Core</Filter>
+      <Filter>Humzer\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Humzer\Core\Log.cpp">
-      <Filter>Core</Filter>
+      <Filter>Humzer\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Humzer\Platform\Windows\WindowsWindow.cpp">
-      <Filter>Platform\Windows</Filter>
+      <Filter>Humzer\Platform\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="src\Humzer\humpch.cpp" />
+    <ClCompile Include="src\humpch.cpp" />
   </ItemGroup>
 </Project>

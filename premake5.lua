@@ -5,25 +5,39 @@ workspace "HumzerWorkspace"
 
 output_dir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
+-- Includes relative to solution directory
+IncludeDir = {}
+IncludeDir["glfw"] = "Humzer/vendor/glfw/include"
+
 project "Humzer"
     location "Humzer"
     kind "SharedLib"
     language "C++"
 
     pchheader "humpch.h"
-    pchsource "Humzer/src/Humzer/humpch.cpp"
+    pchsource "Humzer/src/humpch.cpp"
 
     files { 
         "%{prj.name}/src/**.h", 
-        "%{prj.name}/src/**.cpp" 
+        "%{prj.name}/src/**.cpp" ,
     }
 
     targetdir ("bin/" .. output_dir .. "/%{prj.name}")
     objdir ("bin-int/" .. output_dir .. "/${prj.name}")
 
     includedirs { 
-        "%{prj.name}/include",
-        "%{prj.name}/vendor/spdlog/include"
+        "%{prj.name}/src",
+        "%{prj.name}/vendor/spdlog/include",
+        "%{IncludeDir.glfw}"
+    }
+
+    libdirs {
+        "GLFW/bin"
+    }
+
+    links {
+        "GLFW.lib",
+        "opengl32.lib"
     }
 
     filter { "system:windows" }
