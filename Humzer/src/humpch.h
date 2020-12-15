@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <functional>
 
+#include <cstdint>
 #include <string>
 #include <sstream>
 #include <vector>
@@ -16,6 +17,7 @@
 
 // Core libs
 #include "Humzer/Core/Log.h"
+#include "Humzer/Core/Timestep.h"
 
 #ifdef HUM_PLATFORM_WINDOWS
 	#include <Windows.h>

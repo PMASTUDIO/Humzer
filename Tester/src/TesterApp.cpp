@@ -9,6 +9,10 @@ public:
     ~Tester(){
 
     }
+
+    void ClientUpdate(Humzer::Timestep dt) {
+        HUM_CLIENT_INFO("Mouse position - X: {0} - Y: {1}", Humzer::Input::GetMouseX(), Humzer::Input::GetMouseY());
+    }
 };
 
 Humzer::Application* Humzer::CreateApplication() {

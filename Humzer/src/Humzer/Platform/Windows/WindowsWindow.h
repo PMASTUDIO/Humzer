@@ -18,6 +18,9 @@ namespace Humzer {
 
 		void SetVSync(bool enabled) override;
 		bool GetVSync() const override;
+
+		void* GetNativeWindow() const override;
+
 	private:
 		bool Init();
 		void Shutdown();

@@ -24,7 +24,19 @@
     <ClInclude Include="src\Humzer\Core\EntryPoint.h">
       <Filter>Humzer\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Humzer\Core\Input.h">
+      <Filter>Humzer\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Core\KeyCodes.h">
+      <Filter>Humzer\Core</Filter>
+    </ClInclude>
     <ClInclude Include="src\Humzer\Core\Log.h">
+      <Filter>Humzer\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Core\MouseCodes.h">
+      <Filter>Humzer\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Core\Timestep.h">
       <Filter>Humzer\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Core\Window.h">
@@ -44,6 +56,9 @@
     </ClCompile>
     <ClCompile Include="src\Humzer\Core\Log.cpp">
       <Filter>Humzer\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\Platform\Windows\WindowsInput.cpp">
+      <Filter>Humzer\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Humzer\Platform\Windows\WindowsWindow.cpp">
       <Filter>Humzer\Platform\Windows</Filter>

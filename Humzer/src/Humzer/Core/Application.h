@@ -10,14 +10,25 @@ namespace Humzer
         Application();
         virtual ~Application();
 
+        virtual void ClientUpdate(Timestep dt){}
+
         void Run();
+
+        Window& GetWindow() { return *m_Window; }
+
+        static Application& Get() { return *s_Instance; }
 
     private:
         std::unique_ptr<Window> m_Window;
 
-        bool m_Running;
+        bool m_Running = true;
+        float m_LastFrameTime = 0.0f;
+
+    private:
+        static Application* s_Instance;
     };
 
+    // DEFINED IN CLIENT
     Application* CreateApplication();
 
 } // namespace Humzer

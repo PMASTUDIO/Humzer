@@ -23,18 +23,18 @@ namespace Humzer {
 #ifdef HUM_DEBUG
 
 	// CORE LOG
-	#define HUM_CORE_FATAL(...) ::Humzer::Log::GetCoreLogger()->critical(__VA_ARGS__)
-	#define HUM_CORE_ERROR(...) ::Humzer::Log::GetCoreLogger()->error(__VA_ARGS__)
-	#define HUM_CORE_WARN(...) ::Humzer::Log::GetCoreLogger()->warn(__VA_ARGS__)
-	#define HUM_CORE_INFO(...) ::Humzer::Log::GetCoreLogger()->info(__VA_ARGS__)
-	#define HUM_CORE_TRACE(...) ::Humzer::Log::GetCoreLogger()->trace(__VA_ARGS__)
+	#define HUM_CORE_FATAL(...) Humzer::Log::GetCoreLogger()->critical(__VA_ARGS__)
+	#define HUM_CORE_ERROR(...) Humzer::Log::GetCoreLogger()->error(__VA_ARGS__)
+	#define HUM_CORE_WARN(...) Humzer::Log::GetCoreLogger()->warn(__VA_ARGS__)
+	#define HUM_CORE_INFO(...) Humzer::Log::GetCoreLogger()->info(__VA_ARGS__)
+	#define HUM_CORE_TRACE(...) Humzer::Log::GetCoreLogger()->trace(__VA_ARGS__)
 
 	// CLIENT LOG
-	#define HUM_CLIENT_FATAL(...) ::Humzer::Log::GetClientLogger()->critical(__VA_ARGS__)
-	#define HUM_CLIENT_ERROR(...) ::Humzer::Log::GetClientLogger()->error(__VA_ARGS__)
-	#define HUM_CLIENT_WARN(...) ::Humzer::Log::GetClientLogger()->warn(__VA_ARGS__)
-	#define HUM_CLIENT_INFO(...) ::Humzer::Log::GetClientLogger()->info(__VA_ARGS__)
-	#define HUM_CLIENT_TRACE(...) ::Humzer::Log::GetClientLogger()->trace(__VA_ARGS__)
+	#define HUM_CLIENT_FATAL(...) Humzer::Log::GetClientLogger()->critical(__VA_ARGS__)
+	#define HUM_CLIENT_ERROR(...) Humzer::Log::GetClientLogger()->error(__VA_ARGS__)
+	#define HUM_CLIENT_WARN(...) Humzer::Log::GetClientLogger()->warn(__VA_ARGS__)
+	#define HUM_CLIENT_INFO(...) Humzer::Log::GetClientLogger()->info(__VA_ARGS__)
+	#define HUM_CLIENT_TRACE(...) Humzer::Log::GetClientLogger()->trace(__VA_ARGS__)
 
 #else
 

@@ -8,6 +8,7 @@ output_dir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 -- Includes relative to solution directory
 IncludeDir = {}
 IncludeDir["glfw"] = "Humzer/vendor/glfw/include"
+IncludeDir["glm"] = "Humzer/vendor/GLM"
 
 project "Humzer"
     location "Humzer"
@@ -28,7 +29,8 @@ project "Humzer"
     includedirs { 
         "%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include",
-        "%{IncludeDir.glfw}"
+        "%{IncludeDir.glfw}",
+        "%{IncludeDir.glm}"
     }
 
     libdirs {
@@ -85,7 +87,8 @@ project "Tester"
     includedirs { 
         "%{prj.name}/include",
         "Humzer/vendor/spdlog/include",
-        "Humzer/src"
+        "Humzer/src",
+        "%{IncludeDir.glm}"
     }
 
     links {

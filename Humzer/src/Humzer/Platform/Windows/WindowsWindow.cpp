@@ -23,6 +23,11 @@ namespace Humzer {
 		Shutdown();
 	}
 
+	void* WindowsWindow::GetNativeWindow() const
+	{
+		return m_Window;
+	}
+
 	void Humzer::WindowsWindow::OnUpdate()
 	{
 		glfwSwapBuffers(m_Window);
