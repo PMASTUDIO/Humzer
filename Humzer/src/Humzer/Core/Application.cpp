@@ -2,8 +2,6 @@
 
 #include "Application.h"
 
-#include <gl\GL.h>
-
 #include "GLFW\glfw3.h"
 
 namespace Humzer {

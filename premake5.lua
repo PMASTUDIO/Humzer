@@ -9,6 +9,9 @@ output_dir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 IncludeDir = {}
 IncludeDir["glfw"] = "Humzer/vendor/glfw/include"
 IncludeDir["glm"] = "Humzer/vendor/GLM"
+IncludeDir["glad"] = "Humzer/vendor/GLAD/include"
+
+include "Humzer/vendor/GLAD"
 
 project "Humzer"
     location "Humzer"
@@ -30,7 +33,8 @@ project "Humzer"
         "%{prj.name}/src",
         "%{prj.name}/vendor/spdlog/include",
         "%{IncludeDir.glfw}",
-        "%{IncludeDir.glm}"
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.glad}"
     }
 
     libdirs {
@@ -39,6 +43,7 @@ project "Humzer"
 
     links {
         "GLFW.lib",
+        "GLAD",
         "opengl32.lib"
     }
 

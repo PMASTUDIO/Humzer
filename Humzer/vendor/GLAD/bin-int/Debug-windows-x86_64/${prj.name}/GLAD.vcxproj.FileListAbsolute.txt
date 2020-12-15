@@ -1,0 +1,2 @@
+D:\Humzer Engine\Humzer\vendor\GLAD\bin\Debug-windows-x86_64\GLAD\GLAD.pdb
+D:\Humzer Engine\Humzer\vendor\GLAD\bin-int\Debug-windows-x86_64\${prj.name}\GLAD.pdb

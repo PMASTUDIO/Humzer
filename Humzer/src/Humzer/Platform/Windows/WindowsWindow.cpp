@@ -73,6 +73,12 @@ namespace Humzer {
 		}
 
 		glfwMakeContextCurrent(m_Window);
+
+		if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
+			HUM_CORE_FATAL("Could not intialize GLAD!");
+			return false;
+		}
+
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		
 		SetVSync(true);
