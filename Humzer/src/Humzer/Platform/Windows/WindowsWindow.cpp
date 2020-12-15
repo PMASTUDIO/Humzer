@@ -1,7 +1,13 @@
 #include "humpch.h"
 #include "WindowsWindow.h"
+#include "Humzer/Platform/OpenGL/OpenglContext.h"
 
 namespace Humzer {
+
+	void GLFWErrorCallback(int error, const char* description)
+	{
+		HUM_CORE_ERROR("GLFW Error ({0}): {1}", error, description);
+	}
 
 	Window* Window::Create(int width, int height, std::string title) {
 		return new WindowsWindow(width, height, title);
@@ -30,8 +36,8 @@ namespace Humzer {
 
 	void Humzer::WindowsWindow::OnUpdate()
 	{
-		glfwSwapBuffers(m_Window);
 		glfwPollEvents();
+		m_Context->SwapBuffers();
 	}
 
 	int Humzer::WindowsWindow::GetWidth()
@@ -61,6 +67,7 @@ namespace Humzer {
 
 	bool WindowsWindow::Init()
 	{
+
 		if (!glfwInit()) {
 			HUM_CORE_FATAL("GLFW Couldn't be initialized!");
 			return false;
@@ -72,15 +79,19 @@ namespace Humzer {
 			return false;
 		}
 
-		glfwMakeContextCurrent(m_Window);
-
-		if(!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)){
-			HUM_CORE_FATAL("Could not intialize GLAD!");
-			return false;
-		}
+		m_Context = new OpenGLContext(m_Window);
+		m_Context->Init();
 
 		glfwSetWindowUserPointer(m_Window, &m_Data);
 		
+		glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height) {
+			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
+			data.Width = width;
+			data.Height = height;
+		});
+
+		glfwSetErrorCallback(static_cast<GLFWerrorfun>(GLFWErrorCallback));
+
 		SetVSync(true);
 
 		return true;

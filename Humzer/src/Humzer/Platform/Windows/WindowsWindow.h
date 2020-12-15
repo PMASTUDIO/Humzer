@@ -1,11 +1,15 @@
 #pragma once
 
 #include "Humzer/Core/Window.h"
+#include "Humzer/Renderer/GraphicsContext.h"
+
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace Humzer {
+
+	static void GLFWErrorCallback(int error, const char* description);
 
 	class HUMZER_API WindowsWindow : public Window {
 	public:
@@ -34,6 +38,8 @@ namespace Humzer {
 			unsigned int Width, Height;
 			bool VSync;
 		};
+
+		GraphicsContext* m_Context;
 
 		WindowData m_Data;
 
