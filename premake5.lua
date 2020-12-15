@@ -10,6 +10,9 @@ project "Humzer"
     kind "SharedLib"
     language "C++"
 
+    pchheader "humpch.h"
+    pchsource "Humzer/src/Humzer/humpch.cpp"
+
     files { 
         "%{prj.name}/src/**.h", 
         "%{prj.name}/src/**.cpp" 

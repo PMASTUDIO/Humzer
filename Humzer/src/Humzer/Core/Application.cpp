@@ -1,3 +1,5 @@
+#include "humpch.h"
+
 #include "Application.h"
 
 namespace Humzer {
