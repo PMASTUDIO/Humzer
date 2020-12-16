@@ -53,6 +53,9 @@
     <ClInclude Include="src\Humzer\Platform\OpenGL\OpenglContext.h" />
     <ClInclude Include="src\Humzer\Renderer\Renderer.h" />
     <ClInclude Include="src\Humzer\Renderer\Buffer.h" />
+    <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLBuffer.h" />
+    <ClInclude Include="src\Humzer\Renderer\VertexArray.h" />
+    <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLVertexArray.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Humzer\Core\Application.cpp">
@@ -71,5 +74,8 @@
     <ClCompile Include="src\Humzer\Platform\OpenGL\OpenglContext.cpp" />
     <ClCompile Include="src\Humzer\Renderer\Renderer.cpp" />
     <ClCompile Include="src\Humzer\Renderer\Buffer.cpp" />
+    <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLBuffer.cpp" />
+    <ClCompile Include="src\Humzer\Renderer\VertexArray.cpp" />
+    <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLVertexArray.cpp" />
   </ItemGroup>
 </Project>

@@ -18,6 +18,7 @@
 // Core libs
 #include "Humzer/Core/Log.h"
 #include "Humzer/Core/Timestep.h"
+#include "Humzer/Core/Core.h"
 
 #ifdef HUM_PLATFORM_WINDOWS
 	#include <Windows.h>

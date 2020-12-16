@@ -3,6 +3,10 @@
 #include "Core.h"
 #include "Window.h"
 
+// TESTING
+#include <Humzer\Renderer\Buffer.h>
+#include "..\Renderer\VertexArray.h"
+
 namespace Humzer
 {
     class HUMZER_API Application {
@@ -26,6 +30,11 @@ namespace Humzer
 
     private:
         static Application* s_Instance;
+
+        // TESTING ONLY
+        Ref<VertexBuffer> VBO;
+        Ref<IndexBuffer> EBO;
+        Ref<VertexArray> VAO;
     };
 
     // DEFINED IN CLIENT
