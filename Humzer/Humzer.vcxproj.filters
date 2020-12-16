@@ -51,6 +51,8 @@
     <ClInclude Include="src\humpch.h" />
     <ClInclude Include="src\Humzer\Renderer\GraphicsContext.h" />
     <ClInclude Include="src\Humzer\Platform\OpenGL\OpenglContext.h" />
+    <ClInclude Include="src\Humzer\Renderer\Renderer.h" />
+    <ClInclude Include="src\Humzer\Renderer\Buffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Humzer\Core\Application.cpp">
@@ -67,5 +69,7 @@
     </ClCompile>
     <ClCompile Include="src\humpch.cpp" />
     <ClCompile Include="src\Humzer\Platform\OpenGL\OpenglContext.cpp" />
+    <ClCompile Include="src\Humzer\Renderer\Renderer.cpp" />
+    <ClCompile Include="src\Humzer\Renderer\Buffer.cpp" />
   </ItemGroup>
 </Project>
