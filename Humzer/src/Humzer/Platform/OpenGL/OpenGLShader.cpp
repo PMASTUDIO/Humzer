@@ -4,12 +4,16 @@
 #include <glad/glad.h>
 
 #include <glm/gtc/type_ptr.hpp>
+#include <fstream>
 
 namespace Humzer {
 
 	
-	OpenGLShader::OpenGLShader(const std::string& vertexSrc, const std::string& fragmentSrc)
+	OpenGLShader::OpenGLShader(const std::string& vertexPath, const std::string& fragmentPath)
 	{
+		std::string vertexSrc = ReadShader(vertexPath);
+		std::string fragmentSrc = ReadShader(fragmentPath);
+
 		// Create an empty vertex shader handle
 		GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
 
@@ -167,6 +171,31 @@ namespace Humzer {
 	{
 		GLint location = glGetUniformLocation(m_ID, name.c_str());
 		glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(matrix));
+	}
+
+	std::string OpenGLShader::ReadShader(std::string path)
+	{
+		// OPEN FILE
+		std::ifstream shaderFile;
+		std::string _code;
+
+		shaderFile.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+		try
+		{
+			shaderFile.open(path);
+
+			// STREAM CONTENTS
+			std::stringstream shaderStream;
+			shaderStream << shaderFile.rdbuf();
+
+			// TRANSFORM INTO STRING
+			_code = shaderStream.str();
+		}
+		catch (std::ifstream::failure e) {
+			HUM_CORE_ERROR("-- ERROR LOADING SHADER -- \n	( FILE: {0} ) -- \n	( ERROR: {1} )\n", path, e.what());
+		}
+
+		return _code;
 	}
 
 }

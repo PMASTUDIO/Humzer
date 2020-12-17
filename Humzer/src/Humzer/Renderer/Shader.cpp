@@ -6,12 +6,12 @@
 
 namespace Humzer {
 
-	Humzer::Ref<Humzer::Shader> Shader::Create(const std::string& vertexSrc, const std::string& fragmentSrc)
+	Humzer::Ref<Humzer::Shader> Shader::Create(const std::string& vertexPath, const std::string& fragmentPath)
 	{
 		switch (Renderer::GetAPI())
 		{
 		case RendererAPI::OpenGL:
-			return CreateRef<OpenGLShader>(vertexSrc, fragmentSrc);
+			return CreateRef<OpenGLShader>(vertexPath, fragmentPath);
 			break;
 		default:
 		case RendererAPI::None:
