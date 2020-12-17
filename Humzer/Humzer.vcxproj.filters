@@ -58,6 +58,7 @@
     <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLVertexArray.h" />
     <ClInclude Include="src\Humzer\Renderer\Shader.h" />
     <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLShader.h" />
+    <ClInclude Include="src\Humzer\Renderer\PrimitiveData.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Humzer\Core\Application.cpp">
@@ -81,5 +82,6 @@
     <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLVertexArray.cpp" />
     <ClCompile Include="src\Humzer\Renderer\Shader.cpp" />
     <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLShader.cpp" />
+    <ClCompile Include="src\Humzer\Renderer\PrimitiveData.cpp" />
   </ItemGroup>
 </Project>
