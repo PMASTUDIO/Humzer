@@ -7,6 +7,7 @@
 #include <Humzer\Renderer\Buffer.h>
 #include "..\Renderer\VertexArray.h"
 #include "..\Renderer\Shader.h"
+#include "..\Renderer\Texture.h"
 
 namespace Humzer
 {
@@ -37,6 +38,7 @@ namespace Humzer
         Ref<IndexBuffer> EBO;
         Ref<VertexArray> VAO;
         Ref<Shader> BasicShader;
+        Ref<Texture2D> CheckerboardTexture;
     };
 
     // DEFINED IN CLIENT

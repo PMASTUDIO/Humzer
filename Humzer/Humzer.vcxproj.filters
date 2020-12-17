@@ -1,87 +1,159 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Humzer">
-      <UniqueIdentifier>{C07E55B8-AC20-808E-95DB-93E2811C07DF}</UniqueIdentifier>
+    <Filter Include="src">
+      <UniqueIdentifier>{2DAB880B-99B4-887C-2230-9F7C8E38947C}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Humzer\Core">
-      <UniqueIdentifier>{18DBCBE2-8490-44D8-0D85-3EAF79393BDC}</UniqueIdentifier>
+    <Filter Include="src\Humzer">
+      <UniqueIdentifier>{F757B415-E30F-F662-4C17-CFBE38EE9053}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Humzer\Platform">
-      <UniqueIdentifier>{1453FEBE-80DE-6B83-89EF-EE77F5F9C783}</UniqueIdentifier>
+    <Filter Include="src\Humzer\Core">
+      <UniqueIdentifier>{AF0EA6FA-1B9A-13BF-24AB-96B390B56FBF}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Humzer\Platform\Windows">
-      <UniqueIdentifier>{4ED167D5-BA08-B06C-C312-14902FC9D665}</UniqueIdentifier>
+    <Filter Include="src\Humzer\Platform">
+      <UniqueIdentifier>{2B7A66D9-97DB-43E7-2049-8A998CA97AA6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Humzer\Platform\OpenGL">
+      <UniqueIdentifier>{FFA4847B-EBB4-304C-546E-956A409D1FE5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Humzer\Platform\Windows">
+      <UniqueIdentifier>{651F3544-D12C-632A-5A13-5F15C61F2FE1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Humzer\Renderer">
+      <UniqueIdentifier>{7D8143B4-E9E2-20C2-7250-6774DEB05781}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor">
+      <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vendor\stb_image">
+      <UniqueIdentifier>{0DA0BA59-F998-D9AB-22CB-BE300E23B9B7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Humzer\Core\Application.h">
-      <Filter>Humzer\Core</Filter>
+      <Filter>src\Humzer\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Core\Core.h">
-      <Filter>Humzer\Core</Filter>
+      <Filter>src\Humzer\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Core\EntryPoint.h">
-      <Filter>Humzer\Core</Filter>
+      <Filter>src\Humzer\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Core\Input.h">
-      <Filter>Humzer\Core</Filter>
+      <Filter>src\Humzer\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Core\KeyCodes.h">
-      <Filter>Humzer\Core</Filter>
+      <Filter>src\Humzer\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Core\Log.h">
-      <Filter>Humzer\Core</Filter>
+      <Filter>src\Humzer\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Core\MouseCodes.h">
-      <Filter>Humzer\Core</Filter>
+      <Filter>src\Humzer\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Core\Timestep.h">
-      <Filter>Humzer\Core</Filter>
+      <Filter>src\Humzer\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Core\Window.h">
-      <Filter>Humzer\Core</Filter>
+      <Filter>src\Humzer\Core</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Humzer.h">
-      <Filter>Humzer</Filter>
+      <Filter>src\Humzer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLBuffer.h">
+      <Filter>src\Humzer\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLShader.h">
+      <Filter>src\Humzer\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLTexture.h">
+      <Filter>src\Humzer\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLVertexArray.h">
+      <Filter>src\Humzer\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Platform\OpenGL\OpenglContext.h">
+      <Filter>src\Humzer\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Platform\Windows\WindowsWindow.h">
-      <Filter>Humzer\Platform\Windows</Filter>
+      <Filter>src\Humzer\Platform\Windows</Filter>
     </ClInclude>
-    <ClInclude Include="src\humpch.h" />
-    <ClInclude Include="src\Humzer\Renderer\GraphicsContext.h" />
-    <ClInclude Include="src\Humzer\Platform\OpenGL\OpenglContext.h" />
-    <ClInclude Include="src\Humzer\Renderer\Renderer.h" />
-    <ClInclude Include="src\Humzer\Renderer\Buffer.h" />
-    <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLBuffer.h" />
-    <ClInclude Include="src\Humzer\Renderer\VertexArray.h" />
-    <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLVertexArray.h" />
-    <ClInclude Include="src\Humzer\Renderer\Shader.h" />
-    <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLShader.h" />
-    <ClInclude Include="src\Humzer\Renderer\PrimitiveData.h" />
+    <ClInclude Include="src\Humzer\Renderer\Buffer.h">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Renderer\GraphicsContext.h">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Renderer\PrimitiveData.h">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Renderer\Renderer.h">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Renderer\Shader.h">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Renderer\Texture.h">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Renderer\VertexArray.h">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\humpch.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Humzer\Core\Application.cpp">
-      <Filter>Humzer\Core</Filter>
+      <Filter>src\Humzer\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Humzer\Core\Log.cpp">
-      <Filter>Humzer\Core</Filter>
+      <Filter>src\Humzer\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLBuffer.cpp">
+      <Filter>src\Humzer\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLShader.cpp">
+      <Filter>src\Humzer\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLTexture.cpp">
+      <Filter>src\Humzer\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLVertexArray.cpp">
+      <Filter>src\Humzer\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\Platform\OpenGL\OpenglContext.cpp">
+      <Filter>src\Humzer\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Humzer\Platform\Windows\WindowsInput.cpp">
-      <Filter>Humzer\Platform\Windows</Filter>
+      <Filter>src\Humzer\Platform\Windows</Filter>
     </ClCompile>
     <ClCompile Include="src\Humzer\Platform\Windows\WindowsWindow.cpp">
-      <Filter>Humzer\Platform\Windows</Filter>
+      <Filter>src\Humzer\Platform\Windows</Filter>
     </ClCompile>
-    <ClCompile Include="src\humpch.cpp" />
-    <ClCompile Include="src\Humzer\Platform\OpenGL\OpenglContext.cpp" />
-    <ClCompile Include="src\Humzer\Renderer\Renderer.cpp" />
-    <ClCompile Include="src\Humzer\Renderer\Buffer.cpp" />
-    <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLBuffer.cpp" />
-    <ClCompile Include="src\Humzer\Renderer\VertexArray.cpp" />
-    <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLVertexArray.cpp" />
-    <ClCompile Include="src\Humzer\Renderer\Shader.cpp" />
-    <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLShader.cpp" />
-    <ClCompile Include="src\Humzer\Renderer\PrimitiveData.cpp" />
+    <ClCompile Include="src\Humzer\Renderer\Buffer.cpp">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\Renderer\PrimitiveData.cpp">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\Renderer\Renderer.cpp">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\Renderer\Shader.cpp">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\Renderer\Texture.cpp">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\Renderer\VertexArray.cpp">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\humpch.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="vendor\stb_image\stb_image.cpp">
+      <Filter>vendor\stb_image</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

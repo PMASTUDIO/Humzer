@@ -10,6 +10,7 @@ IncludeDir = {}
 IncludeDir["glfw"] = "Humzer/vendor/glfw/include"
 IncludeDir["glm"] = "Humzer/vendor/GLM"
 IncludeDir["glad"] = "Humzer/vendor/GLAD/include"
+IncludeDir["stb_image"] = "Humzer/vendor/stb_image"
 
 include "Humzer/vendor/GLAD"
 
@@ -24,6 +25,7 @@ project "Humzer"
     files { 
         "%{prj.name}/src/**.h", 
         "%{prj.name}/src/**.cpp" ,
+        "%{prj.name}/vendor/stb_image/**.cpp"
     }
 
     targetdir ("bin/" .. output_dir .. "/%{prj.name}")
@@ -34,7 +36,8 @@ project "Humzer"
         "%{prj.name}/vendor/spdlog/include",
         "%{IncludeDir.glfw}",
         "%{IncludeDir.glm}",
-        "%{IncludeDir.glad}"
+        "%{IncludeDir.glad}",
+        "%{IncludeDir.stb_image}"
     }
 
     libdirs {
