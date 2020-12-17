@@ -6,6 +6,7 @@
 // TESTING
 #include <Humzer\Renderer\Buffer.h>
 #include "..\Renderer\VertexArray.h"
+#include "..\Renderer\Shader.h"
 
 namespace Humzer
 {
@@ -35,6 +36,7 @@ namespace Humzer
         Ref<VertexBuffer> VBO;
         Ref<IndexBuffer> EBO;
         Ref<VertexArray> VAO;
+        Ref<Shader> BasicShader;
     };
 
     // DEFINED IN CLIENT
