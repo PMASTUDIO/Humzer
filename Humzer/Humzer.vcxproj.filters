@@ -63,6 +63,9 @@
     <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLBuffer.h">
       <Filter>src\Humzer\Platform\OpenGL</Filter>
     </ClInclude>
+    <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLRendererAPI.h">
+      <Filter>src\Humzer\Platform\OpenGL</Filter>
+    </ClInclude>
     <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLShader.h">
       <Filter>src\Humzer\Platform\OpenGL</Filter>
     </ClInclude>
@@ -81,13 +84,22 @@
     <ClInclude Include="src\Humzer\Renderer\Buffer.h">
       <Filter>src\Humzer\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Humzer\Renderer\Camera.h">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Humzer\Renderer\GraphicsContext.h">
       <Filter>src\Humzer\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Renderer\PrimitiveData.h">
       <Filter>src\Humzer\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Humzer\Renderer\RenderCommand.h">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Humzer\Renderer\Renderer.h">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Renderer\RendererAPI.h">
       <Filter>src\Humzer\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Renderer\Shader.h">
@@ -102,10 +114,6 @@
     <ClInclude Include="src\humpch.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Humzer\Renderer\RendererAPI.h" />
-    <ClInclude Include="src\Humzer\Renderer\RenderCommand.h" />
-    <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLRendererAPI.h" />
-    <ClInclude Include="src\Humzer\Renderer\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Humzer\Core\Application.cpp">
@@ -115,6 +123,9 @@
       <Filter>src\Humzer\Core</Filter>
     </ClCompile>
     <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLBuffer.cpp">
+      <Filter>src\Humzer\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLRendererAPI.cpp">
       <Filter>src\Humzer\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLShader.cpp">
@@ -138,10 +149,19 @@
     <ClCompile Include="src\Humzer\Renderer\Buffer.cpp">
       <Filter>src\Humzer\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Humzer\Renderer\Camera.cpp">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Humzer\Renderer\PrimitiveData.cpp">
       <Filter>src\Humzer\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Humzer\Renderer\RenderCommand.cpp">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClCompile>
     <ClCompile Include="src\Humzer\Renderer\Renderer.cpp">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\Renderer\RendererAPI.cpp">
       <Filter>src\Humzer\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Humzer\Renderer\Shader.cpp">
@@ -159,9 +179,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Humzer\Renderer\RendererAPI.cpp" />
-    <ClCompile Include="src\Humzer\Renderer\RenderCommand.cpp" />
-    <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLRendererAPI.cpp" />
-    <ClCompile Include="src\Humzer\Renderer\Camera.cpp" />
   </ItemGroup>
 </Project>

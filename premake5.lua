@@ -12,6 +12,8 @@ IncludeDir["glm"] = "Humzer/vendor/GLM"
 IncludeDir["glad"] = "Humzer/vendor/GLAD/include"
 IncludeDir["stb_image"] = "Humzer/vendor/stb_image"
 
+IncludeDir["lib_ovr"] = "Humzer/vendor/LibOVR/Include"
+
 include "Humzer/vendor/GLAD"
 
 project "Humzer"
@@ -37,17 +39,20 @@ project "Humzer"
         "%{IncludeDir.glfw}",
         "%{IncludeDir.glm}",
         "%{IncludeDir.glad}",
-        "%{IncludeDir.stb_image}"
+        "%{IncludeDir.stb_image}",
+        "%{IncludeDir.lib_ovr}"
     }
 
     libdirs {
-        "GLFW/bin"
+        "GLFW/bin",
+        "Humzer/vendor/LibOVR/Lib/Windows/x64/Release/VS2017"
     }
 
     links {
         "GLFW.lib",
         "GLAD",
-        "opengl32.lib"
+        "opengl32.lib",
+        "LibOVR.lib"
     }
 
     filter { "system:windows" }
