@@ -32,40 +32,19 @@ namespace Humzer {
     Application::~Application(){}
 
     void Application::Run(){
-        // TESTING ONLY (VERTEX STUFF)
 
-        VAO = VertexArray::Create();
-
-        std::vector<float> vertices = {};
-        std::vector<uint32_t> indices = {};
-
-        Primitive::getCubeData(vertices, indices);
-        VBO = VertexBuffer::Create(&vertices[0], vertices.size() * sizeof(float));
-
-        BufferLayout layout = {
-            { ShaderDataType::Float3, "a_Position"},
-            { ShaderDataType::Float3, "a_Normals"},
-            { ShaderDataType::Float4, "a_Color"},
-            { ShaderDataType::Float2, "a_TexCoord"},
-        };
-
-        VBO->SetLayout(layout);
-        VAO->AddVertexBuffer(VBO);
-
-        EBO = IndexBuffer::Create(&indices[0], indices.size());
-        VAO->SetIndexBuffer(EBO);
-
-        // LOADING ASSETS
-		BasicShader = Shader::Create("Resources/shaders/textured_shader.vs", "Resources/shaders/textured_shader.fs");
+        //// LOADING ASSETS
         CheckerboardTexture = Texture2D::Create("Resources/textures/Checkerboard.png");
         
-        // BIND TEXTURE UNIFORM
-        BasicShader->Bind();
-        BasicShader->SetInt("u_Texture", 0); // BIND SLOT
+        //// BIND TEXTURE UNIFORM
+        //BasicShader->Bind();
+        //BasicShader->SetInt("u_Texture", 0); // BIND SLOT
 
-        glm::mat4 modelPos = glm::mat4(1.0);
+        //glm::mat4 modelPos = glm::mat4(1.0);
 
         RenderCommand::EnableDepthTesting();
+
+        Renderer3D::Init();
 
         while (m_Running) {
 
@@ -81,16 +60,19 @@ namespace Humzer {
             ClientUpdate(timestep);
 
             // TESTING
-            Renderer::BeginScene(*basicCam);
-            CheckerboardTexture->Bind();
+            Renderer3D::BeginScene(*basicCam);
+            
+            //CheckerboardTexture->Bind();
+            Renderer3D::DrawPlane({ 0.0, 0.0, 0.0 }, { 1.0, 1.0 }, { 1.0, 0.0, 0.0, 1.0 });
+            Renderer3D::DrawCube({ 0.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, { 0.0, 1.0, 0.0, 1.0 });
 
-            modelPos = glm::rotate(modelPos, 2 * timestep, glm::vec3(1.0, 0.4, 0.2));
-
-            Renderer::Submit(VAO, BasicShader, modelPos);
+           /* modelPos = glm::rotate(modelPos, 2 * timestep, glm::vec3(1.0, 0.4, 0.2));*/
             Renderer::EndScene();
             
             m_Window->OnUpdate();
         }
+
+        Renderer3D::Shutdown();
     }
 
 }

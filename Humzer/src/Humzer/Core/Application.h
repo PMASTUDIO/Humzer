@@ -35,10 +35,6 @@ namespace Humzer
         static Application* s_Instance;
 
         // TESTING ONLY
-        Ref<VertexBuffer> VBO;
-        Ref<IndexBuffer> EBO;
-        Ref<VertexArray> VAO;
-        Ref<Shader> BasicShader;
         Ref<Texture2D> CheckerboardTexture;
 
         PerspectiveCamera* basicCam;
