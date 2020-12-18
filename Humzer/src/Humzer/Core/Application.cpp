@@ -19,11 +19,14 @@ namespace Humzer {
 
     Application* Application::s_Instance = nullptr;
 
-    Application::Application(){
+    Application::Application() {
 
         s_Instance = this;
 
         m_Window = std::unique_ptr<Window>(Window::Create(1280, 720, "Humzer Game Engine"));
+
+        basicCam = new PerspectiveCamera(45.0f, 1.778f, 0.1f, 1000.0f, glm::vec3(0.0f, 4.0f, 20.0f));
+
 	}
     Application::~Application(){}
 
@@ -54,9 +57,10 @@ namespace Humzer {
         // LOADING ASSETS
 		BasicShader = Shader::Create("Resources/shaders/textured_shader.vs", "Resources/shaders/textured_shader.fs");
         CheckerboardTexture = Texture2D::Create("Resources/textures/Checkerboard.png");
-
+        
         // BIND TEXTURE UNIFORM
         std::dynamic_pointer_cast<OpenGLShader>(BasicShader)->Bind();
+        std::dynamic_pointer_cast<OpenGLShader>(BasicShader)->UploadUniformMat4("u_ViewProjection", basicCam->GetViewProjection());
         std::dynamic_pointer_cast<OpenGLShader>(BasicShader)->UploadUniformInt("u_Texture", 0); // BIND SLOT
 
         while (m_Running) {
@@ -67,6 +71,8 @@ namespace Humzer {
 			float time = (float)glfwGetTime();
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
+
+            basicCam->OnUpdate(timestep);
 
             ClientUpdate(timestep);
 

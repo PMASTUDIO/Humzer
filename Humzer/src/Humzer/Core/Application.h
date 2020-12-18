@@ -8,6 +8,7 @@
 #include "..\Renderer\VertexArray.h"
 #include "..\Renderer\Shader.h"
 #include "..\Renderer\Texture.h"
+#include "..\Renderer\Camera.h"
 
 namespace Humzer
 {
@@ -39,6 +40,8 @@ namespace Humzer
         Ref<VertexArray> VAO;
         Ref<Shader> BasicShader;
         Ref<Texture2D> CheckerboardTexture;
+
+        PerspectiveCamera* basicCam;
     };
 
     // DEFINED IN CLIENT

@@ -105,6 +105,7 @@
     <ClInclude Include="src\Humzer\Renderer\RendererAPI.h" />
     <ClInclude Include="src\Humzer\Renderer\RenderCommand.h" />
     <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLRendererAPI.h" />
+    <ClInclude Include="src\Humzer\Renderer\Camera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Humzer\Core\Application.cpp">
@@ -161,5 +162,6 @@
     <ClCompile Include="src\Humzer\Renderer\RendererAPI.cpp" />
     <ClCompile Include="src\Humzer\Renderer\RenderCommand.cpp" />
     <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLRendererAPI.cpp" />
+    <ClCompile Include="src\Humzer\Renderer\Camera.cpp" />
   </ItemGroup>
 </Project>
