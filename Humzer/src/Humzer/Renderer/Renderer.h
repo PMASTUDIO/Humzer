@@ -1,22 +1,19 @@
 #pragma once
 
-namespace Humzer {
+#include "RenderCommand.h"
+#include "VertexArray.h"
 
-	enum class RendererAPI {
-		None = 0,
-		OpenGL = 1,
-		OpenGLES = 2,
-		Vulkan = 3,
-		Direct3D12 = 4,
-		Metal = 5
-	};
+namespace Humzer {
 
 	class Renderer {
 	public:
-		inline static RendererAPI GetAPI() { return s_RendererAPI; }
-		inline static void SetAPI(RendererAPI api) { s_RendererAPI = api; } // NEEDS TO BE CALLED BEFORE WINDOWS AND CONTEXT CREATION!
-	private:
-		static RendererAPI s_RendererAPI;
+		static void BeginScene();
+		static void EndScene();
+
+		static void Submit(const Ref<VertexArray>& vertexArray);
+
+		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
+		// inline static void SetAPI(RendererAPI api) { s_RendererAPI = api; } // NEEDS TO BE CALLED BEFORE WINDOWS AND CONTEXT CREATION!
 	};
 
 }

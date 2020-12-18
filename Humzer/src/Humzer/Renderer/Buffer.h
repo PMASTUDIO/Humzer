@@ -117,6 +117,8 @@ namespace Humzer {
 		virtual void Unbind() const = 0;
 
 		static Ref<IndexBuffer> Create(uint32_t* indices, uint32_t size);
+
+		virtual uint32_t GetCount() const = 0;
 	};
 
 }

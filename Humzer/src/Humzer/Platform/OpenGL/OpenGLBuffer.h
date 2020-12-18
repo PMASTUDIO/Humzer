@@ -22,14 +22,17 @@ namespace Humzer {
 
 	class OpenGLIndexBuffer : public IndexBuffer {
 	public:
-		OpenGLIndexBuffer(uint32_t* indices, uint32_t size);
+		OpenGLIndexBuffer(uint32_t* indices, uint32_t count);
 		virtual ~OpenGLIndexBuffer();
 
 		void Bind() const override;
-
 		void Unbind() const override;
+
+		uint32_t GetCount() const override;
+
 	private:
 		unsigned int m_ID;
+		uint32_t m_Count;
 	};
 
 }

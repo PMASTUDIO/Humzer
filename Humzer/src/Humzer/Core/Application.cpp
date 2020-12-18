@@ -11,6 +11,8 @@
 #include <filesystem>
 #include "..\Renderer\PrimitiveData.h"
 #include "..\Platform\OpenGL\OpenGLShader.h"
+#include "..\Renderer\RenderCommand.h"
+#include "..\Renderer\Renderer.h"
 
 
 namespace Humzer {
@@ -46,7 +48,7 @@ namespace Humzer {
         VBO->SetLayout(layout);
         VAO->AddVertexBuffer(VBO);
 
-        EBO = IndexBuffer::Create(&indices[0], indices.size() * sizeof(uint32_t));
+        EBO = IndexBuffer::Create(&indices[0], indices.size());
         VAO->SetIndexBuffer(EBO);
 
         // LOADING ASSETS
@@ -58,8 +60,9 @@ namespace Humzer {
         std::dynamic_pointer_cast<OpenGLShader>(BasicShader)->UploadUniformInt("u_Texture", 0); // BIND SLOT
 
         while (m_Running) {
-			glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-			glClear(GL_COLOR_BUFFER_BIT);
+
+            RenderCommand::SetClearColor({ 0.2f, 0.3f, 0.3f, 1.0f });
+            RenderCommand::Clear();
 
 			float time = (float)glfwGetTime();
 			Timestep timestep = time - m_LastFrameTime;
@@ -68,14 +71,18 @@ namespace Humzer {
             ClientUpdate(timestep);
 
             // TESTING
+            Renderer::BeginScene();
             CheckerboardTexture->Bind();
 
-			BasicShader->Bind();
-            VAO->Bind();
-            glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-            VAO->Unbind();
-			BasicShader->Unbind();
+            BasicShader->Bind();
 
+            Renderer::Submit(VAO);
+            Renderer::EndScene();
+
+			
+            VAO->Bind();
+            
+            
             m_Window->OnUpdate();
         }
     }

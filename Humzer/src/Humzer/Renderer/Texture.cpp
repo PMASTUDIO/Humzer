@@ -10,11 +10,11 @@ namespace Humzer {
 	{
 		switch (Renderer::GetAPI())
 		{
-		case RendererAPI::OpenGL:
+		case RendererAPI::API::OpenGL:
 			return CreateRef<OpenGLTexture2D>(path);
 			break;
 		default:
-		case RendererAPI::None:
+		case RendererAPI::API::None:
 			HUM_CORE_FATAL("No Renderer API Selected!");
 			return nullptr;
 		}
