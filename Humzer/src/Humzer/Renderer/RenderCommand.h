@@ -7,6 +7,11 @@ namespace Humzer {
 
 	class RenderCommand {
 	public:
+		inline static void EnableDepthTesting()
+		{
+			s_RendererAPI->EnableDepthTesting();
+		}
+
 		inline static void SetClearColor(const glm::vec4& color)
 		{
 			s_RendererAPI->SetClearColor(color);

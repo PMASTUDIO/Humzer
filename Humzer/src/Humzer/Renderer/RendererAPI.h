@@ -22,6 +22,8 @@ namespace Humzer {
 
 		virtual void DrawIndexed(const Ref<VertexArray>& vertexArray) = 0;
 
+		virtual void EnableDepthTesting() = 0;
+
 		inline static API GetAPI() { return s_API; }
 	private:
 		static API s_API;

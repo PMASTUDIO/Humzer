@@ -13,6 +13,7 @@
 #include "..\Platform\OpenGL\OpenGLShader.h"
 #include "..\Renderer\RenderCommand.h"
 #include "..\Renderer\Renderer.h"
+#include "glm\ext\matrix_transform.hpp"
 
 
 namespace Humzer {
@@ -38,7 +39,7 @@ namespace Humzer {
         std::vector<float> vertices = {};
         std::vector<uint32_t> indices = {};
 
-        Primitive::getQuadData(vertices, indices);
+        Primitive::getCubeData(vertices, indices);
         VBO = VertexBuffer::Create(&vertices[0], vertices.size() * sizeof(float));
 
         BufferLayout layout = {
@@ -59,9 +60,12 @@ namespace Humzer {
         CheckerboardTexture = Texture2D::Create("Resources/textures/Checkerboard.png");
         
         // BIND TEXTURE UNIFORM
-        std::dynamic_pointer_cast<OpenGLShader>(BasicShader)->Bind();
-        std::dynamic_pointer_cast<OpenGLShader>(BasicShader)->UploadUniformMat4("u_ViewProjection", basicCam->GetViewProjection());
-        std::dynamic_pointer_cast<OpenGLShader>(BasicShader)->UploadUniformInt("u_Texture", 0); // BIND SLOT
+        BasicShader->Bind();
+        BasicShader->SetInt("u_Texture", 0); // BIND SLOT
+
+        glm::mat4 modelPos = glm::mat4(1.0);
+
+        RenderCommand::EnableDepthTesting();
 
         while (m_Running) {
 
@@ -77,17 +81,13 @@ namespace Humzer {
             ClientUpdate(timestep);
 
             // TESTING
-            Renderer::BeginScene();
+            Renderer::BeginScene(*basicCam);
             CheckerboardTexture->Bind();
 
-            BasicShader->Bind();
+            modelPos = glm::rotate(modelPos, 2 * timestep, glm::vec3(1.0, 0.4, 0.2));
 
-            Renderer::Submit(VAO);
+            Renderer::Submit(VAO, BasicShader, modelPos);
             Renderer::EndScene();
-
-			
-            VAO->Bind();
-            
             
             m_Window->OnUpdate();
         }

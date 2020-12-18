@@ -18,8 +18,32 @@ namespace Humzer {
 		m_Width = width;
 		m_Height = height;
 
+		
+		// UPLOAD TEXTURE TO GPU
+		GLenum data_format = 0;
+		GLenum internal_format = 0;
+		switch (channels)
+		{
+		case 2:
+			internal_format = GL_RG8;
+			data_format = GL_RG;
+			break;
+		case 3:
+			internal_format = GL_RGB8;
+			data_format = GL_RGB;
+			break;
+		case 4:
+			internal_format = GL_RGBA8;
+			data_format = GL_RGBA;
+			break;
+		default:
+			internal_format = GL_RGB8;
+			data_format = GL_RGB;
+			break;
+		}
+
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_ID);
-		glTextureStorage2D(m_ID, 1, GL_RGB8, m_Width, m_Height);
+		glTextureStorage2D(m_ID, 1, internal_format, m_Width, m_Height);
 
 		glTextureParameteri(m_ID, GL_TEXTURE_WRAP_S, GL_REPEAT);
 		glTextureParameteri(m_ID, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -27,25 +51,8 @@ namespace Humzer {
 		glTextureParameteri(m_ID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 		glTextureParameteri(m_ID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-		// UPLOAD TEXTURE TO GPU
-		GLenum image_format;
-		switch (channels)
-		{
-		case 2:
-			image_format = GL_RG;
-			break;
-		case 3:
-			image_format = GL_RGB;
-			break;
-		case 4:
-			image_format = GL_RGBA;
-			break;
-		default:
-			image_format = GL_RGB;
-			break;
-		}
-
-		glTextureSubImage2D(m_ID, 0, 0, 0, m_Width, m_Height, image_format, GL_UNSIGNED_BYTE, data);
+		
+		glTextureSubImage2D(m_ID, 0, 0, 0, m_Width, m_Height, data_format, GL_UNSIGNED_BYTE, data);
 
 		// FREE IMAGE
 		stbi_image_free(data);
