@@ -5,6 +5,8 @@
 #include "Shader.h"
 #include "Camera.h"
 
+namespace Humzer { class Texture2D; }
+
 namespace Humzer {
 
 	class Renderer {
@@ -36,7 +38,10 @@ namespace Humzer {
 
 		// PRIMITIVES
 		static void DrawPlane(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
+		static void DrawPlane(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture);
+
 		static void DrawCube(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color);
+		static void DrawCube(const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& texture);
 	};
 
 }

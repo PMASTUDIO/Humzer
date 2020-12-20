@@ -35,10 +35,6 @@ namespace Humzer {
 
         //// LOADING ASSETS
         CheckerboardTexture = Texture2D::Create("Resources/textures/Checkerboard.png");
-        
-        //// BIND TEXTURE UNIFORM
-        //BasicShader->Bind();
-        //BasicShader->SetInt("u_Texture", 0); // BIND SLOT
 
         //glm::mat4 modelPos = glm::mat4(1.0);
 
@@ -63,8 +59,8 @@ namespace Humzer {
             Renderer3D::BeginScene(*basicCam);
             
             //CheckerboardTexture->Bind();
-            Renderer3D::DrawPlane({ 0.0, 0.0, 0.0 }, { 1.0, 1.0 }, { 1.0, 0.0, 0.0, 1.0 });
-            Renderer3D::DrawCube({ 0.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, { 0.0, 1.0, 0.0, 1.0 });
+            Renderer3D::DrawPlane({ 0.0, 0.0, 0.0 }, { 1.0, 1.0 }, CheckerboardTexture);
+            Renderer3D::DrawCube({ 5.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, { 0.0, 1.0, 0.0, 1.0 });
 
            /* modelPos = glm::rotate(modelPos, 2 * timestep, glm::vec3(1.0, 0.4, 0.2));*/
             Renderer::EndScene();
