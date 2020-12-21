@@ -4,3 +4,6 @@
 [submodule "Humzer/vendor/GLM"]
 	path = Humzer/vendor/GLM
 	url = https://github.com/g-truc/glm.git
+[submodule "Humzer/vendor/assimp"]
+	path = Humzer/vendor/assimp
+	url = https://github.com/assimp/assimp.git

@@ -11,6 +11,7 @@ IncludeDir["glfw"] = "Humzer/vendor/glfw/include"
 IncludeDir["glm"] = "Humzer/vendor/GLM"
 IncludeDir["glad"] = "Humzer/vendor/GLAD/include"
 IncludeDir["stb_image"] = "Humzer/vendor/stb_image"
+IncludeDir["assimp"] = "Humzer/vendor/assimp/include"
 
 IncludeDir["lib_ovr"] = "Humzer/vendor/LibOVR/Include"
 
@@ -40,19 +41,22 @@ project "Humzer"
         "%{IncludeDir.glm}",
         "%{IncludeDir.glad}",
         "%{IncludeDir.stb_image}",
-        "%{IncludeDir.lib_ovr}"
+        "%{IncludeDir.lib_ovr}",
+        "%{IncludeDir.assimp}"
     }
 
     libdirs {
         "GLFW/bin",
-        "Humzer/vendor/LibOVR/Lib/Windows/x64/Release/VS2017"
+        "Humzer/vendor/LibOVR/Lib/Windows/x64/Release/VS2017",
+        "Humzer/vendor/assimp-bin/x64/lib",
     }
 
     links {
         "GLFW.lib",
         "GLAD",
         "opengl32.lib",
-        "LibOVR.lib"
+        "LibOVR.lib",
+        "assimp-vc142-mt.lib"
     }
 
     filter { "system:windows" }
@@ -66,7 +70,8 @@ project "Humzer"
         }
 
         postbuildcommands {
-            ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. output_dir .. "/Tester")
+            ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. output_dir .. "/Tester"),
+            ("{COPY} vendor/assimp-bin/x64/assimp-vc142-mtd.dll ../bin/" .. output_dir .. "/Tester")
         }
 
 
@@ -81,7 +86,6 @@ project "Humzer"
     filter { "configurations:Dist" }
         defines { "HUM_DIST" }
         optimize "On"
-
 
 
 project "Tester"

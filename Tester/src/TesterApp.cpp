@@ -7,7 +7,6 @@ class Tester : public Humzer::Application {
 public:
     Tester(){
 		CheckerboardTexture = Humzer::Texture2D::Create("Resources/textures/Checkerboard.png");
-
     }
 
     ~Tester(){
@@ -15,7 +14,6 @@ public:
     }
 
     void ClientUpdate(Humzer::Timestep dt) {
-		//CheckerboardTexture->Bind();
 		Renderer3D::DrawPlane({ 0.0, 0.0, 0.0 }, { 1.0, 1.0 }, CheckerboardTexture);
 		Renderer3D::DrawCube({ 5.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, { 0.0, 1.0, 0.0, 1.0 });
     }

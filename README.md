@@ -4,7 +4,7 @@
 
 1. Clone the repository and generate the solution:
     ```shell
-    git clone https://github.com/PMASTUDIO/Humzer.git
+    git clone --recursive https://github.com/PMASTUDIO/Humzer.git
     GenerateWinProj.bat
     ```
 
