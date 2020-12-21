@@ -9,7 +9,7 @@ namespace Humzer { class Texture2D; }
 
 namespace Humzer {
 
-	class Renderer {
+	class HUMZER_API Renderer {
 	public:
 		static void BeginScene(PerspectiveCamera& camera);
 		static void EndScene();
@@ -28,7 +28,7 @@ namespace Humzer {
 		static SceneData* s_SceneData;
 	};
 
-	class Renderer3D {
+	class HUMZER_API Renderer3D {
 	public:
 		static void Init();
 		static void Shutdown();

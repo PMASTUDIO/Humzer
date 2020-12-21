@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #ifdef HUM_PLATFORM_WINDOWS
     #ifdef HUM_BUILD_DLL
         #define HUMZER_API __declspec(dllexport)

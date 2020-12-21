@@ -15,7 +15,7 @@ namespace Humzer {
 		virtual void Bind(uint32_t slot = 0) const = 0;
 	};
 
-	class Texture2D : public Texture
+	class HUMZER_API Texture2D : public Texture
 	{
 	public:
 		static Ref<Texture2D> Create(const std::string& path);

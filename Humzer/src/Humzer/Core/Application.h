@@ -5,9 +5,6 @@
 
 // TESTING
 #include <Humzer\Renderer\Buffer.h>
-#include "..\Renderer\VertexArray.h"
-#include "..\Renderer\Shader.h"
-#include "..\Renderer\Texture.h"
 #include "..\Renderer\Camera.h"
 
 namespace Humzer
@@ -33,10 +30,6 @@ namespace Humzer
 
     private:
         static Application* s_Instance;
-
-        // TESTING ONLY
-        Ref<Texture2D> CheckerboardTexture;
-
         PerspectiveCamera* basicCam;
     };
 

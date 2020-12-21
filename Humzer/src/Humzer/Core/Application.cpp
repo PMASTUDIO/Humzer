@@ -26,17 +26,12 @@ namespace Humzer {
 
         m_Window = std::unique_ptr<Window>(Window::Create(1280, 720, "Humzer Game Engine"));
 
-        basicCam = new PerspectiveCamera(45.0f, 1.778f, 0.1f, 1000.0f, glm::vec3(0.0f, 4.0f, 20.0f));
+        basicCam = new PerspectiveCamera(45.0f, 1.778f, 0.1f, 1000.0f, glm::vec3(0.0f, 4.0f, 20.0f), true);
 
 	}
     Application::~Application(){}
 
     void Application::Run(){
-
-        //// LOADING ASSETS
-        CheckerboardTexture = Texture2D::Create("Resources/textures/Checkerboard.png");
-
-        //glm::mat4 modelPos = glm::mat4(1.0);
 
         RenderCommand::EnableDepthTesting();
 
@@ -53,18 +48,12 @@ namespace Humzer {
 
             basicCam->OnUpdate(timestep);
 
+            Renderer3D::BeginScene(*basicCam);
+
             ClientUpdate(timestep);
 
-            // TESTING
-            Renderer3D::BeginScene(*basicCam);
-            
-            //CheckerboardTexture->Bind();
-            Renderer3D::DrawPlane({ 0.0, 0.0, 0.0 }, { 1.0, 1.0 }, CheckerboardTexture);
-            Renderer3D::DrawCube({ 5.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, { 0.0, 1.0, 0.0, 1.0 });
+            Renderer3D::EndScene();
 
-           /* modelPos = glm::rotate(modelPos, 2 * timestep, glm::vec3(1.0, 0.4, 0.2));*/
-            Renderer::EndScene();
-            
             m_Window->OnUpdate();
         }
 
