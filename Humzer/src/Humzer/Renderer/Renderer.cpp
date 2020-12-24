@@ -61,7 +61,7 @@ namespace Humzer {
 			PlaneVBO->SetLayout(base_layout);
 			s_Data->PlaneVAO->AddVertexBuffer(PlaneVBO);
 
-			Ref<IndexBuffer> PlaneEBO = IndexBuffer::Create(&indices[0], indices.size());
+			Ref<IndexBuffer> PlaneEBO = IndexBuffer::Create(&indices[0], indices.size() * sizeof(uint32_t));
 			s_Data->PlaneVAO->SetIndexBuffer(PlaneEBO);
 
 			// --- CUBE SET UP ---
@@ -72,7 +72,7 @@ namespace Humzer {
 			CubeVBO->SetLayout(base_layout);
 			s_Data->CubeVAO->AddVertexBuffer(CubeVBO);
 
-			Ref<IndexBuffer> CubeEBO = IndexBuffer::Create(&indices[0], indices.size());
+			Ref<IndexBuffer> CubeEBO = IndexBuffer::Create(&indices[0], indices.size() * sizeof(uint32_t));
 			s_Data->CubeVAO->SetIndexBuffer(CubeEBO);
 
 			// --- SHADERS SET UP ---

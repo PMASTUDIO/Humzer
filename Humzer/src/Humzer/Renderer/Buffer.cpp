@@ -5,12 +5,12 @@
 
 #include "../Platform/OpenGL/OpenGLBuffer.h"
 
-Humzer::Ref<Humzer::VertexBuffer> Humzer::VertexBuffer::Create(float* vertices, uint32_t size)
+Humzer::Ref<Humzer::VertexBuffer> Humzer::VertexBuffer::Create(void* data, uint32_t size)
 {
 	switch (Renderer::GetAPI())
 	{
 	case RendererAPI::API::OpenGL:
-		return CreateRef<OpenGLVertexBuffer>(vertices, size);
+		return CreateRef<OpenGLVertexBuffer>(data, size);
 		break;
 
 
@@ -21,7 +21,7 @@ Humzer::Ref<Humzer::VertexBuffer> Humzer::VertexBuffer::Create(float* vertices, 
 	}
 }
 
-Humzer::Ref<Humzer::IndexBuffer> Humzer::IndexBuffer::Create(uint32_t* indices, uint32_t size)
+Humzer::Ref<Humzer::IndexBuffer> Humzer::IndexBuffer::Create(void* indices, uint32_t size)
 {
 	switch (Renderer::GetAPI())
 	{

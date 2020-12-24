@@ -6,7 +6,7 @@ namespace Humzer {
 
 	class OpenGLVertexBuffer : public VertexBuffer {
 	public:
-		OpenGLVertexBuffer(float* vertices, uint32_t size);
+		OpenGLVertexBuffer(void* data, uint32_t size);
 		virtual ~OpenGLVertexBuffer();
 
 		void Bind() const override;
@@ -22,17 +22,18 @@ namespace Humzer {
 
 	class OpenGLIndexBuffer : public IndexBuffer {
 	public:
-		OpenGLIndexBuffer(uint32_t* indices, uint32_t count);
+		OpenGLIndexBuffer(void* indices, uint32_t count);
 		virtual ~OpenGLIndexBuffer();
 
 		void Bind() const override;
 		void Unbind() const override;
 
-		uint32_t GetCount() const override;
+		virtual uint32_t GetCount() const { return m_Size / sizeof(uint32_t); }
+		virtual uint32_t GetSize() const { return m_Size; }
 
 	private:
 		unsigned int m_ID;
-		uint32_t m_Count;
+		uint32_t m_Size;
 	};
 
 }

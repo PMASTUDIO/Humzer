@@ -19,8 +19,10 @@ include "Humzer/vendor/GLAD"
 
 project "Humzer"
     location "Humzer"
-    kind "SharedLib"
+    kind "StaticLib"
     language "C++"
+    cppdialect "C++17"
+    staticruntime "On"
 
     pchheader "humpch.h"
     pchsource "Humzer/src/humpch.cpp"
@@ -48,7 +50,6 @@ project "Humzer"
     libdirs {
         "GLFW/bin",
         "Humzer/vendor/LibOVR/Lib/Windows/x64/Release/VS2017",
-        "Humzer/vendor/assimp-bin/x64/lib",
     }
 
     links {
@@ -56,42 +57,35 @@ project "Humzer"
         "GLAD",
         "opengl32.lib",
         "LibOVR.lib",
-        "assimp-vc142-mt.lib"
     }
 
     filter { "system:windows" }
         cppdialect "C++17"
-        staticruntime "On"
-        systemversion "latest"
 
         defines {
             "HUM_PLATFORM_WINDOWS",
             "HUM_BUILD_DLL"
         }
 
-        postbuildcommands {
-            ("{COPY} %{cfg.buildtarget.relpath} ../bin/" .. output_dir .. "/Tester"),
-            ("{COPY} vendor/assimp-bin/x64/assimp-vc142-mtd.dll ../bin/" .. output_dir .. "/Tester")
-        }
-
-
     filter { "configurations:Debug" }
         defines { "HUM_DEBUG" }
-        symbols "On"
+        symbols "on"
 
     filter { "configurations:Release" }
         defines { "HUM_RELEASE" }
-        optimize "On"
+        optimize "on"
     
     filter { "configurations:Dist" }
         defines { "HUM_DIST" }
-        optimize "On"
+        optimize "on"
 
 
 project "Tester"
     location "Tester"
     kind "ConsoleApp"
     language "C++"
+    cppdialect "C++17"
+    staticruntime "On"
 
     files { 
         "%{prj.name}/src/**.h", 
@@ -105,7 +99,8 @@ project "Tester"
         "%{prj.name}/include",
         "Humzer/vendor/spdlog/include",
         "Humzer/src",
-        "%{IncludeDir.glm}"
+        "%{IncludeDir.glm}",
+        "%{IncludeDir.assimp}"
     }
 
     links {
@@ -113,8 +108,6 @@ project "Tester"
     }
 
     filter { "system:windows" }
-        cppdialect "C++17"
-        staticruntime "On"
         systemversion "latest"
 
         defines {
@@ -124,13 +117,44 @@ project "Tester"
 
     filter { "configurations:Debug" }
         defines { "HUM_DEBUG" }
-        symbols "On"
+        symbols "on"
+
+        links
+		{
+			"Humzer/vendor/assimp/bin/Debug/assimp-vc141-mtd.lib"
+		}
+
+        postbuildcommands 
+        {
+            '{COPY} "../Humzer/vendor/assimp/bin/Debug/assimp-vc141-mtd.dll" "%{cfg.targetdir}"'
+        }
+
 
     filter { "configurations:Release" }
         defines { "HUM_RELEASE" }
         optimize "On"
+
+        links
+		{
+			"Humzer/vendor/assimp/bin/Release/assimp-vc141-mtd.lib"
+		}
+
+        postbuildcommands 
+        {
+            '{COPY} "../Humzer/vendor/assimp/bin/Release/assimp-vc141-mtd.dll" "%{cfg.targetdir}"'
+        }
     
     filter { "configurations:Dist" }
         defines { "HUM_DIST" }
         optimize "On"
+
+        links
+		{
+			"Humzer/vendor/assimp/bin/Release/assimp-vc141-mtd.lib"
+		}
+
+        postbuildcommands 
+        {
+            '{COPY} "../Humzer/vendor/assimp/bin/Release/assimp-vc141-mtd.dll" "%{cfg.targetdir}"'
+        }
     

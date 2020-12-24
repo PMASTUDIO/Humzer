@@ -30,6 +30,8 @@ namespace Humzer
 
     private:
         static Application* s_Instance;
+
+    protected:
         PerspectiveCamera* basicCam;
     };
 

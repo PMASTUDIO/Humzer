@@ -90,6 +90,9 @@
     <ClInclude Include="src\Humzer\Renderer\GraphicsContext.h">
       <Filter>src\Humzer\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Humzer\Renderer\Mesh.h">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClInclude>
     <ClInclude Include="src\Humzer\Renderer\PrimitiveData.h">
       <Filter>src\Humzer\Renderer</Filter>
     </ClInclude>
@@ -150,6 +153,9 @@
       <Filter>src\Humzer\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Humzer\Renderer\Camera.cpp">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\Renderer\Mesh.cpp">
       <Filter>src\Humzer\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Humzer\Renderer\PrimitiveData.cpp">

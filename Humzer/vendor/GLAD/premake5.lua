@@ -1,5 +1,6 @@
 project "GLAD"
     kind "StaticLib"
+    staticruntime "On"
     language "C"
 
     files { 
@@ -17,8 +18,5 @@ project "GLAD"
 
     filter { "system:windows" }
         systemversion "latest"
-        staticruntime "On"
 
-    filter { "system:windows", "configurations:Release" }
-        buildoptions "/MT"
     
