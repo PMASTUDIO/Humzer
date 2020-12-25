@@ -5,8 +5,8 @@ using namespace Humzer;
 class Tester : public Humzer::Application {
 public:
     Tester(){
-		CheckerboardTexture = Humzer::Texture2D::Create("Resources/textures/Checkerboard.png");
-        testMesh = CreateRef<Mesh>("Resources/meshes/cerberus.fbx");
+        GunTexture = Humzer::Texture2D::Create("Resources/textures/Cerberus/cerberus_A.png");
+        testMesh = CreateRef<Mesh>("Resources/meshes/CerberusMaterials.fbx");
     }
 
     ~Tester(){
@@ -14,13 +14,13 @@ public:
     }
 
     void ClientUpdate(Humzer::Timestep dt) {
-		Renderer3D::DrawPlane({ 0.0, 0.0, 0.0 }, { 1.0, 1.0 }, CheckerboardTexture);
-		Renderer3D::DrawCube({ 5.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, { 0.0, 1.0, 0.0, 1.0 });
+		//Renderer3D::DrawPlane({ 0.0, 0.0, 0.0 }, { 1.0, 1.0 }, CheckerboardTexture);
+		//Renderer3D::DrawCube({ 5.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, { 0.0, 1.0, 0.0, 1.0 });
 
-        testMesh->Render(dt, *basicCam);
+        testMesh->Render(dt, *basicCam, GunTexture);
     }
 private:
-	Humzer::Ref<Humzer::Texture2D> CheckerboardTexture;
+	Humzer::Ref<Humzer::Texture2D> GunTexture;
     Ref<Mesh> testMesh;
 };
 

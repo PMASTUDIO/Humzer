@@ -1,6 +1,8 @@
 #include "humpch.h"
 #include "Mesh.h"
 
+#include <filesystem>
+
 #include <glm/ext/matrix_transform.hpp>
 #include <glm/gtc/quaternion.hpp>
 
@@ -10,7 +12,11 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include <assimp/Importer.hpp>
+#include <assimp/material.h>
+
 #include "RenderCommand.h"
+#include "Texture.h"
+
 
 namespace Humzer {
 
@@ -27,6 +33,8 @@ namespace Humzer {
 		m_MeshShader = Shader::Create("Resources/shaders/mesh_base_shader.vs", "Resources/shaders/mesh_base_shader.fs");
 		
 		processNode(scene->mRootNode, scene);
+
+		processMaterials(scene, m_MeshShader); // Populates m_Textures with diffuse maps
 		
 		// MESH SETUP
 		m_VertexArray = VertexArray::Create(); // Create VAO
@@ -42,6 +50,9 @@ namespace Humzer {
 		auto ib = IndexBuffer::Create(m_Indices.data(), m_Indices.size() * sizeof(Index));
 		m_VertexArray->SetIndexBuffer(ib); 
 		m_Scene = scene;
+
+		m_MeshShader->SetInt("u_Texture", 0);
+
 		HUM_CORE_INFO("Loaded {0} meshes, with {1} vertices and {2} indices, from {3}, successfuly!", scene->mNumMeshes, m_StaticVertices.size(), m_Indices.size(), m_FilePath);
 	}
 
@@ -60,9 +71,57 @@ namespace Humzer {
 		glm::mat4 transformTest = glm::translate(glm::mat4(1.0), { 0.0, 0.0, 0.0 }) * glm::scale(glm::mat4(1.0), { 1.0, 1.0, 1.0 });
 		m_MeshShader->SetMat4("u_Transform", transformTest);
 
+		for (size_t i = 0; i < m_Textures.size(); i++) {
+			m_Textures[i]->Bind();
+		}
+
 		// DRAWING
 		m_VertexArray->Bind();
 		RenderCommand::DrawIndexed(m_VertexArray);
+	}
+
+	void Mesh::processMaterials(const aiScene* scene, const Ref<Shader> shader)
+	{
+		// PROCESS MATERIALS
+		if (scene->HasMaterials()) {
+			HUM_CORE_INFO("Material loading for {0} started!", m_FilePath);
+			
+			m_Textures.resize(scene->mNumMaterials); // EXPECT X NUM OF TEXTURES
+			
+			for (uint32_t i = 0; i < scene->mNumMaterials; i++)
+			{
+				auto aiMaterial = scene->mMaterials[i];
+				auto aiMaterialName = aiMaterial->GetName();
+
+				HUM_CORE_INFO("  {0} (Index = {1})", aiMaterialName.data, i);
+				aiString aiTexPath;
+				uint32_t textureCount = aiMaterial->GetTextureCount(aiTextureType_DIFFUSE);
+				HUM_CORE_INFO("    TextureCount = {0}", textureCount);
+
+				bool hasAlbedoMap = aiMaterial->GetTexture(aiTextureType_DIFFUSE, 0, &aiTexPath) == AI_SUCCESS;
+				if (hasAlbedoMap)
+				{
+					std::filesystem::path path = m_FilePath;
+					auto parentPath = path.parent_path();
+					parentPath /= std::string(aiTexPath.data);
+					std::string texturePath = parentPath.string();
+					HUM_CORE_INFO("    Albedo map path = {0}", texturePath);
+
+					auto texture = Texture2D::Create(texturePath);
+					if (texture->Loaded())
+					{
+						HUM_CORE_INFO("[{0}] Texture at {1} loaded successfully", i, texturePath);
+						m_Textures[i] = texture;
+					}
+					else {
+						HUM_CORE_ERROR("Could not load texture: {0}", texturePath);
+					}
+				}
+				else {
+					HUM_CORE_WARN("    No albedo map found");
+				}
+			}
+		}
 	}
 
 	void Mesh::processNode(aiNode* node, const aiScene* scene)
@@ -123,6 +182,7 @@ namespace Humzer {
 
 		return submesh;
 	}
+
 
 }
 

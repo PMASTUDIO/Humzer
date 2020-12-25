@@ -14,6 +14,7 @@ struct aiAnimation;
 struct aiNodeAnim;
 struct aiScene;
 struct aiMesh;
+struct aiMaterial;
 
 namespace Assimp {
 	class Importer;
@@ -55,6 +56,7 @@ namespace Humzer {
 		inline Ref<Shader> GetMeshShader() { return m_MeshShader; }
 		inline const std::string& GetFilePath() const { return m_FilePath; }
 	private:
+		void processMaterials(const aiScene* scene, const Ref<Shader> shader);
 		void processNode(aiNode* node, const aiScene* scene);
 		Submesh processMesh(aiMesh* mesh, const aiScene* scene, uint32_t vertexCount, uint32_t indexCount);
 	private:
@@ -64,6 +66,8 @@ namespace Humzer {
 		Scope<Assimp::Importer> m_Importer;
 
 		const aiScene* m_Scene;
+
+		std::vector<Ref<Texture2D>> m_Textures;
 
 		// GEOMETRY
 		Ref<VertexArray> m_VertexArray;

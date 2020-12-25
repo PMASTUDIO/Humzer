@@ -12,8 +12,10 @@ namespace Humzer {
 		stbi_set_flip_vertically_on_load(1);
 		stbi_uc* data = stbi_load(path.c_str(), &width, &height, &channels, 0);
 
-		if (!data)
+		if (!data) {
 			HUM_CORE_ERROR("Failed to load image at {0}", path);
+			return;
+		}
 
 		m_Width = width;
 		m_Height = height;
@@ -53,6 +55,8 @@ namespace Humzer {
 
 		
 		glTextureSubImage2D(m_ID, 0, 0, 0, m_Width, m_Height, data_format, GL_UNSIGNED_BYTE, data);
+
+		m_Loaded = true;
 
 		// FREE IMAGE
 		stbi_image_free(data);

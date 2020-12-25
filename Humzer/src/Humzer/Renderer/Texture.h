@@ -19,6 +19,8 @@ namespace Humzer {
 	{
 	public:
 		static Ref<Texture2D> Create(const std::string& path);
+
+		virtual bool Loaded() const = 0;
 	};
 
 }
