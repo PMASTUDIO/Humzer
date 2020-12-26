@@ -4,6 +4,7 @@
 #include "VertexArray.h"
 #include "Shader.h"
 #include "Camera.h"
+#include "Mesh.h"
 
 namespace Humzer { class Texture2D; }
 
@@ -36,12 +37,17 @@ namespace Humzer {
 		static void BeginScene(PerspectiveCamera& camera);
 		static void EndScene();
 
-		// PRIMITIVES
+		// IMMEDIATE RENDERER
 		static void DrawPlane(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
 		static void DrawPlane(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture);
 
 		static void DrawCube(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color);
 		static void DrawCube(const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& texture);
+
+		static void DrawMesh(Ref<Mesh> mesh, const glm::vec3& position, const glm::vec3& scale);
+
+	private:
+		static PerspectiveCamera* s_SceneCamera;
 	};
 
 }

@@ -34,7 +34,7 @@ namespace Humzer {
 		
 		processNode(scene->mRootNode, scene);
 
-		processMaterials(scene, m_MeshShader); // Populates m_Textures with diffuse maps
+		processMaterials(scene); // Populates m_Textures with diffuse maps
 		
 		// MESH SETUP
 		m_VertexArray = VertexArray::Create(); // Create VAO
@@ -80,7 +80,7 @@ namespace Humzer {
 		RenderCommand::DrawIndexed(m_VertexArray);
 	}
 
-	void Mesh::processMaterials(const aiScene* scene, const Ref<Shader> shader)
+	void Mesh::processMaterials(const aiScene* scene)
 	{
 		// PROCESS MATERIALS
 		if (scene->HasMaterials()) {

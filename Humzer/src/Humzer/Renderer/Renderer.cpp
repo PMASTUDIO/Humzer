@@ -4,6 +4,9 @@
 #include "glm/ext/matrix_transform.inl"
 #include "Texture.h"
 
+// #TOREMOVE
+#include "glad/glad.h"
+
 namespace Humzer {
 
 		Renderer::SceneData* Renderer::s_SceneData = new Renderer::SceneData;
@@ -35,6 +38,7 @@ namespace Humzer {
 
 			Ref<Shader> FlatColorShader;
 			Ref<Shader>	TexturedShader;
+			Ref<Shader>	MeshShader;
 		};
 
 		static Renderer3DStorage* s_Data;
@@ -78,7 +82,10 @@ namespace Humzer {
 			// --- SHADERS SET UP ---
 			s_Data->FlatColorShader = Shader::Create("Resources/shaders/flat_colored.vs", "Resources/shaders/flat_colored.fs");
 			s_Data->TexturedShader = Shader::Create("Resources/shaders/textured_shader.vs", "Resources/shaders/textured_shader.fs");
+			s_Data->MeshShader = Shader::Create("Resources/shaders/mesh_base_shader.vs", "Resources/shaders/mesh_base_shader.fs");
+			
 			s_Data->TexturedShader->SetInt("u_Texture", 0); // BIND TEXTURE SLOT
+			s_Data->MeshShader->SetInt("u_Texture", 0); // BIND TEXTURE SLOT
 		}
 
 		void Renderer3D::Shutdown()
@@ -86,8 +93,12 @@ namespace Humzer {
 			delete s_Data;
 		}
 
+		Humzer::PerspectiveCamera* Renderer3D::s_SceneCamera = nullptr;
+
 		void Renderer3D::BeginScene(PerspectiveCamera& camera)
 		{
+			s_SceneCamera = &camera;
+
 			s_Data->FlatColorShader->Bind();
 			s_Data->FlatColorShader->SetMat4("u_ViewProjection", camera.GetViewProjection());
 			s_Data->FlatColorShader->SetMat4("u_Transform", glm::mat4(1.0));
@@ -150,6 +161,24 @@ namespace Humzer {
 
 			s_Data->CubeVAO->Bind();
 			RenderCommand::DrawIndexed(s_Data->CubeVAO);
+		}
+
+		void Renderer3D::DrawMesh(Ref<Mesh> mesh, const glm::vec3& position, const glm::vec3& scale)
+		{
+			// SHADER SET UP
+			mesh->m_MeshShader->Bind();
+			mesh->m_MeshShader->SetMat4("u_ViewProjection", s_SceneCamera->GetViewProjection());
+
+			glm::mat4 transform = glm::translate(glm::mat4(1.0), position) * glm::scale(glm::mat4(1.0), scale);
+			mesh->m_MeshShader->SetMat4("u_Transform", transform);
+
+			for (size_t i = 0; i < mesh->m_Textures.size(); i++) {
+				mesh->m_Textures[i]->Bind();
+			}
+
+			// DRAWING
+			mesh->m_VertexArray->Bind();
+			RenderCommand::DrawIndexed(mesh->m_VertexArray);
 		}
 
 }

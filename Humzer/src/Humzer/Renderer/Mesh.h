@@ -56,7 +56,7 @@ namespace Humzer {
 		inline Ref<Shader> GetMeshShader() { return m_MeshShader; }
 		inline const std::string& GetFilePath() const { return m_FilePath; }
 	private:
-		void processMaterials(const aiScene* scene, const Ref<Shader> shader);
+		void processMaterials(const aiScene* scene);
 		void processNode(aiNode* node, const aiScene* scene);
 		Submesh processMesh(aiMesh* mesh, const aiScene* scene, uint32_t vertexCount, uint32_t indexCount);
 	private:
@@ -75,5 +75,7 @@ namespace Humzer {
 		std::vector<Index> m_Indices;
 
 		std::vector<Submesh> m_Submeshes;
+
+		friend class Renderer3D;
 	};
 }
