@@ -26,8 +26,6 @@ namespace Humzer {
 
         m_Window = std::unique_ptr<Window>(Window::Create(1280, 720, "Humzer Game Engine"));
 
-        basicCam = new PerspectiveCamera(45.0f, 1.778f, 0.1f, 1000.0f, glm::vec3(0.0f, 4.0f, 20.0f), true);
-
 	}
     Application::~Application(){}
 
@@ -46,13 +44,7 @@ namespace Humzer {
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
-            basicCam->OnUpdate(timestep);
-
-            Renderer3D::BeginScene(*basicCam);
-
             ClientUpdate(timestep);
-
-            Renderer3D::EndScene();
 
             m_Window->OnUpdate();
         }
