@@ -2,6 +2,9 @@
 #include "WindowsWindow.h"
 #include "Humzer/Platform/OpenGL/OpenglContext.h"
 
+
+#include "../../Renderer/Renderer.h"
+
 namespace Humzer {
 
 	void GLFWErrorCallback(int error, const char* description)
@@ -88,6 +91,8 @@ namespace Humzer {
 			WindowData& data = *(WindowData*)glfwGetWindowUserPointer(window);
 			data.Width = width;
 			data.Height = height;
+
+			Renderer::OnWindowResize(width, height);
 		});
 
 		glfwSetErrorCallback(static_cast<GLFWerrorfun>(GLFWErrorCallback));

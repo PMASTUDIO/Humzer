@@ -14,6 +14,8 @@ namespace Humzer {
 
 		void OnUpdate(Timestep ts);
 
+		void OnResize(float width, float height);
+
 		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
 		glm::mat4 GetProjection() const { return m_ProjectionMatrix; }
 		glm::mat4 GetViewProjection() const { return m_ProjectionMatrix * m_ViewMatrix; }

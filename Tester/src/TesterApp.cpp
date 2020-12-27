@@ -4,7 +4,7 @@ using namespace Humzer;
 
 class Tester : public Humzer::Application {
 public:
-    Tester() : basicCam(45.0f, 1.778f, 0.1f, 1000.0f, glm::vec3(0.0f, 4.0f, 20.0f), true) {
+    Tester() : basicCam(45.0f, 1280.0f / 720.0f, 0.1f, 1000.0f, glm::vec3(0.0f, 4.0f, 20.0f), true) {
         testMesh = CreateRef<Mesh>("Resources/meshes/CerberusMaterials.fbx");
     }
 

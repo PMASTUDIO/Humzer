@@ -47,6 +47,14 @@ namespace Humzer {
 		}
 	}
 
+	void PerspectiveCamera::OnResize(float width, float height)
+	{
+		m_AspectRatio = width / height;
+		m_ViewportWidth = width;
+		m_ViewportHeight = height;
+		UpdateMatrices();
+	}
+
 	void PerspectiveCamera::UpdateMatrices()
 	{
 		m_ViewMatrix = glm::lookAt(m_Position, m_Position + m_CameraFront, m_CameraUp);

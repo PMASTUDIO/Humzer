@@ -17,6 +17,8 @@ namespace Humzer {
 
 		static void Submit(const Ref<VertexArray>& vertexArray, const Ref<Shader>& shader, glm::mat4 transform);
 
+		static void OnWindowResize(uint32_t width, uint32_t height);
+
 		inline static RendererAPI::API GetAPI() { return RendererAPI::GetAPI(); }
 		// inline static void SetAPI(RendererAPI api) { s_RendererAPI = api; } // NEEDS TO BE CALLED BEFORE WINDOWS AND CONTEXT CREATION!
 
