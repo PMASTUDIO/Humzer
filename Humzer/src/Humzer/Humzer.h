@@ -16,6 +16,7 @@
 #include "Renderer/Renderer.h"
 #include "Renderer/Texture.h"
 #include "Renderer/Mesh.h"
+#include "Renderer/Shader.h"
 
 // ---- ENTRY POINT ----
 #include "Core/EntryPoint.h"

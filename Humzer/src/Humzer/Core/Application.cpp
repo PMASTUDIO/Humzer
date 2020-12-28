@@ -25,7 +25,6 @@ namespace Humzer {
         s_Instance = this;
 
         m_Window = std::unique_ptr<Window>(Window::Create(1280, 720, "Humzer Game Engine"));
-
 	}
     Application::~Application(){}
 

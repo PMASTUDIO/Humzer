@@ -30,7 +30,7 @@ namespace Humzer {
 		if (!scene || !scene->HasMeshes())
 			HUM_CORE_ERROR("Failed to load mesh file: {0}", filename);
 
-		m_MeshShader = Shader::Create("Resources/shaders/mesh_base_shader.vs", "Resources/shaders/mesh_base_shader.fs");
+		m_MeshShader = Shader::Create("mesh_base", "Resources/shaders/mesh_base_shader.vs", "Resources/shaders/mesh_base_shader.fs");
 		
 		processNode(scene->mRootNode, scene);
 

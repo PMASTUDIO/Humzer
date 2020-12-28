@@ -8,7 +8,7 @@
 namespace Humzer {
 
 	
-	OpenGLShader::OpenGLShader(const std::string& vertexPath, const std::string& fragmentPath)
+	OpenGLShader::OpenGLShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath) : m_Name(name)
 	{
 		std::string vertexSrc = ReadShader(vertexPath);
 		std::string fragmentSrc = ReadShader(fragmentPath);
@@ -190,6 +190,11 @@ namespace Humzer {
 	void OpenGLShader::SetMat4(const std::string& name, const glm::mat4& value)
 	{
 		UploadUniformMat4(name, value);
+	}
+
+	const std::string& OpenGLShader::GetName() const
+	{
+		return m_Name;
 	}
 
 	std::string OpenGLShader::ReadShader(std::string path)

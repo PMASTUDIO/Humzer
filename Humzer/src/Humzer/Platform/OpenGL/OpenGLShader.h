@@ -6,7 +6,7 @@ namespace Humzer {
 
 	class OpenGLShader : public Shader {
 	public:
-		OpenGLShader(const std::string& vertexPath, const std::string& fragmentPath);
+		OpenGLShader(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath);
 
 		virtual ~OpenGLShader();
 
@@ -35,10 +35,14 @@ namespace Humzer {
 
 		void SetMat4(const std::string& name, const glm::mat4& value) override;
 
+
+		const std::string& GetName() const override;
+
 	private:
 		std::string ReadShader(std::string path);
 	private:
 		uint32_t m_ID;
+		std::string m_Name;
 	};
 
 }

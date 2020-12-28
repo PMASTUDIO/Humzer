@@ -85,9 +85,9 @@ namespace Humzer {
 			s_Data->CubeVAO->SetIndexBuffer(CubeEBO);
 
 			// --- SHADERS SET UP ---
-			s_Data->FlatColorShader = Shader::Create("Resources/shaders/flat_colored.vs", "Resources/shaders/flat_colored.fs");
-			s_Data->TexturedShader = Shader::Create("Resources/shaders/textured_shader.vs", "Resources/shaders/textured_shader.fs");
-			s_Data->MeshShader = Shader::Create("Resources/shaders/mesh_base_shader.vs", "Resources/shaders/mesh_base_shader.fs");
+			s_Data->FlatColorShader = Shader::Create("flat_color", "Resources/shaders/flat_colored.vs", "Resources/shaders/flat_colored.fs");
+			s_Data->TexturedShader = Shader::Create("textured", "Resources/shaders/textured_shader.vs", "Resources/shaders/textured_shader.fs");
+			s_Data->MeshShader = Shader::Create("mesh_base", "Resources/shaders/mesh_base_shader.vs", "Resources/shaders/mesh_base_shader.fs");
 			
 			s_Data->TexturedShader->SetInt("u_Texture", 0); // BIND TEXTURE SLOT
 			s_Data->MeshShader->SetInt("u_Texture", 0); // BIND TEXTURE SLOT

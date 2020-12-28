@@ -15,6 +15,7 @@ namespace Humzer
         virtual ~Application();
 
         virtual void ClientUpdate(Timestep dt){}
+        virtual void OnWindowResize(int x, int y, int width, int height){}
 
         void Run();
 
