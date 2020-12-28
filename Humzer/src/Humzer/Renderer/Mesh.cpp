@@ -21,7 +21,7 @@
 
 namespace Humzer {
 
-	static const uint32_t s_MeshImportFlags = aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_GenNormals;
+	static const uint32_t s_MeshImportFlags = aiProcess_Triangulate | aiProcess_GenNormals;
 
 	Mesh::Mesh(const std::string& filename) : m_FilePath(filename)
 	{
