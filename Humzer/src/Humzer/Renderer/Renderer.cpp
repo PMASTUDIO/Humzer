@@ -108,6 +108,7 @@ namespace Humzer {
 			s_Data->m_FlatColorShader->Bind();
 			s_Data->m_FlatColorShader->SetMat4("u_ViewProjection", camera.GetViewProjection());
 			s_Data->m_FlatColorShader->SetMat4("u_Transform", glm::mat4(1.0));
+			s_Data->m_FlatColorShader->SetFloat3("u_ViewPos", camera.GetPosition());
 
 			s_Data->m_TexturedShader->Bind();
 			s_Data->m_TexturedShader->SetMat4("u_ViewProjection", camera.GetViewProjection());
@@ -176,12 +177,13 @@ namespace Humzer {
 
 		void Renderer3D::DrawMesh(Ref<Mesh> mesh, const glm::vec3& position, const glm::vec3& scale)
 		{
+			glm::mat4 transform = glm::translate(glm::mat4(1.0), position) * glm::scale(glm::mat4(1.0), scale);
+
 			// SHADER SET UP
 			mesh->m_MeshShader->Bind();
 			mesh->m_MeshShader->SetMat4("u_ViewProjection", s_SceneCamera->GetViewProjection());
-
-			glm::mat4 transform = glm::translate(glm::mat4(1.0), position) * glm::scale(glm::mat4(1.0), scale);
 			mesh->m_MeshShader->SetMat4("u_Transform", transform);
+			mesh->m_MeshShader->SetFloat3("u_ViewPos", s_SceneCamera->GetPosition());
 
 			for (size_t i = 0; i < mesh->m_Textures.size(); i++) {
 				mesh->m_Textures[i]->Bind();
