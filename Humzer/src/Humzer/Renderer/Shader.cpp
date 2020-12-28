@@ -20,6 +20,16 @@ namespace Humzer {
 		}
 	}
 
+	ShaderLibrary::ShaderLibrary()
+	{
+
+	}
+
+	ShaderLibrary::~ShaderLibrary()
+	{
+
+	}
+
 	void ShaderLibrary::Add(const Ref<Shader>& shader)
 	{
 		auto& name = shader->GetName();
@@ -43,12 +53,13 @@ namespace Humzer {
 	Humzer::Ref<Humzer::Shader> ShaderLibrary::Get(const std::string& name)
 	{
 		// #ASSERT
-		if (m_Shaders.find(name) != m_Shaders.end()) {
-			HUM_CORE_WARN("Shader with name {0} already exists!", name);
+		if (m_Shaders.find(name) == m_Shaders.end()) {
+			HUM_CORE_WARN("Shader with name {0} doesn't exists!", name);
 			return nullptr;
 		}
 
 		return m_Shaders[name];
 	}
+
 
 }

@@ -16,6 +16,7 @@
 
 #include "RenderCommand.h"
 #include "Texture.h"
+#include "Renderer.h"
 
 
 namespace Humzer {
@@ -30,7 +31,13 @@ namespace Humzer {
 		if (!scene || !scene->HasMeshes())
 			HUM_CORE_ERROR("Failed to load mesh file: {0}", filename);
 
-		m_MeshShader = Shader::Create("mesh_base", "Resources/shaders/mesh_base_shader.vs", "Resources/shaders/mesh_base_shader.fs");
+		// #ASSERT
+		/*if (!Renderer3D::GetShaderLibrary()) {
+			HUM_CORE_ERROR("{0} : Mesh can't be initialized before Renderer3D init", filename);
+			return;
+		}*/
+
+		m_MeshShader = Renderer3D::GetShaderLibrary()->Get("mesh_base");
 		
 		processNode(scene->mRootNode, scene);
 

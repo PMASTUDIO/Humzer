@@ -34,6 +34,8 @@ namespace Humzer {
 
         Renderer3D::Init();
 
+        ClientOnStart();
+
         while (m_Running) {
 
             RenderCommand::SetClearColor({ 0.2f, 0.3f, 0.3f, 1.0f });

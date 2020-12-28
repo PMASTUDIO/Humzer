@@ -95,6 +95,7 @@ namespace Humzer {
 			Renderer::OnWindowResize(width, height);
 		});
 
+
 		glfwSetErrorCallback(static_cast<GLFWerrorfun>(GLFWErrorCallback));
 
 		SetVSync(true);

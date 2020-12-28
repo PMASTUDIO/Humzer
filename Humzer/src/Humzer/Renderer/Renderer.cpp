@@ -41,9 +41,9 @@ namespace Humzer {
 			Ref<VertexArray> PlaneVAO;
 			Ref<VertexArray> CubeVAO;
 
-			Ref<Shader> FlatColorShader;
-			Ref<Shader>	TexturedShader;
-			Ref<Shader>	MeshShader;
+			Ref<ShaderLibrary> m_ShaderLibrary;
+			Ref<Shader> m_FlatColorShader;
+			Ref<Shader> m_TexturedShader;
 		};
 
 		static Renderer3DStorage* s_Data;
@@ -51,6 +51,8 @@ namespace Humzer {
 		void Renderer3D::Init()
 		{
 			s_Data = new Renderer3DStorage();
+			
+			s_Data->m_ShaderLibrary = CreateRef<ShaderLibrary>();
 
 			BufferLayout base_layout = {
 				{ ShaderDataType::Float3, "a_Position"},
@@ -85,12 +87,11 @@ namespace Humzer {
 			s_Data->CubeVAO->SetIndexBuffer(CubeEBO);
 
 			// --- SHADERS SET UP ---
-			s_Data->FlatColorShader = Shader::Create("flat_color", "Resources/shaders/flat_colored.vs", "Resources/shaders/flat_colored.fs");
-			s_Data->TexturedShader = Shader::Create("textured", "Resources/shaders/textured_shader.vs", "Resources/shaders/textured_shader.fs");
-			s_Data->MeshShader = Shader::Create("mesh_base", "Resources/shaders/mesh_base_shader.vs", "Resources/shaders/mesh_base_shader.fs");
+			s_Data->m_FlatColorShader = GetShaderLibrary()->Load("flat_color", "Resources/shaders/flat_colored.vs", "Resources/shaders/flat_colored.fs");
+			s_Data->m_TexturedShader = GetShaderLibrary()->Load("textured", "Resources/shaders/textured_shader.vs", "Resources/shaders/textured_shader.fs");
+			GetShaderLibrary()->Load("mesh_base", "Resources/shaders/mesh_base_shader.vs", "Resources/shaders/mesh_base_shader.fs");
 			
-			s_Data->TexturedShader->SetInt("u_Texture", 0); // BIND TEXTURE SLOT
-			s_Data->MeshShader->SetInt("u_Texture", 0); // BIND TEXTURE SLOT
+			s_Data->m_TexturedShader->SetInt("u_Texture", 0); // BIND TEXTURE SLOT
 		}
 
 		void Renderer3D::Shutdown()
@@ -104,13 +105,13 @@ namespace Humzer {
 		{
 			s_SceneCamera = &camera;
 
-			s_Data->FlatColorShader->Bind();
-			s_Data->FlatColorShader->SetMat4("u_ViewProjection", camera.GetViewProjection());
-			s_Data->FlatColorShader->SetMat4("u_Transform", glm::mat4(1.0));
+			s_Data->m_FlatColorShader->Bind();
+			s_Data->m_FlatColorShader->SetMat4("u_ViewProjection", camera.GetViewProjection());
+			s_Data->m_FlatColorShader->SetMat4("u_Transform", glm::mat4(1.0));
 
-			s_Data->TexturedShader->Bind();
-			s_Data->TexturedShader->SetMat4("u_ViewProjection", camera.GetViewProjection());
-			s_Data->TexturedShader->SetMat4("u_Transform", glm::mat4(1.0));
+			s_Data->m_TexturedShader->Bind();
+			s_Data->m_TexturedShader->SetMat4("u_ViewProjection", camera.GetViewProjection());
+			s_Data->m_TexturedShader->SetMat4("u_Transform", glm::mat4(1.0));
 		}
 
 		void Renderer3D::EndScene()
@@ -118,13 +119,18 @@ namespace Humzer {
 
 		}
 
+		Ref<ShaderLibrary> Renderer3D::GetShaderLibrary()
+		{
+			return s_Data->m_ShaderLibrary;
+		}
+
 		void Renderer3D::DrawPlane(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 		{
-			s_Data->FlatColorShader->Bind();
-			s_Data->FlatColorShader->SetFloat4("u_Color", color);
+			s_Data->m_FlatColorShader->Bind();
+			s_Data->m_FlatColorShader->SetFloat4("u_Color", color);
 			
 			glm::mat4 transform = glm::translate(glm::mat4(1.0), position) * glm::scale(glm::mat4(1.0), {size.x, size.y, 1.0f});
-			s_Data->FlatColorShader->SetMat4("u_Transform", transform);
+			s_Data->m_FlatColorShader->SetMat4("u_Transform", transform);
 
 			s_Data->PlaneVAO->Bind();
 			RenderCommand::DrawIndexed(s_Data->PlaneVAO);
@@ -132,10 +138,10 @@ namespace Humzer {
 
 		void Renderer3D::DrawPlane(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture)
 		{
-			s_Data->TexturedShader->Bind();
+			s_Data->m_TexturedShader->Bind();
 			
 			glm::mat4 transform = glm::translate(glm::mat4(1.0), position) * glm::scale(glm::mat4(1.0), { size.x, size.y, 1.0f });
-			s_Data->TexturedShader->SetMat4("u_Transform", transform);
+			s_Data->m_TexturedShader->SetMat4("u_Transform", transform);
 
 			texture->Bind();
 
@@ -145,11 +151,11 @@ namespace Humzer {
 
 		void Renderer3D::DrawCube(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color)
 		{
-			s_Data->FlatColorShader->Bind();
-			s_Data->FlatColorShader->SetFloat4("u_Color", color);
+			s_Data->m_FlatColorShader->Bind();
+			s_Data->m_FlatColorShader->SetFloat4("u_Color", color);
 
 			glm::mat4 transform = glm::translate(glm::mat4(1.0), position) * glm::scale(glm::mat4(1.0), size);
-			s_Data->FlatColorShader->SetMat4("u_Transform", transform);
+			s_Data->m_FlatColorShader->SetMat4("u_Transform", transform);
 
 			s_Data->CubeVAO->Bind();
 			RenderCommand::DrawIndexed(s_Data->CubeVAO);
@@ -157,10 +163,10 @@ namespace Humzer {
 
 		void Renderer3D::DrawCube(const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& texture)
 		{
-			s_Data->TexturedShader->Bind();
+			s_Data->m_TexturedShader->Bind();
 
 			glm::mat4 transform = glm::translate(glm::mat4(1.0), position) * glm::scale(glm::mat4(1.0), size);
-			s_Data->TexturedShader->SetMat4("u_Transform", transform);
+			s_Data->m_TexturedShader->SetMat4("u_Transform", transform);
 
 			texture->Bind();
 

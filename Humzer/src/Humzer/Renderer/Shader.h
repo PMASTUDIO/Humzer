@@ -25,6 +25,9 @@ namespace Humzer {
 
 	class ShaderLibrary {
 	public:
+		ShaderLibrary();
+		~ShaderLibrary();
+
 		void Add(const Ref<Shader>& shader);
 		Ref<Shader> Load(const std::string& name, const std::string& vertexPath, const std::string& fragmentPath);
 

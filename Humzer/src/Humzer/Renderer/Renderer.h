@@ -39,6 +39,8 @@ namespace Humzer {
 		static void BeginScene(PerspectiveCamera& camera);
 		static void EndScene();
 
+		static Ref<ShaderLibrary> GetShaderLibrary();
+
 		// IMMEDIATE RENDERER
 		static void DrawPlane(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
 		static void DrawPlane(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture);
