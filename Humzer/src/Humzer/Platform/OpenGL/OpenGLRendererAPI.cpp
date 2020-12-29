@@ -15,6 +15,11 @@ namespace Humzer {
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	}
 
+	void OpenGLRendererAPI::DrawArrays(const int num_of_vertices)
+	{
+		glDrawArrays(GL_TRIANGLES, 0, num_of_vertices);
+	}
+
 	void OpenGLRendererAPI::DrawIndexed(const Ref<VertexArray>& vertexArray)
 	{
 		glDrawElements(GL_TRIANGLES, vertexArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
@@ -23,6 +28,21 @@ namespace Humzer {
 	void OpenGLRendererAPI::EnableDepthTesting()
 	{
 		glEnable(GL_DEPTH_TEST);
+	}
+
+	void OpenGLRendererAPI::DisableDepthTesting()
+	{
+		glDisable(GL_DEPTH_TEST);
+	}
+
+	void OpenGLRendererAPI::EnableDepthMask()
+	{
+		glDepthMask(GL_TRUE);
+	}
+
+	void OpenGLRendererAPI::DisableDepthMask()
+	{
+		glDepthMask(GL_FALSE);
 	}
 
 	void OpenGLRendererAPI::SetViewport(uint32_t x, uint32_t y, uint32_t width, uint32_t height)

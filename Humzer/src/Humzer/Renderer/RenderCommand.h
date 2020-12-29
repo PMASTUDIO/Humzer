@@ -16,6 +16,21 @@ namespace Humzer {
 			s_RendererAPI->EnableDepthTesting();
 		}
 
+		inline static void DisableDepthTesting()
+		{
+			s_RendererAPI->DisableDepthTesting();
+		}
+
+		inline static void EnableDepthMask()
+		{
+			s_RendererAPI->EnableDepthMask();
+		}
+
+		inline static void DisableDepthMask()
+		{
+			s_RendererAPI->DisableDepthMask();
+		}
+
 		inline static void SetClearColor(const glm::vec4& color)
 		{
 			s_RendererAPI->SetClearColor(color);
@@ -29,6 +44,11 @@ namespace Humzer {
 		inline static void DrawIndexed(const std::shared_ptr<VertexArray>& vertexArray)
 		{
 			s_RendererAPI->DrawIndexed(vertexArray);
+		}
+
+		inline static void DrawArrays(const int num_of_vertices)
+		{
+			s_RendererAPI->DrawArrays(num_of_vertices);
 		}
 	private:
 		static RendererAPI* s_RendererAPI;

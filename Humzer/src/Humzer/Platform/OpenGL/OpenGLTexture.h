@@ -23,4 +23,21 @@ namespace Humzer {
 		bool m_Loaded = false;
 	};
 
+	class OpenGLTextureCube : public TextureCube {
+	public:
+		OpenGLTextureCube(const std::vector<std::string> faces);
+		virtual ~OpenGLTextureCube();
+
+		uint32_t GetWidth() const override { return m_Width; }
+		uint32_t GetHeight() const override { return m_Height; }
+
+		void Bind(uint32_t slot = 0) const override;
+	private:
+		//std::string m_Path;
+		uint32_t m_Width, m_Height;
+		unsigned int m_ID;
+
+		//unsigned char* m_ImageData;
+	};
+
 }

@@ -40,10 +40,12 @@ namespace Humzer {
 		struct Renderer3DStorage {
 			Ref<VertexArray> PlaneVAO;
 			Ref<VertexArray> CubeVAO;
+			Ref<VertexArray> SkyboxVAO;
 
 			Ref<ShaderLibrary> m_ShaderLibrary;
 			Ref<Shader> m_FlatColorShader;
 			Ref<Shader> m_TexturedShader;
+			Ref<Shader> m_SkyboxShader;
 		};
 
 		static Renderer3DStorage* s_Data;
@@ -59,6 +61,10 @@ namespace Humzer {
 				{ ShaderDataType::Float3, "a_Normals"},
 				{ ShaderDataType::Float4, "a_Color"},
 				{ ShaderDataType::Float2, "a_TexCoord"},
+			};
+
+			BufferLayout skybox_layout = {
+				{ ShaderDataType::Float3, "a_Position"},
 			};
 
 			std::vector<float> vertices = {};
@@ -86,12 +92,22 @@ namespace Humzer {
 			Ref<IndexBuffer> CubeEBO = IndexBuffer::Create(&indices[0], indices.size() * sizeof(uint32_t));
 			s_Data->CubeVAO->SetIndexBuffer(CubeEBO);
 
+			// --- SKYBOX SET UP ---
+			s_Data->SkyboxVAO = VertexArray::Create();
+
+			Primitive::getSkyboxData(vertices);
+			Ref<VertexBuffer> SkyboxVBO = VertexBuffer::Create(&vertices[0], vertices.size() * sizeof(float));
+			SkyboxVBO->SetLayout(skybox_layout);
+			s_Data->SkyboxVAO->AddVertexBuffer(SkyboxVBO);
+
 			// --- SHADERS SET UP ---
 			s_Data->m_FlatColorShader = GetShaderLibrary()->Load("flat_color", "Resources/shaders/flat_colored.vs", "Resources/shaders/flat_colored.fs");
 			s_Data->m_TexturedShader = GetShaderLibrary()->Load("textured", "Resources/shaders/textured_shader.vs", "Resources/shaders/textured_shader.fs");
+			s_Data->m_SkyboxShader = GetShaderLibrary()->Load("skybox", "Resources/shaders/skybox.vs", "Resources/shaders/skybox.fs");
 			GetShaderLibrary()->Load("mesh_base", "Resources/shaders/mesh_base_shader.vs", "Resources/shaders/mesh_base_shader.fs");
 			
 			s_Data->m_TexturedShader->SetInt("u_Texture", 0); // BIND TEXTURE SLOT
+			s_Data->m_SkyboxShader->SetInt("u_Skybox", 0); // BIND TEXTURE SLOT
 		}
 
 		void Renderer3D::Shutdown()
@@ -120,6 +136,10 @@ namespace Humzer {
 			s_Data->m_TexturedShader->SetMat4("u_ViewProjection", camera.GetViewProjection());
 			s_Data->m_TexturedShader->SetMat4("u_Transform", glm::mat4(1.0));
 
+			// SKYBOX SHADER
+			s_Data->m_SkyboxShader->Bind();
+			glm::mat4 view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
+			s_Data->m_SkyboxShader->SetMat4("u_ViewProjection", camera.GetProjection() * view);
 			
 		}
 
@@ -181,6 +201,18 @@ namespace Humzer {
 
 			s_Data->CubeVAO->Bind();
 			RenderCommand::DrawIndexed(s_Data->CubeVAO);
+		}
+
+		void Renderer3D::DrawSkybox(const Ref<TextureCube>& texture)
+		{
+			RenderCommand::DisableDepthMask();
+			s_Data->m_SkyboxShader->Bind();
+
+			s_Data->SkyboxVAO->Bind();
+			texture->Bind();
+			RenderCommand::DrawArrays(36);
+
+			RenderCommand::EnableDepthMask();
 		}
 
 		void Renderer3D::DrawMesh(Ref<Mesh> mesh, const glm::vec3& position, const glm::vec3& scale)

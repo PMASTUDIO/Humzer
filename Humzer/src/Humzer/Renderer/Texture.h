@@ -23,4 +23,10 @@ namespace Humzer {
 		virtual bool Loaded() const = 0;
 	};
 
+	class HUMZER_API TextureCube : public Texture
+	{
+	public:
+		static Ref<TextureCube> Create(const std::vector<std::string> faces);
+	};
+
 }

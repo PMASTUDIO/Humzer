@@ -20,4 +20,18 @@ namespace Humzer {
 		}
 	}
 
+	Ref<TextureCube> TextureCube::Create(const std::vector<std::string> faces)
+	{
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::OpenGL:
+			return CreateRef<OpenGLTextureCube>(faces);
+			break;
+		default:
+		case RendererAPI::API::None:
+			HUM_CORE_FATAL("No Renderer API Selected!");
+			return nullptr;
+		}
+	}
+
 }

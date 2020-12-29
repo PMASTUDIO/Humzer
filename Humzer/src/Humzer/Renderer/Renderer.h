@@ -48,6 +48,8 @@ namespace Humzer {
 		static void DrawCube(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color);
 		static void DrawCube(const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& texture);
 
+		static void DrawSkybox(const Ref<TextureCube>& texture);
+
 		static void DrawMesh(Ref<Mesh> mesh, const glm::vec3& position, const glm::vec3& scale);
 
 	private:
