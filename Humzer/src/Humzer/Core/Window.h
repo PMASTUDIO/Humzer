@@ -20,6 +20,8 @@ namespace Humzer {
 
 		virtual void* GetNativeWindow() const = 0;
 
+		virtual void CaptureMouse() const = 0;
+
 		static Window* Create(int width, int height, std::string title);
 	};
 

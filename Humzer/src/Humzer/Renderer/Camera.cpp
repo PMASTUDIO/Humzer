@@ -5,6 +5,7 @@
 #include <glm/gtx/quaternion.hpp>
 #include "glm/ext/matrix_transform.hpp"
 #include "../Core/Input.h"
+#include "../Core/Application.h"
 
 const int MOVE_SPEED = 50;
 
@@ -12,28 +13,36 @@ namespace Humzer {
 
 	PerspectiveCamera::PerspectiveCamera(float fov, float aspectRatio, float nearClip, float farClip, glm::vec3 pos, bool moveControlsEnabled) :
 		m_FOV(fov), m_AspectRatio(aspectRatio), m_NearClip(nearClip), m_FarClip(farClip), m_Position(pos), m_MoveControlsEnabled(moveControlsEnabled)
+		,m_Yaw(YAW), m_Pitch(PITCH), m_MouseSensitivity(SENSITIVITY),
+		m_MouseLastPos(0.0f, 0.0f), m_FirstFrame(true)
 	{
 		glm::vec3 m_CameraFront = glm::vec3(0.0f, 0.0f, 0.0f);
 		glm::vec3 m_CameraUp = glm::vec3(0.0f, 1.0f, 0.0f);
+		glm::vec3 m_WorldUp = { 0.0f, 1.0f, 0.0f };
+		glm::vec3 m_CameraRight = { 1.0f, 0.0f, 0.0f };
+
+		Application::Get().GetWindow().CaptureMouse();
 
 		UpdateMatrices();
+		UpdateCameraVectors();
 	}
 
 	void PerspectiveCamera::OnUpdate(Timestep ts)
 	{
 		if (m_MoveControlsEnabled) {
+			float speed = MOVE_SPEED * ts;
 			if (Input::IsKeyPressed(Key::W)) {
-				m_Position.z -= MOVE_SPEED * ts;
+				m_Position += m_CameraFront * speed;
 			}
 			else if (Input::IsKeyPressed(Key::S)) {
-				m_Position.z += MOVE_SPEED * ts;
+				m_Position -= m_CameraFront * speed;
 			}
 
 			if (Input::IsKeyPressed(Key::A)) {
-				m_Position.x -= MOVE_SPEED * ts;
+				m_Position -= m_CameraRight * speed;
 			}
 			else if (Input::IsKeyPressed(Key::D)) {
-				m_Position.x += MOVE_SPEED * ts;
+				m_Position += m_CameraRight * speed;
 			}
 
 			if (Input::IsKeyPressed(Key::LeftShift)) {
@@ -42,6 +51,20 @@ namespace Humzer {
 			else if (Input::IsKeyPressed(Key::LeftControl)) {
 				m_Position.y += MOVE_SPEED * ts;
 			}
+			
+
+			if (m_FirstFrame) {
+				m_MouseLastPos.x = Input::GetMouseX();
+				m_MouseLastPos.y = Input::GetMouseY();
+				m_FirstFrame = false;
+			}
+
+			glm::vec2 mouseOffset = { Input::GetMouseX() - m_MouseLastPos.x, m_MouseLastPos.y - Input::GetMouseY() };
+
+			m_MouseLastPos.x = Input::GetMouseX();
+			m_MouseLastPos.y = Input::GetMouseY();
+
+			ProcessMouseMovent(mouseOffset);
 
 			UpdateMatrices();
 		}
@@ -59,6 +82,38 @@ namespace Humzer {
 	{
 		m_ViewMatrix = glm::lookAt(m_Position, m_Position + m_CameraFront, m_CameraUp);
 		m_ProjectionMatrix = glm::perspective(glm::radians(m_FOV), m_ViewportWidth / m_ViewportHeight, m_NearClip, m_FarClip);
+	}
+
+
+	void PerspectiveCamera::UpdateCameraVectors()
+	{
+		glm::vec3 front;
+		front.x = cos(glm::radians(m_Yaw)) * cos(glm::radians(m_Pitch));
+		front.y = sin(glm::radians(m_Pitch));
+		front.z = sin(glm::radians(m_Yaw)) * cos(glm::radians(m_Pitch));
+
+		m_CameraFront = glm::normalize(front);
+		m_CameraRight = glm::normalize(glm::cross(m_CameraFront, m_WorldUp));
+		m_CameraUp = glm::normalize(glm::cross(m_CameraRight, m_CameraFront));
+	}
+
+	void PerspectiveCamera::ProcessMouseMovent(glm::vec2 offset, bool constrainPitch)
+	{
+		offset *= m_MouseSensitivity;
+
+		m_Yaw += offset.x;
+		m_Pitch += offset.y;
+
+		// make sure that when pitch is out of bounds, screen doesn't get flipped
+		if (constrainPitch) {
+			if (m_Pitch > 89.0f)
+				m_Pitch = 89.0f;
+			if (m_Pitch < -89.0f)
+				m_Pitch = -89.0f;
+		}
+
+		UpdateCameraVectors();
+		
 	}
 
 }

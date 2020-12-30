@@ -26,6 +26,9 @@ namespace Humzer {
 
 		void* GetNativeWindow() const override;
 
+
+		void CaptureMouse() const override;
+
 	private:
 		bool Init();
 		void Shutdown();

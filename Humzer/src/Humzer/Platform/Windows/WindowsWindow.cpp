@@ -37,6 +37,12 @@ namespace Humzer {
 		return m_Window;
 	}
 
+	void WindowsWindow::CaptureMouse() const
+	{
+		// tell GLFW to capture our mouse
+		glfwSetInputMode(m_Window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+	}
+
 	void Humzer::WindowsWindow::OnUpdate()
 	{
 		glfwPollEvents();
