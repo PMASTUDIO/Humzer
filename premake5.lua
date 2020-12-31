@@ -12,6 +12,7 @@ IncludeDir["glm"] = "Humzer/vendor/GLM"
 IncludeDir["glad"] = "Humzer/vendor/GLAD/include"
 IncludeDir["stb_image"] = "Humzer/vendor/stb_image"
 IncludeDir["assimp"] = "Humzer/vendor/assimp/include"
+IncludeDir["entt"] = "Humzer/vendor/entt/include"
 
 IncludeDir["lib_ovr"] = "Humzer/vendor/LibOVR/Include"
 
@@ -44,7 +45,8 @@ project "Humzer"
         "%{IncludeDir.glad}",
         "%{IncludeDir.stb_image}",
         "%{IncludeDir.lib_ovr}",
-        "%{IncludeDir.assimp}"
+        "%{IncludeDir.assimp}",
+        "%{IncludeDir.entt}"
     }
 
     libdirs {
@@ -100,7 +102,8 @@ project "Tester"
         "Humzer/vendor/spdlog/include",
         "Humzer/src",
         "%{IncludeDir.glm}",
-        "%{IncludeDir.assimp}"
+        "%{IncludeDir.assimp}",
+        "%{IncludeDir.entt}"
     }
 
     links {

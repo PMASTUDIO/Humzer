@@ -22,6 +22,9 @@
     <Filter Include="src\Humzer\Renderer">
       <UniqueIdentifier>{7D8143B4-E9E2-20C2-7250-6774DEB05781}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Humzer\Scene">
+      <UniqueIdentifier>{54A28250-409B-A1A2-69CD-8627552581AE}</UniqueIdentifier>
+    </Filter>
     <Filter Include="vendor">
       <UniqueIdentifier>{B3738122-9F15-ACF8-88D0-BF4C74113349}</UniqueIdentifier>
     </Filter>
@@ -114,9 +117,14 @@
     <ClInclude Include="src\Humzer\Renderer\VertexArray.h">
       <Filter>src\Humzer\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Humzer\Scene\Scene.h">
+      <Filter>src\Humzer\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\humpch.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Humzer\Scene\Components.h" />
+    <ClInclude Include="src\Humzer\Scene\Entity.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Humzer\Core\Application.cpp">
@@ -185,5 +193,7 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Humzer\Scene\Scene.cpp" />
+    <ClCompile Include="src\Humzer\Scene\Entity.cpp" />
   </ItemGroup>
 </Project>

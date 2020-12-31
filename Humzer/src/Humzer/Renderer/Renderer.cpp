@@ -153,6 +153,17 @@ namespace Humzer {
 			return s_Data->m_ShaderLibrary;
 		}
 
+		void Renderer3D::DrawPlane(const glm::mat4 transform, const glm::vec4& color)
+		{
+			s_Data->m_FlatColorShader->Bind();
+			s_Data->m_FlatColorShader->SetFloat4("u_Color", color);
+
+			s_Data->m_FlatColorShader->SetMat4("u_Transform", transform);
+
+			s_Data->PlaneVAO->Bind();
+			RenderCommand::DrawIndexed(s_Data->PlaneVAO);
+		}
+
 		void Renderer3D::DrawPlane(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 		{
 			s_Data->m_FlatColorShader->Bind();
@@ -176,6 +187,17 @@ namespace Humzer {
 
 			s_Data->PlaneVAO->Bind();
 			RenderCommand::DrawIndexed(s_Data->PlaneVAO);
+		}
+
+		void Renderer3D::DrawCube(const glm::mat4 transform, const glm::vec4& color)
+		{
+			s_Data->m_FlatColorShader->Bind();
+			s_Data->m_FlatColorShader->SetFloat4("u_Color", color);
+
+			s_Data->m_FlatColorShader->SetMat4("u_Transform", transform);
+
+			s_Data->CubeVAO->Bind();
+			RenderCommand::DrawIndexed(s_Data->CubeVAO);
 		}
 
 		void Renderer3D::DrawCube(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color)

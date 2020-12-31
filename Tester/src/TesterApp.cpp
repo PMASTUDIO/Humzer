@@ -21,6 +21,14 @@ public:
     }
 
     void ClientOnStart() {
+        mainScene = CreateRef<Scene>();
+        
+        auto cube = mainScene->CreateEntity("square");
+        glm::mat4 cubeTransform = glm::translate(glm::mat4(1.0), { 5.0, 0.0, 0.0 });
+		
+        cube.GetComponent<TransformComponent>().Transform = cubeTransform;
+        cube.AddComponent<PrimitiveRendererComponent>(PrimitiveShape::CUBE, glm::vec4{ 0.0, 1.0, 0.0, 1.0 });
+
         testMesh = CreateRef<Mesh>("Resources/meshes/CerberusMaterials.fbx");
     }
 
@@ -30,9 +38,10 @@ public:
 
         Renderer3D::BeginScene(basicCam);
         Renderer3D::DrawSkybox(skyboxTexture);
-		//Renderer3D::DrawPlane({ 0.0, 0.0, 0.0 }, { 1.0, 1.0 }, CheckerboardTexture);
-		Renderer3D::DrawCube({ 5.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 }, { 0.0, 1.0, 0.0, 1.0 });
-        Renderer3D::DrawMesh(testMesh, { 2.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 });
+		// Renderer3D::DrawPlane({ 0.0, 0.0, 0.0 }, { 1.0, 1.0 }, CheckerboardTexture);
+		
+        mainScene->OnUpdate(dt);
+        // Renderer3D::DrawMesh(testMesh, { 2.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 });
         Renderer3D::EndScene();
 
         // testMesh->Render(dt, *basicCam);
@@ -41,6 +50,7 @@ private:
     PerspectiveCamera basicCam;
     Ref<Mesh> testMesh;
     Ref<TextureCube> skyboxTexture;
+    Ref<Scene> mainScene;
 };
 
 Humzer::Application* Humzer::CreateApplication() {
