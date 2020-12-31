@@ -25,12 +25,17 @@ public:
         mainScene = CreateRef<Scene>();
 
         auto cube = mainScene->CreateEntity("square");
-        glm::mat4 cubeTransform = glm::translate(glm::mat4(1.0), { 5.0, 0.0, 0.0 });
-		
+        glm::mat4 cubeTransform = glm::translate(glm::mat4(1.0), { 5.0, 0.0, 0.0 });		
         cube.GetComponent<TransformComponent>().Transform = cubeTransform;
         cube.AddComponent<PrimitiveRendererComponent>(PrimitiveShape::CUBE, glm::vec4{ 0.0, 1.0, 0.0, 1.0 });
 
+
         testMesh = CreateRef<Mesh>("Resources/meshes/CerberusMaterials.fbx");
+
+		auto gun = mainScene->CreateEntity("gun");
+		glm::mat4 gunTransform = glm::translate(glm::mat4(1.0), { 2.0, 0.0, 0.0 });
+		gun.AddComponent<MeshRendererComponent>().Mesh = testMesh;
+		gun.GetComponent<TransformComponent>().Transform = gunTransform;
     }
 
     void ClientUpdate(Humzer::Timestep dt) {
@@ -39,13 +44,10 @@ public:
 
         Renderer3D::BeginScene(basicCam);
         Renderer3D::DrawSkybox(skyboxTexture);
-		// Renderer3D::DrawPlane({ 0.0, 0.0, 0.0 }, { 1.0, 1.0 }, CheckerboardTexture);
 		
         mainScene->OnUpdate(dt);
-        // Renderer3D::DrawMesh(testMesh, { 2.0, 0.0, 0.0 }, { 1.0, 1.0, 1.0 });
-        Renderer3D::EndScene();
 
-        // testMesh->Render(dt, *basicCam);
+        Renderer3D::EndScene();
     }
 private:
     PerspectiveCamera basicCam;

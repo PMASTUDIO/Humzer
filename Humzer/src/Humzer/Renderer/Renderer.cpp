@@ -237,6 +237,27 @@ namespace Humzer {
 			RenderCommand::EnableDepthMask();
 		}
 
+		void Renderer3D::DrawMesh(const glm::mat4& transform, Ref<Mesh> mesh)
+		{
+			// SHADER SET UP
+			mesh->m_MeshShader->Bind();
+			mesh->m_MeshShader->SetMat4("u_ViewProjection", s_SceneCamera->GetViewProjection());
+			mesh->m_MeshShader->SetMat4("u_Transform", transform);
+			mesh->m_MeshShader->SetFloat3("u_ViewPos", s_SceneCamera->GetPosition());
+
+			// BEFORE MATERIAL SYSTEM
+			mesh->m_MeshShader->SetFloat3("u_Material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
+			mesh->m_MeshShader->SetInt("u_Material.shininess", 32.0f);
+
+			for (size_t i = 0; i < mesh->m_Textures.size(); i++) {
+				mesh->m_Textures[i]->Bind();
+			}
+
+			// DRAWING
+			mesh->m_VertexArray->Bind();
+			RenderCommand::DrawIndexed(mesh->m_VertexArray);
+		}
+
 		void Renderer3D::DrawMesh(Ref<Mesh> mesh, const glm::vec3& position, const glm::vec3& scale)
 		{
 			glm::mat4 transform = glm::translate(glm::mat4(1.0), position) * glm::scale(glm::mat4(1.0), scale);

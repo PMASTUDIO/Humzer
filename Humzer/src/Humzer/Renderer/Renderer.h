@@ -52,6 +52,7 @@ namespace Humzer {
 
 		static void DrawSkybox(const Ref<TextureCube>& texture);
 
+		static void DrawMesh(const glm::mat4& transform, Ref<Mesh> mesh);
 		static void DrawMesh(Ref<Mesh> mesh, const glm::vec3& position, const glm::vec3& scale);
 
 	private:

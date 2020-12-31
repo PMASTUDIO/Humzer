@@ -3,6 +3,7 @@
 #include <string>
 
 #include "Humzer/Renderer/Camera.h"
+#include "../Renderer/Mesh.h"
 
 namespace Humzer {
 
@@ -42,6 +43,13 @@ namespace Humzer {
 		PrimitiveRendererComponent() = default;
 		PrimitiveRendererComponent(const PrimitiveRendererComponent&) = default;
 		PrimitiveRendererComponent(const PrimitiveShape& shape, const glm::vec4& color) : Shape(shape), Color(color) {}
+
+	};
+
+	struct MeshRendererComponent {
+		Ref<Humzer::Mesh> Mesh;
+
+		operator Ref<Humzer::Mesh>() { return Mesh; }
 
 	};
 
