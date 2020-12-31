@@ -29,6 +29,7 @@ namespace Humzer {
 
 	void Scene::OnUpdate(Timestep dt)
 	{
+
 		auto group = m_Registry.group<TransformComponent>(entt::get<PrimitiveRendererComponent>);
 		for (auto entity : group) {
 			auto& [transform, primitive] = group.get<TransformComponent, PrimitiveRendererComponent>(entity);

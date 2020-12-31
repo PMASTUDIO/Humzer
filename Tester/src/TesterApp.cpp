@@ -1,4 +1,5 @@
 #include <Humzer/Humzer.h>
+#include "glm/ext/matrix_transform.hpp"
 
 using namespace Humzer;
 
@@ -22,7 +23,7 @@ public:
 
     void ClientOnStart() {
         mainScene = CreateRef<Scene>();
-        
+
         auto cube = mainScene->CreateEntity("square");
         glm::mat4 cubeTransform = glm::translate(glm::mat4(1.0), { 5.0, 0.0, 0.0 });
 		

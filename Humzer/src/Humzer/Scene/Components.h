@@ -2,6 +2,8 @@
 #include "glm/gtc/quaternion.hpp"
 #include <string>
 
+#include "Humzer/Renderer/Camera.h"
+
 namespace Humzer {
 
 	struct TagComponent {

@@ -12,6 +12,15 @@ namespace Humzer {
 	const float SENSITIVITY = 0.1f;
 	const float ZOOM = 45.0f;
 
+	class Camera {
+	public:
+		Camera(const glm::mat4& projection) : m_ProjectionMatrix(projection) {}
+
+		const glm::mat4& GetProjection() const { return m_ProjectionMatrix; }
+	private:
+		glm::mat4 m_ProjectionMatrix;
+	};
+
 	class PerspectiveCamera
 	{
 	public:
