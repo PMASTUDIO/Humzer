@@ -37,10 +37,10 @@ namespace Humzer {
 				switch (primitive.Shape)
 				{
 				case PrimitiveShape::CUBE:
-					Renderer3D::DrawCube(transform, primitive.Color);
+					Renderer3D::DrawCube(transform.GetTransform(), primitive.Color);
 					break;
 				case PrimitiveShape::QUAD:
-					Renderer3D::DrawPlane(transform, primitive.Color);
+					Renderer3D::DrawPlane(transform.GetTransform(), primitive.Color);
 					break;
 				default:
 					break;
@@ -55,7 +55,7 @@ namespace Humzer {
 				auto& [transform, mesh] = group.get<TransformComponent, MeshRendererComponent>(entity);
 
 				if (mesh.Mesh) {
-					Renderer3D::DrawMesh(transform, mesh.Mesh);
+					Renderer3D::DrawMesh(transform.GetTransform(), mesh.Mesh);
 				}
 
 			}

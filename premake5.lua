@@ -13,10 +13,9 @@ IncludeDir["glad"] = "Humzer/vendor/GLAD/include"
 IncludeDir["stb_image"] = "Humzer/vendor/stb_image"
 IncludeDir["assimp"] = "Humzer/vendor/assimp/include"
 IncludeDir["entt"] = "Humzer/vendor/entt/include"
+IncludeDir["yaml_cpp"] = "Humzer/vendor/yaml-cpp/include"
 
 IncludeDir["lib_ovr"] = "Humzer/vendor/LibOVR/Include"
-
-include "Humzer/vendor/GLAD"
 
 project "Humzer"
     location "Humzer"
@@ -46,7 +45,8 @@ project "Humzer"
         "%{IncludeDir.stb_image}",
         "%{IncludeDir.lib_ovr}",
         "%{IncludeDir.assimp}",
-        "%{IncludeDir.entt}"
+        "%{IncludeDir.entt}",
+        "%{IncludeDir.yaml_cpp}"
     }
 
     libdirs {
@@ -58,6 +58,7 @@ project "Humzer"
         "GLFW.lib",
         "GLAD",
         "opengl32.lib",
+        "yaml-cpp",
         "LibOVR.lib",
     }
 
@@ -160,4 +161,8 @@ project "Tester"
         {
             '{COPY} "../Humzer/vendor/assimp/bin/Release/assimp-vc141-mtd.dll" "%{cfg.targetdir}"'
         }
-    
+
+
+group "Dependencies"
+    include "Humzer/vendor/GLAD"
+    include "Humzer/vendor/yaml-cpp"

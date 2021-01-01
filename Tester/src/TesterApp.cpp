@@ -1,6 +1,9 @@
 #include <Humzer/Humzer.h>
 #include "glm/ext/matrix_transform.hpp"
 
+// TEMP
+#include "Humzer/Scene/SceneSerializer.h"
+
 using namespace Humzer;
 
 class Tester : public Humzer::Application {
@@ -24,18 +27,20 @@ public:
     void ClientOnStart() {
         mainScene = CreateRef<Scene>();
 
-        auto cube = mainScene->CreateEntity("square");
-        glm::mat4 cubeTransform = glm::translate(glm::mat4(1.0), { 5.0, 0.0, 0.0 });		
-        cube.GetComponent<TransformComponent>().Transform = cubeTransform;
+       /* auto cube = mainScene->CreateEntity("square");
+        cube.GetComponent<TransformComponent>().Translation = glm::vec3{ 5.0, 0.0, 0.0 };
         cube.AddComponent<PrimitiveRendererComponent>(PrimitiveShape::CUBE, glm::vec4{ 0.0, 1.0, 0.0, 1.0 });
-
 
         testMesh = CreateRef<Mesh>("Resources/meshes/CerberusMaterials.fbx");
 
 		auto gun = mainScene->CreateEntity("gun");
-		glm::mat4 gunTransform = glm::translate(glm::mat4(1.0), { 2.0, 0.0, 0.0 });
 		gun.AddComponent<MeshRendererComponent>().Mesh = testMesh;
-		gun.GetComponent<TransformComponent>().Transform = gunTransform;
+		gun.GetComponent<TransformComponent>().Translation = { 2.0, 0.0, 0.0 };*/
+
+        // TEMP TEST
+		SceneSerializer serializer(mainScene);
+        //serializer.Serialize("Resources/scenes/first.humscene");
+        serializer.Deserialize("Resources/scenes/first.humscene");
     }
 
     void ClientUpdate(Humzer::Timestep dt) {

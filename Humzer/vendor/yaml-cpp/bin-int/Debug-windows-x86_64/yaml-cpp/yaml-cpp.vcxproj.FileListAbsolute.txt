@@ -1,0 +1,2 @@
+D:\Game Engine Dev with C++\Humzer\Humzer\vendor\yaml-cpp\bin\Debug-windows-x86_64\yaml-cpp\yaml-cpp.pdb
+D:\Game Engine Dev with C++\Humzer\Humzer\vendor\yaml-cpp\bin-int\Debug-windows-x86_64\yaml-cpp\yaml-cpp.pdb

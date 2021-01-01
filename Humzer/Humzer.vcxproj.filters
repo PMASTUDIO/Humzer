@@ -117,14 +117,21 @@
     <ClInclude Include="src\Humzer\Renderer\VertexArray.h">
       <Filter>src\Humzer\Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Humzer\Scene\Components.h">
+      <Filter>src\Humzer\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Scene\Entity.h">
+      <Filter>src\Humzer\Scene</Filter>
+    </ClInclude>
     <ClInclude Include="src\Humzer\Scene\Scene.h">
+      <Filter>src\Humzer\Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Scene\SceneSerializer.h">
       <Filter>src\Humzer\Scene</Filter>
     </ClInclude>
     <ClInclude Include="src\humpch.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Humzer\Scene\Components.h" />
-    <ClInclude Include="src\Humzer\Scene\Entity.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Humzer\Core\Application.cpp">
@@ -187,13 +194,20 @@
     <ClCompile Include="src\Humzer\Renderer\VertexArray.cpp">
       <Filter>src\Humzer\Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="src\Humzer\Scene\Entity.cpp">
+      <Filter>src\Humzer\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\Scene\Scene.cpp">
+      <Filter>src\Humzer\Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\Scene\SceneSerializer.cpp">
+      <Filter>src\Humzer\Scene</Filter>
+    </ClCompile>
     <ClCompile Include="src\humpch.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Humzer\Scene\Scene.cpp" />
-    <ClCompile Include="src\Humzer\Scene\Entity.cpp" />
   </ItemGroup>
 </Project>

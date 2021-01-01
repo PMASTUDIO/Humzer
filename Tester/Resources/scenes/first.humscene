@@ -1,0 +1,22 @@
+# This is a Humzer scene file stored under Resources/scenes/first.humscene
+Scene: Untitled
+Entities:
+  - Entity: 000000000000
+    TagComponent:
+      Tag: gun
+    TransformComponent:
+      Translation: [2, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    MeshRendererComponent:
+      AssetPath: Resources/meshes/CerberusMaterials.fbx
+  - Entity: 000000000000
+    TagComponent:
+      Tag: square
+    TransformComponent:
+      Translation: [5, 0, 0]
+      Rotation: [0, 0, 0]
+      Scale: [1, 1, 1]
+    PrimitiveRendererComponent:
+      Shape: 0
+      Color: [0, 1, 0, 1]
