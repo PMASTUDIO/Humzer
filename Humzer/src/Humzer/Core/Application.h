@@ -21,6 +21,8 @@ namespace Humzer
 
         void Run();
 
+        void Quit();
+
         Window& GetWindow() { return *m_Window; }
 
         static Application& Get() { return *s_Instance; }

@@ -53,4 +53,9 @@ namespace Humzer {
         Renderer3D::Shutdown();
     }
 
+    void Application::Quit()
+    {
+        m_Running = false;
+    }
+
 }

@@ -48,6 +48,10 @@ public:
         mainScene->OnUpdate(dt);
 
         Renderer3D::EndScene();
+
+        if (Input::IsKeyPressed(Key::Escape)) {
+            Quit();
+        }
     }
 private:
     PerspectiveCamera basicCam;
