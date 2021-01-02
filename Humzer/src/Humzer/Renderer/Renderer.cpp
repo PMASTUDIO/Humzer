@@ -106,7 +106,10 @@ namespace Humzer {
 			s_Data->m_SkyboxShader = GetShaderLibrary()->Load("skybox", "Resources/shaders/skybox.vs", "Resources/shaders/skybox.fs");
 			GetShaderLibrary()->Load("mesh_base", "Resources/shaders/mesh_base_shader.vs", "Resources/shaders/mesh_base_shader.fs");
 			
+			s_Data->m_TexturedShader->Bind();
 			s_Data->m_TexturedShader->SetInt("u_Texture", 0); // BIND TEXTURE SLOT
+
+			s_Data->m_SkyboxShader->Bind();
 			s_Data->m_SkyboxShader->SetInt("u_Skybox", 0); // BIND TEXTURE SLOT
 		}
 
