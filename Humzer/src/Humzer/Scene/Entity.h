@@ -13,20 +13,20 @@ namespace Humzer {
 		
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args) {
-			// #ASSERT
 			if (HasComponent<T>()) {
 				HUM_CORE_ERROR("Cannot add component: Entity already has component!");
 			}
+			HUM_ASSERT(!HasComponent<T>(), "Cannot add component: Entity already has component!");
 
 			return m_Scene->m_Registry.emplace<T>(m_EntityHandle, std::forward<Args>(args)...);
 		}
 		
 		template<typename T>
 		T& GetComponent() {
-			// #ASSERT
 			if (!HasComponent<T>()) {
 				HUM_CORE_ERROR("Cannot get component: Entity does not has component!");
 			}
+			HUM_ASSERT(HasComponent<T>(), "Cannot get component: Entity does not has component!");
 
 			return m_Scene->m_Registry.get<T>(m_EntityHandle);
 		}
@@ -38,10 +38,10 @@ namespace Humzer {
 
 		template<typename T>
 		void RemoveComponent() {
-			// #ASSERT
 			if (!HasComponent<T>()) {
 				HUM_CORE_ERROR("Cannot remove component: Entity does not has component!");
 			}
+			HUM_ASSERT(HasComponent<T>(), "Cannot remove component: Entity does not has component!");
 
 			m_Scene->m_Registry.remove<T>(m_EntityHandle);
 		}

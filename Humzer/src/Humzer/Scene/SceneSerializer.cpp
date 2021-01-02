@@ -163,8 +163,8 @@ namespace Humzer {
 
 	void SceneSerializer::SerializeRuntime(const std::string& filepath)
 	{
-		// #ASSERT (not implemented)
-		HUM_CORE_ERROR("Runtime serialization not implemented!");
+		// #TODO
+		HUM_ASSERT(false, "Runtime serialization not implemented!");
 
 	}
 
@@ -231,8 +231,8 @@ namespace Humzer {
 
 	bool SceneSerializer::DeserializeRuntime(const std::string& filepath)
 	{
-		// #ASSERT (not implemented)
-		HUM_CORE_ERROR("Runtime deserialization not implemented!");
+		// #TODO
+		HUM_ASSERT(false, "Runtime deserialization not implemented!");
 
 		return false;
 	}

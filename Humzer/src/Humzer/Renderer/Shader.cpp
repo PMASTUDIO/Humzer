@@ -3,6 +3,7 @@
 
 #include "Renderer.h"
 #include "../Platform/OpenGL/OpenGLShader.h"
+#include "../Core/Core.h"
 
 namespace Humzer {
 
@@ -34,11 +35,11 @@ namespace Humzer {
 	{
 		auto& name = shader->GetName();
 
-		// #ASSERT
 		if (m_Shaders.find(name) != m_Shaders.end()) {
 			HUM_CORE_WARN("Shader with name {0} already exists!", name);
 			return;
 		}
+		HUM_ASSERT(m_Shaders.find(name) == m_Shaders.end());
 
 		m_Shaders[name] = shader;
 	}
@@ -52,11 +53,11 @@ namespace Humzer {
 
 	Humzer::Ref<Humzer::Shader> ShaderLibrary::Get(const std::string& name)
 	{
-		// #ASSERT
 		if (m_Shaders.find(name) == m_Shaders.end()) {
 			HUM_CORE_WARN("Shader with name {0} doesn't exists!", name);
 			return nullptr;
 		}
+		HUM_ASSERT(m_Shaders.find(name) != m_Shaders.end());
 
 		return m_Shaders[name];
 	}

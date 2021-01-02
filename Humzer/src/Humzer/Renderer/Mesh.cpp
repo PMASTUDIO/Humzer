@@ -31,11 +31,11 @@ namespace Humzer {
 		if (!scene || !scene->HasMeshes())
 			HUM_CORE_ERROR("Failed to load mesh file: {0}", filename);
 
-		// #ASSERT
 		/*if (!Renderer3D::GetShaderLibrary()) {
 			HUM_CORE_ERROR("{0} : Mesh can't be initialized before Renderer3D init", filename);
 			return;
 		}*/
+		HUM_ASSERT(Renderer3D::GetShaderLibrary());
 
 		m_MeshShader = Renderer3D::GetShaderLibrary()->Get("mesh_base");
 		
