@@ -27,14 +27,14 @@ public:
     void ClientOnStart() {
         mainScene = CreateRef<Scene>();
 
-       /* auto cube = mainScene->CreateEntity("square");
+      /* auto cube = mainScene->CreateEntity("square");
         cube.GetComponent<TransformComponent>().Translation = glm::vec3{ 5.0, 0.0, 0.0 };
         cube.AddComponent<PrimitiveRendererComponent>(PrimitiveShape::CUBE, glm::vec4{ 0.0, 1.0, 0.0, 1.0 });
 
-        testMesh = CreateRef<Mesh>("Resources/meshes/CerberusMaterials.fbx");
+        auto testMesh = MeshLibrary::Load("Cerberus", "Resources/meshes/CerberusMaterials.fbx");
 
 		auto gun = mainScene->CreateEntity("gun");
-		gun.AddComponent<MeshRendererComponent>().Mesh = testMesh;
+        gun.AddComponent<MeshRendererComponent>().Mesh = testMesh;
 		gun.GetComponent<TransformComponent>().Translation = { 2.0, 0.0, 0.0 };*/
 
         // TEMP TEST
@@ -60,7 +60,6 @@ public:
     }
 private:
     PerspectiveCamera basicCam;
-    Ref<Mesh> testMesh;
     Ref<TextureCube> skyboxTexture;
     Ref<Scene> mainScene;
 };

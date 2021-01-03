@@ -10,6 +10,7 @@ Entities:
       Scale: [1, 1, 1]
     MeshRendererComponent:
       AssetPath: Resources/meshes/CerberusMaterials.fbx
+      AssetName: Cerberus
   - Entity: 000000000000
     TagComponent:
       Tag: square
