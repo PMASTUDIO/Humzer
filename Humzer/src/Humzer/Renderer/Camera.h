@@ -6,6 +6,8 @@
 
 namespace Humzer {
 
+	class Subscriber;
+
 	const float YAW = -90.0f;
 	const float PITCH = 0.0f;
 	const float SPEED = 2.5f;
@@ -29,7 +31,7 @@ namespace Humzer {
 
 		void OnUpdate(Timestep ts);
 
-		void OnResize(float width, float height);
+		void OnResize(void* windowsData);
 
 		const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
 		glm::mat4 GetProjection() const { return m_ProjectionMatrix; }
@@ -63,6 +65,8 @@ namespace Humzer {
 		float m_Pitch = PITCH;
 
 		bool m_MoveControlsEnabled;
+
+		Subscriber* m_EventsSubscriber;
 
 		float m_ViewportWidth = 1280, m_ViewportHeight = 720;
 	};

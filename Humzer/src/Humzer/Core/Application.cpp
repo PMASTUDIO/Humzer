@@ -4,16 +4,12 @@
 
 #include "GLFW\glfw3.h"
 
-// TESTING ONLY
 #include <memory>
-#include <Humzer\Renderer\VertexArray.h>
 
 #include <filesystem>
-#include "..\Renderer\PrimitiveData.h"
-#include "..\Platform\OpenGL\OpenGLShader.h"
 #include "..\Renderer\RenderCommand.h"
 #include "..\Renderer\Renderer.h"
-#include "glm\ext\matrix_transform.hpp"
+#include "..\Events\Dispatcher.h"
 
 
 namespace Humzer {
@@ -25,13 +21,17 @@ namespace Humzer {
         s_Instance = this;
 
         m_Window = std::unique_ptr<Window>(Window::Create(1280, 720, "Humzer Game Engine"));
+
+        Dispatcher::Initialize();
+
 	}
+
     Application::~Application(){}
 
     void Application::Run(){
 
         RenderCommand::EnableDepthTesting();
-
+        
         Renderer3D::Init();
 
         ClientOnStart();
@@ -51,6 +51,11 @@ namespace Humzer {
         }
 
         Renderer3D::Shutdown();
+        
+        std::this_thread::sleep_for(std::chrono::milliseconds(750));
+
+        Dispatcher::Stop();
+        Dispatcher::Terminate();
     }
 
     void Application::Quit()

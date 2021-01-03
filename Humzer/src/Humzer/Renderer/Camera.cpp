@@ -6,6 +6,9 @@
 #include "glm/ext/matrix_transform.hpp"
 #include "../Core/Input.h"
 #include "../Core/Application.h"
+#include "../Events/Subscriber.h"
+#include "../Events/Events.h"
+#include "../Events/Dispatcher.h"
 
 const int MOVE_SPEED = 50;
 
@@ -22,6 +25,11 @@ namespace Humzer {
 		glm::vec3 m_CameraRight = { 1.0f, 0.0f, 0.0f };
 
 		Application::Get().GetWindow().CaptureMouse();
+
+		// LISTEN FOR RESIZE EVENTS
+		m_EventsSubscriber = new Subscriber(this);
+		m_EventsSubscriber->m_Method = std::bind(&PerspectiveCamera::OnResize, this, std::placeholders::_1);
+		Dispatcher::AddSpecificEventSubscriber(m_EventsSubscriber, Events::WINDOWS_RESIZED);
 
 		UpdateMatrices();
 		UpdateCameraVectors();
@@ -70,11 +78,13 @@ namespace Humzer {
 		}
 	}
 
-	void PerspectiveCamera::OnResize(float width, float height)
+	void PerspectiveCamera::OnResize(void* size)
 	{
-		m_AspectRatio = width / height;
-		m_ViewportWidth = width;
-		m_ViewportHeight = height;
+		glm::vec2& vec2Size = *(glm::vec2*)size;
+
+		m_AspectRatio = vec2Size.x / vec2Size.y;
+		m_ViewportWidth = vec2Size.x;
+		m_ViewportHeight = vec2Size.y;
 		UpdateMatrices();
 	}
 

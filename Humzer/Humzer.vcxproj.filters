@@ -132,6 +132,9 @@
     <ClInclude Include="src\humpch.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Humzer\Events\Events.h" />
+    <ClInclude Include="src\Humzer\Events\Subscriber.h" />
+    <ClInclude Include="src\Humzer\Events\Dispatcher.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Humzer\Core\Application.cpp">
@@ -209,5 +212,7 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
+    <ClCompile Include="src\Humzer\Events\Subscriber.cpp" />
+    <ClCompile Include="src\Humzer\Events\Dispatcher.cpp" />
   </ItemGroup>
 </Project>

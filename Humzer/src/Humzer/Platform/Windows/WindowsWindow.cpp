@@ -4,6 +4,8 @@
 
 
 #include "../../Renderer/Renderer.h"
+#include "../../Events/Dispatcher.h"
+#include "../../Events/Events.h"
 
 namespace Humzer {
 
@@ -98,7 +100,10 @@ namespace Humzer {
 			data.Width = width;
 			data.Height = height;
 
+			glm::vec2 size = { width, height };
+
 			Renderer::OnWindowResize(width, height);
+			Dispatcher::DispatchEvent(Events::WINDOWS_RESIZED, &size);
 		});
 
 
