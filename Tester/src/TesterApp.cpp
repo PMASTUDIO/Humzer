@@ -9,14 +9,14 @@ using namespace Humzer;
 class Tester : public Humzer::Application {
 public:
     Tester() : basicCam(45.0f, 1280.0f / 720.0f, 0.1f, 1000.0f, glm::vec3(0.0f, 4.0f, 20.0f), true) {
-        std::vector<std::string> faces{
-            "Resources/textures/sky/right.jpg",
-            "Resources/textures/sky/left.jpg",
-            "Resources/textures/sky/top.jpg",
-            "Resources/textures/sky/bottom.jpg",
-            "Resources/textures/sky/front.jpg",
-            "Resources/textures/sky/back.jpg",
-        };
+		std::vector<std::string> faces{
+			 "Resources/textures/sky/right.jpg",
+			 "Resources/textures/sky/left.jpg",
+			 "Resources/textures/sky/top.jpg",
+			 "Resources/textures/sky/bottom.jpg",
+			 "Resources/textures/sky/front.jpg",
+			 "Resources/textures/sky/back.jpg",
+		 };
         skyboxTexture = TextureCube::Create(faces);
     }
 

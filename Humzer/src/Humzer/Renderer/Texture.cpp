@@ -34,4 +34,18 @@ namespace Humzer {
 		}
 	}
 
+	Humzer::Ref<Humzer::TextureCube> TextureCube::Create(const std::string& filepath)
+	{
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::OpenGL:
+			return CreateRef<OpenGLTextureCube>(filepath);
+			break;
+		default:
+		case RendererAPI::API::None:
+			HUM_CORE_FATAL("No Renderer API Selected!");
+			return nullptr;
+		}
+	}
+
 }

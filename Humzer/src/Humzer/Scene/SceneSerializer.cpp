@@ -132,6 +132,8 @@ namespace Humzer {
 
 			auto& meshRendererComponent = entity.GetComponent<MeshRendererComponent>();
 			out << YAML::Key << "AssetPath" << YAML::Value << meshRendererComponent.Mesh->GetFilePath();
+			const std::string assetName = meshRendererComponent.Mesh->GetName();
+			out << YAML::Key << "AssetName" << YAML::Value << assetName;
 
 			out << YAML::EndMap; // MeshRendererComponent MAP
 		}
@@ -221,7 +223,7 @@ namespace Humzer {
 				{
 					// Entities always have transforms, that's why we get component
 					auto& mrc = deserializedEntity.AddComponent<MeshRendererComponent>();
-					mrc.Mesh = CreateRef<Mesh>(meshRendererComponent["AssetPath"].as<std::string>()); // #TODO Add mesh library
+					mrc.Mesh = MeshLibrary::Load(meshRendererComponent["AssetName"].as<std::string>(), meshRendererComponent["AssetPath"].as<std::string>());
 				}
 			}
 		}

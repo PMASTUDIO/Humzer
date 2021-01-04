@@ -27,6 +27,7 @@ namespace Humzer {
 	{
 	public:
 		static Ref<TextureCube> Create(const std::vector<std::string> faces);
+		static Ref<TextureCube> Create(const std::string& filepath);
 	};
 
 }

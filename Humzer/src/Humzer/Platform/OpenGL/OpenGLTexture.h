@@ -26,6 +26,8 @@ namespace Humzer {
 	class OpenGLTextureCube : public TextureCube {
 	public:
 		OpenGLTextureCube(const std::vector<std::string> faces);
+		OpenGLTextureCube(const std::string& path);
+
 		virtual ~OpenGLTextureCube();
 
 		uint32_t GetWidth() const override { return m_Width; }
@@ -33,11 +35,11 @@ namespace Humzer {
 
 		void Bind(uint32_t slot = 0) const override;
 	private:
-		//std::string m_Path;
+		std::string m_Path;
 		uint32_t m_Width, m_Height;
 		unsigned int m_ID;
 
-		//unsigned char* m_ImageData;
+		unsigned char* m_ImageData;
 	};
 
 }

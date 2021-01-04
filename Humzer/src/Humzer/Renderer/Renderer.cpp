@@ -4,8 +4,6 @@
 #include "glm/ext/matrix_transform.inl"
 #include "Texture.h"
 
-// #TOREMOVE
-#include "glad/glad.h"
 
 namespace Humzer {
 

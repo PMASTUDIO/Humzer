@@ -48,8 +48,10 @@ namespace Humzer {
 	class HUMZER_API Mesh
 	{
 	public:
-		Mesh(const std::string& filename);
+		Mesh(std::string name, std::string filename);
 		~Mesh();
+
+		const std::string& GetName();
 
 		void Render(Timestep ts, PerspectiveCamera& camera, const glm::mat4& transform = glm::mat4(1.0f));
 
@@ -61,6 +63,8 @@ namespace Humzer {
 		Submesh processMesh(aiMesh* mesh, const aiScene* scene, uint32_t vertexCount, uint32_t indexCount);
 	private:
 		std::string m_FilePath;
+		std::string m_Name;
+
 		Ref<Shader> m_MeshShader;
 
 		Scope<Assimp::Importer> m_Importer;
@@ -77,5 +81,15 @@ namespace Humzer {
 		std::vector<Submesh> m_Submeshes;
 
 		friend class Renderer3D;
+	};
+
+	class MeshLibrary {
+	public:
+		static void Add(const Ref<Mesh>& mesh);
+		static Ref<Mesh> Load(const std::string& name, const std::string& filepath);
+
+		static Ref<Mesh> Get(const std::string& name);
+	private:
+		static std::unordered_map<std::string, Ref<Mesh>> s_Meshes;
 	};
 }

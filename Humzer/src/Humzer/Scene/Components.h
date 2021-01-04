@@ -61,7 +61,7 @@ namespace Humzer {
 		Ref<Humzer::Mesh> Mesh;
 
 		operator Ref<Humzer::Mesh>() { return Mesh; }
-
+		operator const std::string& () { return Mesh->GetName(); }
 	};
 
 }

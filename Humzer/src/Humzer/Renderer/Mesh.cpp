@@ -23,7 +23,7 @@ namespace Humzer {
 
 	static const uint32_t s_MeshImportFlags = aiProcess_Triangulate | aiProcess_GenNormals;
 
-	Mesh::Mesh(const std::string& filename) : m_FilePath(filename)
+	Mesh::Mesh(std::string name, std::string filename) : m_Name(name), m_FilePath(filename)
 	{
 		m_Importer = CreateScope<Assimp::Importer>();
 		const aiScene* scene = m_Importer->ReadFile(filename, s_MeshImportFlags);
@@ -38,24 +38,24 @@ namespace Humzer {
 		HUM_ASSERT(Renderer3D::GetShaderLibrary());
 
 		m_MeshShader = Renderer3D::GetShaderLibrary()->Get("mesh_base");
-		
+
 		processNode(scene->mRootNode, scene);
 
 		processMaterials(scene); // Populates m_Textures with diffuse maps
-		
+
 		// MESH SETUP
 		m_VertexArray = VertexArray::Create(); // Create VAO
-		
+
 		auto vb = VertexBuffer::Create(m_StaticVertices.data(), m_StaticVertices.size() * sizeof(Vertex)); // Add vertex data to VBO
 		vb->SetLayout({
 			{ ShaderDataType::Float3, "a_Position" },
 			{ ShaderDataType::Float3, "a_Normal" },
 			{ ShaderDataType::Float2, "a_TexCoord" },
-		});
+			});
 		m_VertexArray->AddVertexBuffer(vb);
 
 		auto ib = IndexBuffer::Create(m_Indices.data(), m_Indices.size() * sizeof(Index));
-		m_VertexArray->SetIndexBuffer(ib); 
+		m_VertexArray->SetIndexBuffer(ib);
 		m_Scene = scene;
 
 		m_MeshShader->SetInt("u_Material.diffuse", 0);
@@ -66,6 +66,11 @@ namespace Humzer {
 	Mesh::~Mesh()
 	{
 
+	}
+
+	const std::string& Mesh::GetName()
+	{
+		return m_Name;
 	}
 
 	void Mesh::Render(Timestep ts, PerspectiveCamera& camera, const glm::mat4& transform /*= glm::mat4(1.0f)*/)
@@ -190,6 +195,29 @@ namespace Humzer {
 		return submesh;
 	}
 
+	// MESH LIBRARY STUFF
+
+	void MeshLibrary::Add(const Ref<Mesh>& mesh)
+	{
+		auto& name = mesh->GetName();
+		HUM_ASSERT(s_Meshes.find(name) == s_Meshes.end(), "Mesh already exists in mesh library!");
+		s_Meshes[name] = mesh;
+	}
+
+	Humzer::Ref<Humzer::Mesh> MeshLibrary::Load(const std::string& name, const std::string& filepath)
+	{
+		auto mesh = CreateRef<Mesh>(name, filepath);
+		Add(mesh);
+		return mesh;
+	}
+
+	Humzer::Ref<Humzer::Mesh> MeshLibrary::Get(const std::string& name)
+	{
+		HUM_ASSERT(s_Meshes.find(name) != s_Meshes.end(), "Shader with the requested name do not exists in shader library!");
+		return s_Meshes[name];
+	}
+
+	std::unordered_map<std::string, Humzer::Ref<Humzer::Mesh>> MeshLibrary::s_Meshes;
 
 }
 

@@ -188,7 +188,89 @@ namespace Humzer {
 		/*for (size_t i = 0; i < faces.size(); i++)
 			delete[] faces[i];*/
 
-		//stbi_image_free(m_ImageData);
+		// stbi_image_free(dat);
+	}
+
+	OpenGLTextureCube::OpenGLTextureCube(const std::string& path) : m_Width(0), m_Height(0), m_Path(path)
+	{
+		int width, height, channels;
+		stbi_set_flip_vertically_on_load(false);
+		m_ImageData = stbi_load(path.c_str(), &width, &height, &channels, 0);
+
+		m_Width = width;
+		m_Height = height;
+
+		uint32_t faceWidth = m_Width / 4;
+		uint32_t faceHeight = m_Height / 3;
+		HUM_ASSERT(faceWidth == faceHeight, "Non-square faces!");
+
+		std::array<uint8_t*, 6> faces;
+		for (size_t i = 0; i < faces.size(); i++)
+			faces[i] = new uint8_t[faceWidth * faceHeight * 3]; // 3 BPP
+
+		int faceIndex = 0;
+
+		for (size_t i = 0; i < 4; i++)
+		{
+			for (size_t y = 0; y < faceHeight; y++)
+			{
+				size_t yOffset = y + faceHeight;
+				for (size_t x = 0; x < faceWidth; x++)
+				{
+					size_t xOffset = x + i * faceWidth;
+					faces[faceIndex][(x + y * faceWidth) * 3 + 0] = m_ImageData[(xOffset + yOffset * m_Width) * 3 + 0];
+					faces[faceIndex][(x + y * faceWidth) * 3 + 1] = m_ImageData[(xOffset + yOffset * m_Width) * 3 + 1];
+					faces[faceIndex][(x + y * faceWidth) * 3 + 2] = m_ImageData[(xOffset + yOffset * m_Width) * 3 + 2];
+				}
+			}
+			faceIndex++;
+		}
+
+		for (size_t i = 0; i < 3; i++)
+		{
+			// Skip the middle one
+			if (i == 1)
+				continue;
+
+			for (size_t y = 0; y < faceHeight; y++)
+			{
+				size_t yOffset = y + i * faceHeight;
+				for (size_t x = 0; x < faceWidth; x++)
+				{
+					size_t xOffset = x + faceWidth;
+					faces[faceIndex][(x + y * faceWidth) * 3 + 0] = m_ImageData[(xOffset + yOffset * m_Width) * 3 + 0];
+					faces[faceIndex][(x + y * faceWidth) * 3 + 1] = m_ImageData[(xOffset + yOffset * m_Width) * 3 + 1];
+					faces[faceIndex][(x + y * faceWidth) * 3 + 2] = m_ImageData[(xOffset + yOffset * m_Width) * 3 + 2];
+				}
+			}
+			faceIndex++;
+		}
+
+		glGenTextures(1, &m_ID);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, m_ID);
+
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+		auto format = GL_RGB;
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, format, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faces[2]);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, format, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faces[0]);
+
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, format, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faces[4]);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, format, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faces[5]);
+
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, format, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faces[1]);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, format, faceWidth, faceHeight, 0, format, GL_UNSIGNED_BYTE, faces[3]);
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+
+		for (size_t i = 0; i < faces.size(); i++)
+			delete[] faces[i];
+
+		stbi_image_free(m_ImageData);
 	}
 
 	OpenGLTextureCube::~OpenGLTextureCube()
