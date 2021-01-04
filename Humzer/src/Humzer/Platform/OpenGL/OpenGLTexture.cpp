@@ -72,7 +72,7 @@ namespace Humzer {
 		glBindTextureUnit(slot, m_ID);
 	}
 
-	OpenGLTextureCube::OpenGLTextureCube(const std::vector<std::string> faces) : m_Width(0), m_Height(0) /*: m_Path(path)*/
+	OpenGLTextureCube::OpenGLTextureCube(const std::vector<std::string> faces) : m_Width(0), m_Height(0), m_Faces(faces) /*: m_Path(path)*/
 	{
 		int width, height, channels;
 		stbi_set_flip_vertically_on_load(false);

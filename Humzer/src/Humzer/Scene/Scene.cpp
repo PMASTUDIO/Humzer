@@ -3,6 +3,7 @@
 #include "Components.h"
 #include "../Renderer/Renderer.h"
 #include "Entity.h"
+#include "../Renderer/Texture.h"
 
 namespace Humzer {
 
@@ -12,6 +13,11 @@ namespace Humzer {
 	}
 
 	Scene::~Scene()
+	{
+
+	}
+
+	void Scene::Init()
 	{
 
 	}
@@ -27,8 +33,16 @@ namespace Humzer {
 		return entity;
 	}
 
+	void Scene::SetSkybox(const Ref<TextureCube>& skybox)
+	{
+		m_SkyboxTexture = skybox;
+	}
+
 	void Scene::OnUpdate(Timestep dt)
 	{
+		if(m_SkyboxTexture)
+			Renderer3D::DrawSkybox(m_SkyboxTexture);
+
 		{
 			auto group = m_Registry.group<TransformComponent>(entt::get<PrimitiveRendererComponent>);
 			for (auto entity : group) {

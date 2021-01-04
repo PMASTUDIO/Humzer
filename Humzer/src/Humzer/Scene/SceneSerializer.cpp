@@ -147,7 +147,19 @@ namespace Humzer {
 		out << YAML::Comment("This is a Humzer scene file stored under " + filepath);
 		out << YAML::BeginMap;
 		out << YAML::Key << "Scene" << YAML::Value << "Untitled";
-		out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
+		
+		if (m_Scene->m_SkyboxTexture) {
+			out << YAML::Key << "Skybox" << YAML::Value << YAML::BeginSeq;
+
+			std::vector<std::string> faces =  m_Scene->m_SkyboxTexture->GetFacesPath();
+			for (auto face : faces) {
+				out << face;
+			}
+
+			out << YAML::EndSeq;
+		}
+	
+			out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 		m_Scene->m_Registry.each([&](auto entityID)
 			{
 				Entity entity = { entityID, m_Scene.get() };
@@ -182,6 +194,17 @@ namespace Humzer {
 
 		std::string sceneName = data["Scene"].as<std::string>();
 		HUM_CORE_TRACE("Deserializing scene '{0}'", sceneName);
+
+		// Skybox
+		auto skyboxFaces = data["Skybox"];
+		if (skyboxFaces) {
+			std::vector<std::string> skyboxPathFaces = {};
+			for (auto face : skyboxFaces) {
+				skyboxPathFaces.push_back(face.as<std::string>());
+			}
+
+			m_Scene->SetSkybox(TextureCube::Create(skyboxPathFaces));
+		}
 
 		auto entities = data["Entities"];
 		if (entities) {
