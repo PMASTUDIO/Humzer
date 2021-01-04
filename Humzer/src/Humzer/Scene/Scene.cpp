@@ -40,6 +40,25 @@ namespace Humzer {
 
 	void Scene::OnUpdate(Timestep dt)
 	{
+		PerspectiveCamera* camera = nullptr;
+		{
+			auto view = m_Registry.view<CameraComponent>();
+			for (auto entity : view) {
+				auto& comp = view.get<CameraComponent>(entity);
+
+				if (comp.Primary) {
+					camera = &comp.Camera;
+				}
+
+				break;
+			}
+		}
+
+		HUM_ASSERT(camera, "Scene does not contain any cameras!");
+		camera->OnUpdate(dt);
+
+		Renderer3D::BeginScene(*camera);
+
 		if(m_SkyboxTexture)
 			Renderer3D::DrawSkybox(m_SkyboxTexture);
 
@@ -74,6 +93,8 @@ namespace Humzer {
 
 			}
 		}
+
+		Renderer3D::EndScene();
 	}
 
 }

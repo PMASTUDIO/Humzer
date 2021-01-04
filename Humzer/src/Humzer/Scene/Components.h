@@ -64,4 +64,17 @@ namespace Humzer {
 		operator const std::string& () { return Mesh->GetName(); }
 	};
 
+	struct CameraComponent {
+		PerspectiveCamera Camera;
+		bool Primary = true;
+
+		CameraComponent() = default;
+		CameraComponent(const CameraComponent&) = default;
+		CameraComponent(float fov, float nearClip, float farClip, glm::vec3 pos) 
+			: Camera(fov, 1280.0f / 720.0f, nearClip, farClip, pos, true) {}
+
+		operator PerspectiveCamera& () { return Camera; }
+		operator const PerspectiveCamera& () const { return Camera; }
+	};
+
 }

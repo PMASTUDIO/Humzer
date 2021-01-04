@@ -138,6 +138,27 @@ namespace Humzer {
 			out << YAML::EndMap; // MeshRendererComponent MAP
 		}
 
+
+		if (entity.HasComponent<CameraComponent>()) {
+			out << YAML::Key << "CameraComponent";
+			out << YAML::BeginMap; // CameraComponent MAP
+
+			auto& cameraComponent = entity.GetComponent<CameraComponent>();
+			auto& camera = cameraComponent.Camera;
+
+			out << YAML::Key << "Camera" << YAML::Value;
+			out << YAML::BeginMap; // Camera
+			out << YAML::Key << "PerspectiveFOV" << YAML::Value << camera.GetFOV();
+			out << YAML::Key << "PerspectiveNear" << YAML::Value << camera.GetNear();
+			out << YAML::Key << "PerspectiveFar" << YAML::Value << camera.GetFar();
+			
+			out << YAML::EndMap; // Camera
+
+			out << YAML::Key << "Primary" << YAML::Value << cameraComponent.Primary;
+
+			out << YAML::EndMap; // CameraComponent MAP
+		}
+
 		out << YAML::EndMap;   // ENTITY MAP
 	}
 
@@ -159,7 +180,7 @@ namespace Humzer {
 			out << YAML::EndSeq;
 		}
 	
-			out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
+		out << YAML::Key << "Entities" << YAML::Value << YAML::BeginSeq;
 		m_Scene->m_Registry.each([&](auto entityID)
 			{
 				Entity entity = { entityID, m_Scene.get() };
@@ -235,7 +256,6 @@ namespace Humzer {
 				auto primitiveRendererComponent = entity["PrimitiveRendererComponent"];
 				if (primitiveRendererComponent)
 				{
-					// Entities always have transforms, that's why we get component
 					auto& prc = deserializedEntity.AddComponent<PrimitiveRendererComponent>();
 					prc.Shape = static_cast<PrimitiveShape>(primitiveRendererComponent["Shape"].as<int>());
 					prc.Color = primitiveRendererComponent["Color"].as<glm::vec4>();
@@ -244,9 +264,25 @@ namespace Humzer {
 				auto meshRendererComponent = entity["MeshRendererComponent"];
 				if (meshRendererComponent)
 				{
-					// Entities always have transforms, that's why we get component
 					auto& mrc = deserializedEntity.AddComponent<MeshRendererComponent>();
 					mrc.Mesh = MeshLibrary::Load(meshRendererComponent["AssetName"].as<std::string>(), meshRendererComponent["AssetPath"].as<std::string>());
+				}
+
+				auto cameraComponent = entity["CameraComponent"];
+				if (cameraComponent)
+				{
+					auto& cameraProps = cameraComponent["Camera"];
+
+					auto fov = cameraProps["PerspectiveFOV"].as<float>();
+					auto nearPlane = cameraProps["PerspectiveNear"].as<float>();
+					auto farPlane = cameraProps["PerspectiveFar"].as<float>();
+
+					auto& tc = deserializedEntity.GetComponent<TransformComponent>();
+					auto cameraPos = transformComponent["Translation"].as<glm::vec3>();
+
+					auto& cc = deserializedEntity.AddComponent<CameraComponent>(fov, nearPlane, farPlane, cameraPos);
+
+					
 				}
 			}
 		}

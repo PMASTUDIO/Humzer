@@ -8,7 +8,7 @@ using namespace Humzer;
 
 class Tester : public Humzer::Application {
 public:
-    Tester() : basicCam(45.0f, 1280.0f / 720.0f, 0.1f, 1000.0f, glm::vec3(0.0f, 4.0f, 20.0f), true) {
+	Tester() /*: basicCam(45.0f, 1280.0f / 720.0f, 0.1f, 1000.0f, glm::vec3(0.0f, 4.0f, 20.0f), true)*/ {
 		/*std::vector<std::string> faces{
 			 "Resources/textures/sky/right.jpg",
 			 "Resources/textures/sky/left.jpg",
@@ -27,10 +27,13 @@ public:
     void ClientOnStart() {
         mainScene = CreateRef<Scene>();
 
-        /*
-        mainScene->SetSkybox(skyboxTexture);
+       /* mainScene->SetSkybox(skyboxTexture);
 
-     auto cube = mainScene->CreateEntity("square");
+        auto mainCamera = mainScene->CreateEntity("camera");
+        mainCamera.GetComponent<TransformComponent>().Translation = glm::vec3(0.0f, 4.0f, 20.0f);
+        mainCamera.AddComponent<CameraComponent>().Camera = basicCam;
+
+        auto cube = mainScene->CreateEntity("square");
         cube.GetComponent<TransformComponent>().Translation = glm::vec3{ 5.0, 0.0, 0.0 };
         cube.AddComponent<PrimitiveRendererComponent>(PrimitiveShape::CUBE, glm::vec4{ 0.0, 1.0, 0.0, 1.0 });
 
@@ -48,22 +51,16 @@ public:
 
     void ClientUpdate(Humzer::Timestep dt) {
 
-        basicCam.OnUpdate(dt);
-
-        Renderer3D::BeginScene(basicCam);
-
         mainScene->OnUpdate(dt);
-
-        Renderer3D::EndScene();
 
         if (Input::IsKeyPressed(Key::Escape)) {
             Quit();
         }
     }
 private:
-    PerspectiveCamera basicCam;
+    //PerspectiveCamera basicCam;
     Ref<Scene> mainScene;
-    Ref<TextureCube> skyboxTexture;
+    /*Ref<TextureCube> skyboxTexture;*/
 };
 
 Humzer::Application* Humzer::CreateApplication() {

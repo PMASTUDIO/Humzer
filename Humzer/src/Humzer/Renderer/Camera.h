@@ -38,6 +38,10 @@ namespace Humzer {
 		glm::mat4 GetViewProjection() const { return m_ProjectionMatrix * m_ViewMatrix; }
 		const glm::vec3& GetPosition() const { return m_Position; }
 
+		const float GetFOV() { return m_FOV; }
+		const float GetNear() { return m_NearClip; }
+		const float GetFar() { return m_FarClip; }
+
 	private:
 		void UpdateMatrices();
 		void UpdateCameraVectors();
@@ -58,8 +62,8 @@ namespace Humzer {
 
 		glm::vec2 m_MouseLastPos = { 0.0f, 0.0f };
 
-		float m_MouseSensitivity;
-		bool m_FirstFrame;
+		float m_MouseSensitivity = SENSITIVITY;
+		bool m_FirstFrame = true;
 
 		float m_Yaw = YAW;
 		float m_Pitch = PITCH;
