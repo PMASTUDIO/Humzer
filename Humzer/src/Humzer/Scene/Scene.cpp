@@ -40,24 +40,27 @@ namespace Humzer {
 
 	void Scene::OnUpdate(Timestep dt)
 	{
-		PerspectiveCamera* camera = nullptr;
+		Camera* mainCamera = nullptr;
+		glm::mat4* cameraTransform = nullptr;
+		glm::vec3* cameraPos; // #TEMP (used to draw mesh with reflections)
 		{
-			auto view = m_Registry.view<CameraComponent>();
+			auto view = m_Registry.view<TransformComponent, CameraComponent>();
 			for (auto entity : view) {
-				auto& comp = view.get<CameraComponent>(entity);
+				auto& [transform, camera] = view.get<TransformComponent, CameraComponent>(entity);
 
-				if (comp.Primary) {
-					camera = &comp.Camera;
+				if (camera.Primary)
+				{
+					mainCamera = &camera.Camera;
+					cameraTransform = &transform.GetTransform();
+					cameraPos = &transform.Translation;
+					break;
 				}
-
-				break;
 			}
 		}
 
-		HUM_ASSERT(camera, "Scene does not contain any cameras!");
-		camera->OnUpdate(dt);
+		HUM_ASSERT(mainCamera, "Scene does not contain any cameras!");
 
-		Renderer3D::BeginScene(*camera);
+		Renderer3D::BeginScene(*mainCamera, *cameraTransform, *cameraPos);
 
 		if(m_SkyboxTexture)
 			Renderer3D::DrawSkybox(m_SkyboxTexture);

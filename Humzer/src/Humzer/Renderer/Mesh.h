@@ -53,7 +53,7 @@ namespace Humzer {
 
 		const std::string& GetName();
 
-		void Render(Timestep ts, PerspectiveCamera& camera, const glm::mat4& transform = glm::mat4(1.0f));
+		void Render(Timestep ts, Camera& camera, const glm::mat4& transform = glm::mat4(1.0f));
 
 		inline Ref<Shader> GetMeshShader() { return m_MeshShader; }
 		inline const std::string& GetFilePath() const { return m_FilePath; }

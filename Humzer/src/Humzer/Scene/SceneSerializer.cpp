@@ -148,10 +148,14 @@ namespace Humzer {
 
 			out << YAML::Key << "Camera" << YAML::Value;
 			out << YAML::BeginMap; // Camera
+			out << YAML::Key << "ProjectionType" << YAML::Value << (int)camera.GetProjectionType();
 			out << YAML::Key << "PerspectiveFOV" << YAML::Value << camera.GetFOV();
 			out << YAML::Key << "PerspectiveNear" << YAML::Value << camera.GetNear();
 			out << YAML::Key << "PerspectiveFar" << YAML::Value << camera.GetFar();
-			
+			out << YAML::Key << "OrthographicSize" << YAML::Value << camera.GetOrthographicSize();
+			out << YAML::Key << "OrthographicNear" << YAML::Value << camera.GetOrthographicNearClip();
+			out << YAML::Key << "OrthographicFar" << YAML::Value << camera.GetOrthographicFarClip();
+
 			out << YAML::EndMap; // Camera
 
 			out << YAML::Key << "Primary" << YAML::Value << cameraComponent.Primary;
@@ -271,18 +275,21 @@ namespace Humzer {
 				auto cameraComponent = entity["CameraComponent"];
 				if (cameraComponent)
 				{
+					auto& cc = deserializedEntity.AddComponent<CameraComponent>();
+
 					auto& cameraProps = cameraComponent["Camera"];
+					cc.Camera.SetProjectionType((SceneCamera::ProjectionType)cameraProps["ProjectionType"].as<int>());
 
-					auto fov = cameraProps["PerspectiveFOV"].as<float>();
-					auto nearPlane = cameraProps["PerspectiveNear"].as<float>();
-					auto farPlane = cameraProps["PerspectiveFar"].as<float>();
+					cc.Camera.SetFOV(cameraProps["PerspectiveFOV"].as<float>());
+					cc.Camera.SetNear(cameraProps["PerspectiveNear"].as<float>());
+					cc.Camera.SetFar(cameraProps["PerspectiveFar"].as<float>());
 
-					auto& tc = deserializedEntity.GetComponent<TransformComponent>();
-					auto cameraPos = transformComponent["Translation"].as<glm::vec3>();
+					cc.Camera.SetOrthographicSize(cameraProps["OrthographicSize"].as<float>());
+					cc.Camera.SetOrthographicNearClip(cameraProps["OrthographicNear"].as<float>());
+					cc.Camera.SetOrthographicFarClip(cameraProps["OrthographicFar"].as<float>());
 
-					auto& cc = deserializedEntity.AddComponent<CameraComponent>(fov, nearPlane, farPlane, cameraPos);
+					cc.Primary = cameraComponent["Primary"].as<bool>();
 
-					
 				}
 			}
 		}

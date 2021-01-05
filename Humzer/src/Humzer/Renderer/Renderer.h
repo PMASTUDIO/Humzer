@@ -12,7 +12,7 @@ namespace Humzer {
 
 	class HUMZER_API Renderer {
 	public:
-		static void BeginScene(PerspectiveCamera& camera);
+		static void BeginScene(Camera& camera, const glm::mat4& transform);
 		static void EndScene();
 
 		static void Submit(const Ref<VertexArray>& vertexArray, const Ref<Shader>& shader, glm::mat4 transform);
@@ -36,7 +36,7 @@ namespace Humzer {
 		static void Init();
 		static void Shutdown();
 
-		static void BeginScene(PerspectiveCamera& camera);
+		static void BeginScene(Camera& camera, const glm::mat4& transform, const glm::vec3 cameraPos);
 		static void EndScene();
 
 		static Ref<ShaderLibrary> GetShaderLibrary();
@@ -53,10 +53,12 @@ namespace Humzer {
 		static void DrawSkybox(const Ref<TextureCube>& texture);
 
 		static void DrawMesh(const glm::mat4& transform, Ref<Mesh> mesh);
+
+		[[deprecated("Transforms should be passed in mat4 form")]]
 		static void DrawMesh(Ref<Mesh> mesh, const glm::vec3& position, const glm::vec3& scale);
 
 	private:
-		static PerspectiveCamera* s_SceneCamera;
+		static Camera* s_SceneCamera;
 	};
 
 }

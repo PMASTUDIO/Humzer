@@ -73,12 +73,12 @@ namespace Humzer {
 		return m_Name;
 	}
 
-	void Mesh::Render(Timestep ts, PerspectiveCamera& camera, const glm::mat4& transform /*= glm::mat4(1.0f)*/)
+	void Mesh::Render(Timestep ts, Camera& camera, const glm::mat4& transform /*= glm::mat4(1.0f)*/)
 	{
 		// SHADER SET UP
 		m_MeshShader->Bind();
 
-		m_MeshShader->SetMat4("u_ViewProjection", camera.GetViewProjection());
+		m_MeshShader->SetMat4("u_ViewProjection", camera.GetProjection());
 
 		glm::mat4 transformTest = glm::translate(glm::mat4(1.0), { 0.0, 0.0, 0.0 }) * glm::scale(glm::mat4(1.0), { 1.0, 1.0, 1.0 });
 		m_MeshShader->SetMat4("u_Transform", transformTest);

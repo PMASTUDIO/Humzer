@@ -25,28 +25,28 @@ public:
     }
 
     void ClientOnStart() {
-        mainScene = CreateRef<Scene>();
+		mainScene = CreateRef<Scene>();
 
-       /* mainScene->SetSkybox(skyboxTexture);
+		//mainScene->SetSkybox(skyboxTexture);
 
-        auto mainCamera = mainScene->CreateEntity("camera");
-        mainCamera.GetComponent<TransformComponent>().Translation = glm::vec3(0.0f, 4.0f, 20.0f);
-        mainCamera.AddComponent<CameraComponent>().Camera = basicCam;
+		auto mainCamera = mainScene->CreateEntity("camera");
+		mainCamera.GetComponent<TransformComponent>().Translation = glm::vec3{ 0.0f, 4.0f, 20.0f };
+		mainCamera.AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Orthographic);
 
-        auto cube = mainScene->CreateEntity("square");
-        cube.GetComponent<TransformComponent>().Translation = glm::vec3{ 5.0, 0.0, 0.0 };
-        cube.AddComponent<PrimitiveRendererComponent>(PrimitiveShape::CUBE, glm::vec4{ 0.0, 1.0, 0.0, 1.0 });
+		auto cube = mainScene->CreateEntity("square");
+		cube.GetComponent<TransformComponent>().Translation = glm::vec3{ 5.0, 0.0, 0.0 };
+		cube.AddComponent<PrimitiveRendererComponent>(PrimitiveShape::CUBE, glm::vec4{ 0.0, 1.0, 0.0, 1.0 });
 
-        auto testMesh = MeshLibrary::Load("Cerberus", "Resources/meshes/CerberusMaterials.fbx");
+		auto testMesh = MeshLibrary::Load("Cerberus", "Resources/meshes/CerberusMaterials.fbx");
 
 		auto gun = mainScene->CreateEntity("gun");
-        gun.AddComponent<MeshRendererComponent>().Mesh = testMesh;
-		gun.GetComponent<TransformComponent>().Translation = { 2.0, 0.0, 0.0 };*/
+		gun.AddComponent<MeshRendererComponent>().Mesh = testMesh;
+		gun.GetComponent<TransformComponent>().Translation = { 2.0, 0.0, 0.0 };
 
         // TEMP TEST
 		SceneSerializer serializer(mainScene);
         //serializer.Serialize("Resources/scenes/first.humscene");
-        serializer.Deserialize("Resources/scenes/first.humscene");
+        //serializer.Deserialize("Resources/scenes/first.humscene");
     }
 
     void ClientUpdate(Humzer::Timestep dt) {
@@ -60,7 +60,7 @@ public:
 private:
     //PerspectiveCamera basicCam;
     Ref<Scene> mainScene;
-    /*Ref<TextureCube> skyboxTexture;*/
+    Ref<TextureCube> skyboxTexture;
 };
 
 Humzer::Application* Humzer::CreateApplication() {

@@ -9,9 +9,11 @@ namespace Humzer {
 
 		Renderer::SceneData* Renderer::s_SceneData = new Renderer::SceneData;
 
-		void Renderer::BeginScene(PerspectiveCamera& camera)
+		void Renderer::BeginScene(Camera& camera, const glm::mat4& transform)
 		{
-			s_SceneData->ViewProjectionMatrix = camera.GetViewProjection();
+			glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
+
+			s_SceneData->ViewProjectionMatrix = viewProj;
 		}
 
 		void Renderer::EndScene()
@@ -36,6 +38,9 @@ namespace Humzer {
 		// RENDERER 3D
 
 		struct Renderer3DStorage {
+			glm::mat4 m_CameraTransform;
+			glm::vec3 m_CameraTranslation;
+
 			Ref<VertexArray> PlaneVAO;
 			Ref<VertexArray> CubeVAO;
 			Ref<VertexArray> SkyboxVAO;
@@ -116,16 +121,21 @@ namespace Humzer {
 			delete s_Data;
 		}
 
-		Humzer::PerspectiveCamera* Renderer3D::s_SceneCamera = nullptr;
+		Humzer::Camera* Renderer3D::s_SceneCamera = nullptr;
 
-		void Renderer3D::BeginScene(PerspectiveCamera& camera)
+		void Renderer3D::BeginScene(Camera& camera, const glm::mat4& transform, const glm::vec3 cameraPos)
 		{
 			s_SceneCamera = &camera;
 
+			glm::mat4 viewProj = camera.GetProjection() * glm::inverse(transform);
+
+			s_Data->m_CameraTranslation = cameraPos;
+			s_Data->m_CameraTransform = transform;
+
 			s_Data->m_FlatColorShader->Bind();
-			s_Data->m_FlatColorShader->SetMat4("u_ViewProjection", camera.GetViewProjection());
+			s_Data->m_FlatColorShader->SetMat4("u_ViewProjection", viewProj);
 			s_Data->m_FlatColorShader->SetMat4("u_Transform", glm::mat4(1.0));
-			s_Data->m_FlatColorShader->SetFloat3("u_ViewPos", camera.GetPosition());
+			s_Data->m_FlatColorShader->SetFloat3("u_ViewPos", cameraPos);
 
 			// TEMPORARY (BEFORE MATERIAL):
 			s_Data->m_FlatColorShader->SetFloat3("u_Material.ambient", glm::vec3(1.0f, 0.5f, 0.31f));
@@ -134,12 +144,12 @@ namespace Humzer {
 			s_Data->m_FlatColorShader->SetInt("u_Material.shininess", 32.0f);
 
 			s_Data->m_TexturedShader->Bind();
-			s_Data->m_TexturedShader->SetMat4("u_ViewProjection", camera.GetViewProjection());
+			s_Data->m_TexturedShader->SetMat4("u_ViewProjection", viewProj);
 			s_Data->m_TexturedShader->SetMat4("u_Transform", glm::mat4(1.0));
 
 			// SKYBOX SHADER
 			s_Data->m_SkyboxShader->Bind();
-			glm::mat4 view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
+			glm::mat4 view = glm::mat4(glm::mat3(glm::inverse(transform)));
 			s_Data->m_SkyboxShader->SetMat4("u_ViewProjection", camera.GetProjection() * view);
 			
 		}
@@ -240,11 +250,13 @@ namespace Humzer {
 
 		void Renderer3D::DrawMesh(const glm::mat4& transform, Ref<Mesh> mesh)
 		{
+			glm::mat4 viewProj = s_SceneCamera->GetProjection() * glm::inverse(s_Data->m_CameraTransform);
+
 			// SHADER SET UP
 			mesh->m_MeshShader->Bind();
-			mesh->m_MeshShader->SetMat4("u_ViewProjection", s_SceneCamera->GetViewProjection());
+			mesh->m_MeshShader->SetMat4("u_ViewProjection", viewProj);
 			mesh->m_MeshShader->SetMat4("u_Transform", transform);
-			mesh->m_MeshShader->SetFloat3("u_ViewPos", s_SceneCamera->GetPosition());
+			mesh->m_MeshShader->SetFloat3("u_ViewPos", s_Data->m_CameraTranslation); // #TODO: Add proper cam position
 
 			// BEFORE MATERIAL SYSTEM
 			mesh->m_MeshShader->SetFloat3("u_Material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
@@ -259,15 +271,16 @@ namespace Humzer {
 			RenderCommand::DrawIndexed(mesh->m_VertexArray);
 		}
 
+		
 		void Renderer3D::DrawMesh(Ref<Mesh> mesh, const glm::vec3& position, const glm::vec3& scale)
 		{
 			glm::mat4 transform = glm::translate(glm::mat4(1.0), position) * glm::scale(glm::mat4(1.0), scale);
 
 			// SHADER SET UP
 			mesh->m_MeshShader->Bind();
-			mesh->m_MeshShader->SetMat4("u_ViewProjection", s_SceneCamera->GetViewProjection());
+			mesh->m_MeshShader->SetMat4("u_ViewProjection", s_SceneCamera->GetProjection()); // #TODO: Add proper view projection matrix
 			mesh->m_MeshShader->SetMat4("u_Transform", transform);
-			mesh->m_MeshShader->SetFloat3("u_ViewPos", s_SceneCamera->GetPosition());
+			mesh->m_MeshShader->SetFloat3("u_ViewPos", { 0, 4, 20 }); // #TODO: Add proper cam position
 
 			// BEFORE MATERIAL SYSTEM
 			mesh->m_MeshShader->SetFloat3("u_Material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
