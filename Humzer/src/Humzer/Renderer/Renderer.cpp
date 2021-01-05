@@ -7,7 +7,16 @@
 
 namespace Humzer {
 
-		Renderer::SceneData* Renderer::s_SceneData = new Renderer::SceneData;
+	Ref<ShaderLibrary> Renderer::s_ShaderLibrary = CreateRef<ShaderLibrary>();
+
+	Renderer::SceneData* Renderer::s_SceneData = new Renderer::SceneData;
+
+		void Renderer::Init()
+		{
+			s_ShaderLibrary = CreateRef<ShaderLibrary>();
+		}
+
+		//Ref<ShaderLibrary> s_ShaderLibrary = CreateRef<ShaderLibrary>();
 
 		void Renderer::BeginScene(Camera& camera, const glm::mat4& transform)
 		{
@@ -30,6 +39,11 @@ namespace Humzer {
 			RenderCommand::DrawIndexed(vertexArray);
 		}
 
+		Humzer::Ref<Humzer::ShaderLibrary> Renderer::GetShaderLibrary()
+		{
+			return s_ShaderLibrary;
+		}
+
 		void Renderer::OnWindowResize(uint32_t width, uint32_t height)
 		{
 			RenderCommand::SetViewport(0, 0, width, height);
@@ -45,7 +59,7 @@ namespace Humzer {
 			Ref<VertexArray> CubeVAO;
 			Ref<VertexArray> SkyboxVAO;
 
-			Ref<ShaderLibrary> m_ShaderLibrary;
+			
 			Ref<Shader> m_FlatColorShader;
 			Ref<Shader> m_TexturedShader;
 			Ref<Shader> m_SkyboxShader;
@@ -56,8 +70,6 @@ namespace Humzer {
 		void Renderer3D::Init()
 		{
 			s_Data = new Renderer3DStorage();
-			
-			s_Data->m_ShaderLibrary = CreateRef<ShaderLibrary>();
 
 			BufferLayout base_layout = {
 				{ ShaderDataType::Float3, "a_Position"},
@@ -104,10 +116,10 @@ namespace Humzer {
 			s_Data->SkyboxVAO->AddVertexBuffer(SkyboxVBO);
 
 			// --- SHADERS SET UP ---
-			s_Data->m_FlatColorShader = GetShaderLibrary()->Load("flat_color", "Resources/shaders/flat_colored.vs", "Resources/shaders/flat_colored.fs");
-			s_Data->m_TexturedShader = GetShaderLibrary()->Load("textured", "Resources/shaders/textured_shader.vs", "Resources/shaders/textured_shader.fs");
-			s_Data->m_SkyboxShader = GetShaderLibrary()->Load("skybox", "Resources/shaders/skybox.vs", "Resources/shaders/skybox.fs");
-			GetShaderLibrary()->Load("mesh_base", "Resources/shaders/mesh_base_shader.vs", "Resources/shaders/mesh_base_shader.fs");
+			s_Data->m_FlatColorShader = Renderer::GetShaderLibrary()->Load("flat_color", "Resources/shaders/flat_colored.vs", "Resources/shaders/flat_colored.fs");
+			s_Data->m_TexturedShader = Renderer::GetShaderLibrary()->Load("textured", "Resources/shaders/textured_shader.vs", "Resources/shaders/textured_shader.fs");
+			s_Data->m_SkyboxShader = Renderer::GetShaderLibrary()->Load("skybox", "Resources/shaders/skybox.vs", "Resources/shaders/skybox.fs");
+			Renderer::GetShaderLibrary()->Load("mesh_base", "Resources/shaders/mesh_base_shader.vs", "Resources/shaders/mesh_base_shader.fs");
 			
 			s_Data->m_TexturedShader->Bind();
 			s_Data->m_TexturedShader->SetInt("u_Texture", 0); // BIND TEXTURE SLOT
@@ -157,11 +169,6 @@ namespace Humzer {
 		void Renderer3D::EndScene()
 		{
 
-		}
-
-		Ref<ShaderLibrary> Renderer3D::GetShaderLibrary()
-		{
-			return s_Data->m_ShaderLibrary;
 		}
 
 		void Renderer3D::DrawPlane(const glm::mat4 transform, const glm::vec4& color)
@@ -293,6 +300,106 @@ namespace Humzer {
 			// DRAWING
 			mesh->m_VertexArray->Bind();
 			RenderCommand::DrawIndexed(mesh->m_VertexArray);
+		}
+
+		// 2D RENDERER
+
+		struct Renderer2DStorage
+		{
+			Ref<VertexArray> QuadVertexArray;
+			Ref<Shader> TextureShader;
+			Ref<Texture2D> WhiteTexture;
+		};
+
+		static Renderer2DStorage* s_Data2D;
+
+
+		void Renderer2D::Init()
+		{
+			s_Data2D = new Renderer2DStorage();
+			s_Data2D->QuadVertexArray = VertexArray::Create();
+
+			float squareVertices[5 * 4] = {
+			-0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+			 0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+			 0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+			-0.5f,  0.5f, 0.0f, 0.0f, 1.0f
+			};
+
+
+			Ref<VertexBuffer> squareVB;
+			squareVB = VertexBuffer::Create(squareVertices, sizeof(squareVertices));
+			squareVB->SetLayout({
+				{ ShaderDataType::Float3, "a_Position" },
+				{ ShaderDataType::Float2, "a_TexCoord" }
+				});
+			s_Data2D->QuadVertexArray->AddVertexBuffer(squareVB);
+
+			uint32_t squareIndices[6] = { 0, 1, 2, 2, 3, 0 };
+			Ref<IndexBuffer> squareIB;
+			squareIB = IndexBuffer::Create(squareIndices, sizeof(squareIndices));
+			s_Data2D->QuadVertexArray->SetIndexBuffer(squareIB);
+
+			s_Data2D->WhiteTexture = Texture2D::Create(1, 1); // 1x1 Texture (1 pixel)
+			uint32_t whiteTextureData = 0xffffffff; // RGBA White
+			s_Data2D->WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
+
+			s_Data2D->TextureShader = Renderer::GetShaderLibrary()->Load("texture_2d", "Resources/shaders/Texture2D.vs", "Resources/shaders/Texture2D.fs");
+			s_Data2D->TextureShader->Bind();
+			s_Data2D->TextureShader->SetInt("u_Texture", 0);
+		}
+
+		void Renderer2D::Shutdown()
+		{
+			delete s_Data2D;
+		}
+
+
+		void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& camTransform)
+		{
+			glm::mat4 viewProj = camera.GetProjection() * glm::inverse(camTransform);
+
+			s_Data2D->TextureShader->Bind();
+			s_Data2D->TextureShader->SetMat4("u_ViewProjection", viewProj);
+		}
+
+		void Renderer2D::EndScene()
+		{
+
+		}
+
+		void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
+		{
+			DrawQuad({ position.x, position.y, 0.0f }, size, color);
+		}
+
+		void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
+		{
+			s_Data2D->TextureShader->SetFloat4("u_Color", color);
+			s_Data2D->WhiteTexture->Bind();
+			
+			glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+			s_Data2D->TextureShader->SetMat4("u_Transform", transform);
+			s_Data2D->QuadVertexArray->Bind();
+			RenderCommand::DrawIndexed(s_Data2D->QuadVertexArray);
+		}
+
+		void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor)
+		{
+			DrawQuad({ position.x, position.y, 0.0f }, size, texture, tilingFactor);
+		}
+
+		void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor)
+		{
+			s_Data2D->TextureShader->SetFloat4("u_Color", glm::vec4(1.0f));
+			s_Data2D->TextureShader->SetFloat("tilingFactor", tilingFactor);
+			texture->Bind();
+
+			glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
+			s_Data2D->TextureShader->SetMat4("u_Transform", transform);
+
+			s_Data2D->QuadVertexArray->Bind();
+			RenderCommand::DrawIndexed(s_Data2D->QuadVertexArray);
 		}
 
 }

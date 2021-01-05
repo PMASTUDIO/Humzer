@@ -18,6 +18,7 @@ public:
 			 "Resources/textures/sky/back.jpg",
 		 };
         skyboxTexture = TextureCube::Create(faces);*/
+		m_CheckerboardTexture = Texture2D::Create("Resources/textures/Checkerboard.png");
     }
 
     ~Tester(){
@@ -29,11 +30,11 @@ public:
 
 		//mainScene->SetSkybox(skyboxTexture);
 
-		auto mainCamera = mainScene->CreateEntity("camera");
-		mainCamera.GetComponent<TransformComponent>().Translation = glm::vec3{ 0.0f, 4.0f, 20.0f };
-		mainCamera.AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Orthographic);
+		m_MainCamera = mainScene->CreateEntity("camera");
+		m_MainCamera.GetComponent<TransformComponent>().Translation = glm::vec3{ 0.0f, 0.0f, 0.0f };
+		m_MainCamera.AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Orthographic);
 
-		auto cube = mainScene->CreateEntity("square");
+		/*auto cube = mainScene->CreateEntity("square");
 		cube.GetComponent<TransformComponent>().Translation = glm::vec3{ 5.0, 0.0, 0.0 };
 		cube.AddComponent<PrimitiveRendererComponent>(PrimitiveShape::CUBE, glm::vec4{ 0.0, 1.0, 0.0, 1.0 });
 
@@ -41,7 +42,7 @@ public:
 
 		auto gun = mainScene->CreateEntity("gun");
 		gun.AddComponent<MeshRendererComponent>().Mesh = testMesh;
-		gun.GetComponent<TransformComponent>().Translation = { 2.0, 0.0, 0.0 };
+		gun.GetComponent<TransformComponent>().Translation = { 2.0, 0.0, 0.0 };*/
 
         // TEMP TEST
 		SceneSerializer serializer(mainScene);
@@ -51,16 +52,27 @@ public:
 
     void ClientUpdate(Humzer::Timestep dt) {
 
-        mainScene->OnUpdate(dt);
+		mainScene->OnUpdate(dt);
+
+		Renderer2D::BeginScene(m_MainCamera.GetComponent<CameraComponent>().Camera, m_MainCamera.GetComponent<TransformComponent>().GetTransform());
+
+		Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+		Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
+		Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture);
+
+		Renderer2D::EndScene();
+
+        
 
         if (Input::IsKeyPressed(Key::Escape)) {
             Quit();
         }
     }
 private:
-    //PerspectiveCamera basicCam;
+    Entity m_MainCamera;
     Ref<Scene> mainScene;
-    Ref<TextureCube> skyboxTexture;
+   /* Ref<TextureCube> skyboxTexture;*/
+	Ref<Texture2D> m_CheckerboardTexture;
 };
 
 Humzer::Application* Humzer::CreateApplication() {

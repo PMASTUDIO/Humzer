@@ -5,7 +5,19 @@
 #include <Humzer\Platform\OpenGL\OpenGLTexture.h>
 
 namespace Humzer {
-
+	Ref<Texture2D> Texture2D::Create(uint32_t width, uint32_t height)
+	{
+		switch (Renderer::GetAPI())
+		{
+		case RendererAPI::API::OpenGL:
+			return CreateRef<OpenGLTexture2D>(width, height);
+			break;
+		default:
+		case RendererAPI::API::None:
+			HUM_CORE_FATAL("No Renderer API Selected!");
+			return nullptr;
+		}
+	}
 	Ref<Texture2D> Texture2D::Create(const std::string& path)
 	{
 		switch (Renderer::GetAPI())

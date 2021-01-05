@@ -44,6 +44,9 @@ namespace Humzer {
 			break;
 		}
 
+		m_Format = data_format;
+		m_InternalFormat = internal_format;
+
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_ID);
 		glTextureStorage2D(m_ID, 1, internal_format, m_Width, m_Height);
 
@@ -62,6 +65,23 @@ namespace Humzer {
 		stbi_image_free(data);
 	}
 
+	OpenGLTexture2D::OpenGLTexture2D(uint32_t width, uint32_t height) :m_Width(width), m_Height(height) {
+		
+		// UPLOAD TEXTURE TO GPU
+		m_Format = GL_RGBA;
+		m_InternalFormat = GL_RGBA8;
+
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_ID);
+		glTextureStorage2D(m_ID, 1, m_InternalFormat, m_Width, m_Height);
+
+		glTextureParameteri(m_ID, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTextureParameteri(m_ID, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+		glTextureParameteri(m_ID, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTextureParameteri(m_ID, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+	}
+
 	OpenGLTexture2D::~OpenGLTexture2D()
 	{
 		glDeleteTextures(1, &m_ID);
@@ -71,6 +91,16 @@ namespace Humzer {
 	{
 		glBindTextureUnit(slot, m_ID);
 	}
+
+	void OpenGLTexture2D::SetData(void* data, uint32_t size)
+	{
+		uint32_t bpc = m_Format == GL_RGBA ? 4 : 3; // Bytes per channel
+		HUM_ASSERT(size == m_Width * m_Height * bpc , "Data must correspond to the entire texture!");
+
+		glTextureSubImage2D(m_ID, 0, 0, 0, m_Width, m_Height, m_Format, GL_UNSIGNED_BYTE, data);
+	}
+
+	// Texture cube
 
 	OpenGLTextureCube::OpenGLTextureCube(const std::vector<std::string> faces) : m_Width(0), m_Height(0), m_Faces(faces) /*: m_Path(path)*/
 	{

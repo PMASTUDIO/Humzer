@@ -35,9 +35,9 @@ namespace Humzer {
 			HUM_CORE_ERROR("{0} : Mesh can't be initialized before Renderer3D init", filename);
 			return;
 		}*/
-		HUM_ASSERT(Renderer3D::GetShaderLibrary());
+		HUM_ASSERT(Renderer::GetShaderLibrary());
 
-		m_MeshShader = Renderer3D::GetShaderLibrary()->Get("mesh_base");
+		m_MeshShader = Renderer::GetShaderLibrary()->Get("mesh_base");
 
 		processNode(scene->mRootNode, scene);
 

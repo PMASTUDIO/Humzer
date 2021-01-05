@@ -1,11 +1,13 @@
 #pragma once
 
 #include "../../Renderer/Texture.h"
+#include "glad/glad.h"
 
 namespace Humzer {
 
 	class OpenGLTexture2D : public Texture2D {
 	public:
+		OpenGLTexture2D(uint32_t width, uint32_t height);
 		OpenGLTexture2D(const std::string& path);
 		virtual ~OpenGLTexture2D();
 
@@ -15,10 +17,15 @@ namespace Humzer {
 		virtual bool Loaded() const override { return m_Loaded; }
 
 		void Bind(uint32_t slot = 0) const override;
+
+		void SetData(void* data, uint32_t size) override;
+
 	private:
 		std::string m_Path;
 		uint32_t m_Width, m_Height;
 		unsigned int m_ID;
+
+		GLenum m_InternalFormat, m_Format;
 
 		bool m_Loaded = false;
 	};

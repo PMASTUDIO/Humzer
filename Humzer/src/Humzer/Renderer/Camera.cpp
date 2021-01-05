@@ -29,7 +29,7 @@ namespace Humzer {
 		Dispatcher::AddSpecificEventSubscriber(m_EventsSubscriber, Events::WINDOWS_RESIZED);
 
 		UpdateMatrices();
-		UpdateCameraVectors();
+		// UpdateCameraVectors();
 	}
 
 	void SceneCamera::SetPerspective(float verticalFOV, float nearClip, float farClip)
@@ -38,11 +38,16 @@ namespace Humzer {
 		m_FOV = verticalFOV;
 		m_NearClip = nearClip;
 		m_FarClip = farClip;
+		UpdateMatrices();
 	}
 
 	void SceneCamera::SetOrthographic(float size, float nearClip, float farClip)
 	{
 		m_ProjectionType = ProjectionType::Orthographic;
+		m_OrthographicSize = size;
+		m_OrthographicNear = nearClip;
+		m_OrthographicFar = farClip;
+		UpdateMatrices();
 	}
 
 	void SceneCamera::SetViewportSize(uint32_t width, uint32_t height)
@@ -108,15 +113,13 @@ namespace Humzer {
 			m_ProjectionMatrix = glm::perspective(glm::radians(m_FOV), m_AspectRatio, m_NearClip, m_FarClip);
 		}
 		else {
-			// #TODO Orthographic Cam projection set up 
-
-			/*float orthoLeft = -m_OrthographicSize * m_AspectRatio * 0.5f;
+			float orthoLeft = -m_OrthographicSize * m_AspectRatio * 0.5f;
 			float orthoRight = m_OrthographicSize * m_AspectRatio * 0.5f;
 			float orthoBottom = -m_OrthographicSize * 0.5f;
 			float orthoTop = m_OrthographicSize * 0.5f;
 
-			m_Projection = glm::ortho(orthoLeft, orthoRight,
-				orthoBottom, orthoTop, m_OrthographicNear, m_OrthographicFar);*/
+			m_ProjectionMatrix = glm::ortho(orthoLeft, orthoRight,
+				orthoBottom, orthoTop, m_OrthographicNear, m_OrthographicFar);
 		}
 
 		/*m_ViewMatrix = glm::lookAt(m_Position, m_Position + m_CameraFront, m_CameraUp);*/
