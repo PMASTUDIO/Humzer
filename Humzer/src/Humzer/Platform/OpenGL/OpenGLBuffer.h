@@ -7,6 +7,7 @@ namespace Humzer {
 	class OpenGLVertexBuffer : public VertexBuffer {
 	public:
 		OpenGLVertexBuffer(void* data, uint32_t size);
+		OpenGLVertexBuffer(uint32_t size);
 		virtual ~OpenGLVertexBuffer();
 
 		void Bind() const override;
@@ -14,6 +15,8 @@ namespace Humzer {
 
 		void SetLayout(const BufferLayout& layout) override { m_Layout = layout; }
 		const BufferLayout& GetLayout() const override { return m_Layout; }
+
+		void SetData(const void* data, uint32_t size) override;
 
 	private:
 		unsigned int m_ID;

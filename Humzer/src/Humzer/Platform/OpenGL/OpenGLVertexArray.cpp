@@ -26,6 +26,7 @@ void Humzer::OpenGLVertexArray::Unbind() const
 void Humzer::OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexBuffer)
 {
 	glBindVertexArray(m_ID);
+	vertexBuffer->Bind();
 
 	const auto& layout = vertexBuffer->GetLayout();
 	for (const auto& element : layout)

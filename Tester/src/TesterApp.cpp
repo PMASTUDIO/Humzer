@@ -31,10 +31,10 @@ public:
 		//mainScene->SetSkybox(skyboxTexture);
 
 		m_MainCamera = mainScene->CreateEntity("camera");
-		m_MainCamera.GetComponent<TransformComponent>().Translation = glm::vec3{ 0.0f, 0.0f, 0.0f };
+		m_MainCamera.GetComponent<TransformComponent>().Translation = glm::vec3{ 0.0f, 4.0f, 20.0f };
 		m_MainCamera.AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Orthographic);
 
-		/*auto cube = mainScene->CreateEntity("square");
+		auto cube = mainScene->CreateEntity("square");
 		cube.GetComponent<TransformComponent>().Translation = glm::vec3{ 5.0, 0.0, 0.0 };
 		cube.AddComponent<PrimitiveRendererComponent>(PrimitiveShape::CUBE, glm::vec4{ 0.0, 1.0, 0.0, 1.0 });
 
@@ -42,8 +42,9 @@ public:
 
 		auto gun = mainScene->CreateEntity("gun");
 		gun.AddComponent<MeshRendererComponent>().Mesh = testMesh;
-		gun.GetComponent<TransformComponent>().Translation = { 2.0, 0.0, 0.0 };*/
-
+		gun.GetComponent<TransformComponent>().Translation = { 2.0, 0.0, 0.0 };
+			
+			
         // TEMP TEST
 		SceneSerializer serializer(mainScene);
         //serializer.Serialize("Resources/scenes/first.humscene");
@@ -54,15 +55,12 @@ public:
 
 		mainScene->OnUpdate(dt);
 
-		Renderer2D::BeginScene(m_MainCamera.GetComponent<CameraComponent>().Camera, m_MainCamera.GetComponent<TransformComponent>().GetTransform());
+		//Renderer2D::BeginScene(m_MainCamera.GetComponent<CameraComponent>().Camera, m_MainCamera.GetComponent<TransformComponent>().GetTransform());
+		//Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
+		//Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
+		///*Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture, 10.0f);*/
+		//Renderer2D::EndScene();
 
-		Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-		Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
-		Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture);
-
-		Renderer2D::EndScene();
-
-        
 
         if (Input::IsKeyPressed(Key::Escape)) {
             Quit();

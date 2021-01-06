@@ -21,6 +21,22 @@ Humzer::Ref<Humzer::VertexBuffer> Humzer::VertexBuffer::Create(void* data, uint3
 	}
 }
 
+Humzer::Ref<Humzer::VertexBuffer> Humzer::VertexBuffer::Create(uint32_t size)
+{
+	switch (Renderer::GetAPI())
+	{
+	case RendererAPI::API::OpenGL:
+		return CreateRef<OpenGLVertexBuffer>(size);
+		break;
+
+
+	default:
+	case RendererAPI::API::None:
+		HUM_CORE_FATAL("No Renderer API Selected!");
+		return nullptr;
+	}
+}
+
 Humzer::Ref<Humzer::IndexBuffer> Humzer::IndexBuffer::Create(void* indices, uint32_t size)
 {
 	switch (Renderer::GetAPI())
