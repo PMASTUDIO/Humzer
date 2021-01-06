@@ -308,7 +308,8 @@ namespace Humzer {
 			glm::vec3 Position;
 			glm::vec4 Color;
 			glm::vec2 TexCoord;
-			// #WILL-HAVE: texid
+			float TexIndex;
+			float TilingFactor;
 		};
 
 		struct Renderer2DStorage
@@ -316,12 +317,16 @@ namespace Humzer {
 			const uint32_t MaxQuads = 10000;
 			const uint32_t MaxVertices = MaxQuads * 4;
 			const uint32_t MaxIndices = MaxQuads * 6;
+			static const uint32_t MaxTextureSlots = 32; // @TODO: Render Caps
 
 			uint32_t QuadIndexCount = 0;
 			QuadVertex* QuadVertexBufferBase = nullptr;
 			QuadVertex* QuadVertexBufferPtr = nullptr;
 
 			glm::vec4 QuadVertexPositions[4];
+
+			std::array<Ref<Texture2D>, MaxTextureSlots> TextureSlots;
+			uint32_t TextureSlotIndex = 1; // Since 0 will always be white texture
 
 			Ref<VertexArray> QuadVertexArray;
 			Ref<VertexBuffer> QuadVertexBuffer;
@@ -344,7 +349,9 @@ namespace Humzer {
 			s_Data2D->QuadVertexBuffer->SetLayout({
 				{ ShaderDataType::Float3, "a_Position" },
 				{ ShaderDataType::Float4, "a_Color"},
-				{ ShaderDataType::Float2, "a_TexCoord" }
+				{ ShaderDataType::Float2, "a_TexCoord" },
+				{ ShaderDataType::Float, "a_TexIndex"},
+				{ ShaderDataType::Float, "a_TilingFactor"},
 			});
 			s_Data2D->QuadVertexArray->AddVertexBuffer(s_Data2D->QuadVertexBuffer);
 
@@ -375,16 +382,23 @@ namespace Humzer {
 			uint32_t whiteTextureData = 0xffffffff; // RGBA White
 			s_Data2D->WhiteTexture->SetData(&whiteTextureData, sizeof(uint32_t));
 
+			int32_t samplers[s_Data2D->MaxTextureSlots];
+			for (uint32_t i = 0; i < s_Data2D->MaxTextureSlots; i++)
+				samplers[i] = i;
+			
+
 			// SHADERS INIT
 			s_Data2D->TextureShader = Renderer::GetShaderLibrary()->Load("texture_2d", "Resources/shaders/Texture2D.vs", "Resources/shaders/Texture2D.fs");
 			s_Data2D->TextureShader->Bind();
-			s_Data2D->TextureShader->SetInt("u_Texture", 0);
+			s_Data2D->TextureShader->SetIntArray("u_Textures", samplers, s_Data2D->MaxTextureSlots); // Sampler
 
 			// Set quad vertex positions
 			s_Data2D->QuadVertexPositions[0] = { -0.5f, -0.5f, 0.0f, 1.0f };
 			s_Data2D->QuadVertexPositions[1] = { 0.5f, -0.5f, 0.0f, 1.0f };
 			s_Data2D->QuadVertexPositions[2] = { 0.5f,  0.5f, 0.0f, 1.0f };
 			s_Data2D->QuadVertexPositions[3] = { -0.5f,  0.5f, 0.0f, 1.0f };
+			
+			s_Data2D->TextureSlots[0] = s_Data2D->WhiteTexture;
 		}
 
 		void Renderer2D::Shutdown()
@@ -403,6 +417,7 @@ namespace Humzer {
 			// Start Batch
 			s_Data2D->QuadVertexBufferPtr = s_Data2D->QuadVertexBufferBase;
 			s_Data2D->QuadIndexCount = 0;
+			s_Data2D->TextureSlotIndex = 1; // Since 0 will always be white texture
 		}
 
 		void Renderer2D::EndScene()
@@ -418,6 +433,11 @@ namespace Humzer {
 			uint32_t totalDataSize = (uint32_t)((uint8_t*)s_Data2D->QuadVertexBufferPtr - (uint8_t*)s_Data2D->QuadVertexBufferBase); // (uint8_t because we have to cast to a 1 byte type to make the subtraction)
 			s_Data2D->QuadVertexBuffer->SetData(s_Data2D->QuadVertexBufferBase, totalDataSize);
 
+			// Bind Textures
+			for (uint32_t i = 0; i < s_Data2D->TextureSlotIndex; i++) {
+				s_Data2D->TextureSlots[i]->Bind(i);
+			}
+
 			s_Data2D->QuadVertexArray->Bind();
 			RenderCommand::DrawIndexed(s_Data2D->QuadVertexArray, s_Data2D->QuadIndexCount);
 		}
@@ -427,12 +447,15 @@ namespace Humzer {
 		{
 			constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 			constexpr size_t quadVertexCount = 4;
+			const float texIndex = 0.0f; // White Texture
 
 			for (size_t i = 0; i < quadVertexCount; i++) // FOR EACH QUAD VERTEX
 			{
 				s_Data2D->QuadVertexBufferPtr->Position = transform * s_Data2D->QuadVertexPositions[i];
 				s_Data2D->QuadVertexBufferPtr->Color = color;
 				s_Data2D->QuadVertexBufferPtr->TexCoord = textureCoords[i];
+				s_Data2D->QuadVertexBufferPtr->TexIndex = texIndex;
+				s_Data2D->QuadVertexBufferPtr->TilingFactor = 1.0f;
 				s_Data2D->QuadVertexBufferPtr++;
 			}
 
@@ -460,14 +483,45 @@ namespace Humzer {
 		// DRAW TEXTURED QUAD WITH TRANSFORM
 		void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor /*= 1.0f*/)
 		{
-			s_Data2D->TextureShader->SetFloat4("u_Color", glm::vec4(1.0f));
+			constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
+
+			constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
+			constexpr size_t quadVertexCount = 4;
+			float texIndex = 0.0f;
+
+			for (uint32_t i = 1; i < s_Data2D->TextureSlotIndex; i++) { // Iterate to last TextureSlot in use
+				if (*s_Data2D->TextureSlots[i].get() == *texture.get()) { // Compare textures id
+					texIndex = (float)i;
+					break;
+				}
+			}
+
+			if (texIndex == 0.0f) {
+				texIndex = (float)s_Data2D->TextureSlotIndex;
+				s_Data2D->TextureSlots[s_Data2D->TextureSlotIndex] = texture;
+				s_Data2D->TextureSlotIndex++;
+			}
+
+			for (size_t i = 0; i < quadVertexCount; i++) // FOR EACH QUAD VERTEX
+			{
+				s_Data2D->QuadVertexBufferPtr->Position = transform * s_Data2D->QuadVertexPositions[i];
+				s_Data2D->QuadVertexBufferPtr->Color = color;
+				s_Data2D->QuadVertexBufferPtr->TexCoord = textureCoords[i];
+				s_Data2D->QuadVertexBufferPtr->TexIndex = texIndex;
+				s_Data2D->QuadVertexBufferPtr->TilingFactor = tilingFactor;
+				s_Data2D->QuadVertexBufferPtr++;
+			}
+
+			s_Data2D->QuadIndexCount += 6;
+
+			/*s_Data2D->TextureShader->SetFloat4("u_Color", glm::vec4(1.0f));
 			s_Data2D->TextureShader->SetFloat("u_TilingFactor", tilingFactor);
 			texture->Bind();
 
 			s_Data2D->TextureShader->SetMat4("u_Transform", transform);
 
 			s_Data2D->QuadVertexArray->Bind();
-			RenderCommand::DrawIndexed(s_Data2D->QuadVertexArray);
+			RenderCommand::DrawIndexed(s_Data2D->QuadVertexArray);*/
 		}
 
 		void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor)

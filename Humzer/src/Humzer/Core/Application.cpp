@@ -32,7 +32,7 @@ namespace Humzer {
 
         RenderCommand::EnableDepthTesting();
         
-        /*Renderer2D::Init();*/
+        Renderer2D::Init();
         Renderer3D::Init();
 
         ClientOnStart();
@@ -51,7 +51,7 @@ namespace Humzer {
             m_Window->OnUpdate();
         }
 
-        /*Renderer2D::Shutdown();*/
+        Renderer2D::Shutdown();
         Renderer3D::Shutdown();
         
         std::this_thread::sleep_for(std::chrono::milliseconds(750));

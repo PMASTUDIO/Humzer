@@ -20,6 +20,12 @@ namespace Humzer {
 
 		void SetData(void* data, uint32_t size) override;
 
+
+		bool operator ==(const Texture2D& other) const override
+		{
+			return m_ID == ((OpenGLTexture2D&)other).m_ID;
+		}
+
 	private:
 		std::string m_Path;
 		uint32_t m_Width, m_Height;
