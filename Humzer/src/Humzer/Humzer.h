@@ -17,11 +17,13 @@
 #include "Renderer/Texture.h"
 #include "Renderer/Mesh.h"
 #include "Renderer/Shader.h"
+#include "Renderer/Framebuffer.h"
 
 // ECS
 #include "Scene/Scene.h"
 #include "Scene/Components.h"
 #include "Scene/Entity.h"
+#include "Scene/SceneSerializer.h"
 
 // ---- ENTRY POINT ----
 #include "Core/EntryPoint.h"

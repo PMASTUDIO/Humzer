@@ -135,6 +135,8 @@
     <ClInclude Include="src\Humzer\Events\Events.h" />
     <ClInclude Include="src\Humzer\Events\Subscriber.h" />
     <ClInclude Include="src\Humzer\Events\Dispatcher.h" />
+    <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLFramebuffer.h" />
+    <ClInclude Include="src\Humzer\Renderer\Framebuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Humzer\Core\Application.cpp">
@@ -214,5 +216,7 @@
     </ClCompile>
     <ClCompile Include="src\Humzer\Events\Subscriber.cpp" />
     <ClCompile Include="src\Humzer\Events\Dispatcher.cpp" />
+    <ClCompile Include="src\Humzer\Renderer\Framebuffer.cpp" />
+    <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLFramebuffer.cpp" />
   </ItemGroup>
 </Project>

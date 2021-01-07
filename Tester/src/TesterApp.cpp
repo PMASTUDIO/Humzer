@@ -1,9 +1,6 @@
 #include <Humzer/Humzer.h>
 #include "glm/ext/matrix_transform.hpp"
 
-// TEMP
-#include "Humzer/Scene/SceneSerializer.h"
-
 using namespace Humzer;
 
 class Tester : public Humzer::Application {
@@ -18,7 +15,13 @@ public:
 			 "Resources/textures/sky/back.jpg",
 		 };
         skyboxTexture = TextureCube::Create(faces);*/
-		//m_CheckerboardTexture = Texture2D::Create("Resources/textures/Checkerboard.png");
+		m_CheckerboardTexture = Texture2D::Create("Resources/textures/Checkerboard.png");
+
+		FramebufferSpecs fbSpecs;
+		fbSpecs.Width = 1280;
+		fbSpecs.Height = 720;
+
+		m_Framebuffer = Framebuffer::Create(fbSpecs);
     }
 
     ~Tester(){
@@ -26,11 +29,12 @@ public:
     }
 
     void ClientOnStart() {
+
 		mainScene = CreateRef<Scene>();
 
 		//mainScene->SetSkybox(skyboxTexture);
 
-		/*auto camera = mainScene->CreateEntity("camera");
+		auto camera = mainScene->CreateEntity("camera");
 		camera.GetComponent<TransformComponent>().Translation = glm::vec3{ 0.0f, 0.0f, 0.0f };
 		camera.AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Orthographic);
 
@@ -48,7 +52,7 @@ public:
 		checkerboard.GetComponent<TransformComponent>().Translation = glm::vec3{ 0.0f, 0.0f, -0.1f };
 		checkerboard.GetComponent<TransformComponent>().Scale = glm::vec3{ 5.0f, 5.0f, 0.0f };
 		checkerboard.AddComponent<SpriteRendererComponent>().Texture = m_CheckerboardTexture;
-		checkerboard.GetComponent<SpriteRendererComponent>().TilingFactor = 10.0f;*/
+		checkerboard.GetComponent<SpriteRendererComponent>().TilingFactor = 10.0f;
 
 		/*auto cube = mainScene->CreateEntity("square");
 		cube.GetComponent<TransformComponent>().Translation = glm::vec3{ 5.0, 0.0, 0.0 };
@@ -64,13 +68,20 @@ public:
         // TEMP TEST
 		SceneSerializer serializer(mainScene);
         //serializer.Serialize("Resources/scenes/Demo2D.humscene");
-        serializer.Deserialize("Resources/scenes/Demo2D.humscene");
+        //serializer.Deserialize("Resources/scenes/Demo2D.humscene");
 		//serializer.Deserialize("Resources/scenes/Demo3D.humscene");
     }
 
     void ClientUpdate(Humzer::Timestep dt) {
 
+		m_Framebuffer->Bind();
+
+		RenderCommand::SetClearColor({ 0.2f, 0.3f, 0.3f, 1.0f });
+		RenderCommand::Clear();
+
 		mainScene->OnUpdate(dt);
+
+		m_Framebuffer->Unbind();
 
         if (Input::IsKeyPressed(Key::Escape)) {
             Quit();
@@ -80,6 +91,7 @@ private:
     Ref<Scene> mainScene;
    /* Ref<TextureCube> skyboxTexture;*/
 	Ref<Texture2D> m_CheckerboardTexture;
+	Ref<Framebuffer> m_Framebuffer;
 };
 
 Humzer::Application* Humzer::CreateApplication() {
