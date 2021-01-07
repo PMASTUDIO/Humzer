@@ -314,9 +314,9 @@ namespace Humzer {
 
 		struct Renderer2DStorage
 		{
-			const uint32_t MaxQuads = 10000;
-			const uint32_t MaxVertices = MaxQuads * 4;
-			const uint32_t MaxIndices = MaxQuads * 6;
+			static const uint32_t MaxQuads = 10000;
+			static const uint32_t MaxVertices = MaxQuads * 4;
+			static const uint32_t MaxIndices = MaxQuads * 6;
 			static const uint32_t MaxTextureSlots = 32; // @TODO: Render Caps
 
 			uint32_t QuadIndexCount = 0;
@@ -332,6 +332,8 @@ namespace Humzer {
 			Ref<VertexBuffer> QuadVertexBuffer;
 			Ref<Shader> TextureShader;
 			Ref<Texture2D> WhiteTexture;
+
+			Renderer2D::Statistics Stats;
 		};
 
 		static Renderer2DStorage* s_Data2D;
@@ -440,6 +442,20 @@ namespace Humzer {
 
 			s_Data2D->QuadVertexArray->Bind();
 			RenderCommand::DrawIndexed(s_Data2D->QuadVertexArray, s_Data2D->QuadIndexCount);
+
+#ifdef HUM_DEBUG
+			s_Data2D->Stats.DrawCalls++;
+#endif
+		}
+
+
+		void Renderer2D::FlushAndReset() {
+			EndScene();
+
+			// Start Batch
+			s_Data2D->QuadVertexBufferPtr = s_Data2D->QuadVertexBufferBase;
+			s_Data2D->QuadIndexCount = 0;
+			s_Data2D->TextureSlotIndex = 1; // Since 0 will always be white texture
 		}
 
 		// DRAW COLORED QUAD WITH TRANSFORM
@@ -448,6 +464,10 @@ namespace Humzer {
 			constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 			constexpr size_t quadVertexCount = 4;
 			const float texIndex = 0.0f; // White Texture
+
+			if (s_Data2D->QuadIndexCount >= Renderer2DStorage::MaxIndices) {
+				FlushAndReset();
+			}
 
 			for (size_t i = 0; i < quadVertexCount; i++) // FOR EACH QUAD VERTEX
 			{
@@ -460,6 +480,10 @@ namespace Humzer {
 			}
 
 			s_Data2D->QuadIndexCount += 6;
+
+#ifdef HUM_DEBUG
+			s_Data2D->Stats.QuadCount++;
+#endif
 
 			/*s_Data2D->TextureShader->SetFloat("u_TilingFactor", 1.0f);
 			s_Data2D->WhiteTexture->Bind();
@@ -489,6 +513,10 @@ namespace Humzer {
 			constexpr size_t quadVertexCount = 4;
 			float texIndex = 0.0f;
 
+			if (s_Data2D->QuadIndexCount >= Renderer2DStorage::MaxIndices) {
+				FlushAndReset();
+			}
+
 			for (uint32_t i = 1; i < s_Data2D->TextureSlotIndex; i++) { // Iterate to last TextureSlot in use
 				if (*s_Data2D->TextureSlots[i].get() == *texture.get()) { // Compare textures id
 					texIndex = (float)i;
@@ -514,6 +542,10 @@ namespace Humzer {
 
 			s_Data2D->QuadIndexCount += 6;
 
+#ifdef HUM_DEBUG
+			s_Data2D->Stats.QuadCount++;
+#endif
+
 			/*s_Data2D->TextureShader->SetFloat4("u_Color", glm::vec4(1.0f));
 			s_Data2D->TextureShader->SetFloat("u_TilingFactor", tilingFactor);
 			texture->Bind();
@@ -534,4 +566,15 @@ namespace Humzer {
 			glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
 			DrawQuad(transform, texture, tilingFactor);
 		}
+
+		Humzer::Renderer2D::Statistics Renderer2D::GetStats()
+		{
+			return s_Data2D->Stats;
+		}
+
+		void Renderer2D::ResetStats()
+		{
+			memset(&s_Data2D->Stats, 0, sizeof(Statistics));
+		}
+
 }

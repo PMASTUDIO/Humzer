@@ -30,7 +30,7 @@ namespace Humzer {
 
     void Application::Run(){
 
-        RenderCommand::EnableDepthTesting();
+        RenderCommand::Init();
         
         Renderer2D::Init();
         Renderer3D::Init();

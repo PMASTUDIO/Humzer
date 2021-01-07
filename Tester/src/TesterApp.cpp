@@ -55,6 +55,8 @@ public:
 
 		mainScene->OnUpdate(dt);
 
+		Humzer::Renderer2D::ResetStats();
+
 		Renderer2D::BeginScene(m_MainCamera.GetComponent<CameraComponent>().Camera, m_MainCamera.GetComponent<TransformComponent>().GetTransform());
 		Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
 		Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
@@ -63,6 +65,17 @@ public:
 
 		Renderer2D::EndScene();
 
+		Renderer2D::BeginScene(m_MainCamera.GetComponent<CameraComponent>().Camera, m_MainCamera.GetComponent<TransformComponent>().GetTransform());
+		for (float y = -5.0f; y < 5.0f; y += 0.4f) {
+			for (float x = -5.0f; x < 5.0f; x += 0.4f) {
+				glm::vec4 color = { (x + 5.0f) / 10.0f, 0.4f, (y + 5.0f) / 10.0f, 0.5f };
+				Renderer2D::DrawQuad({ x, y }, { 0.15f, 0.15f }, color);
+			}
+		}
+		Renderer2D::EndScene();
+
+		auto stats = Humzer::Renderer2D::GetStats();
+		HUM_CORE_INFO("Renderer2D Stats: Draw Calls: {0} - Quads: {1} - Vertices: {2} - Indices: {3}", stats.DrawCalls, stats.QuadCount, stats.GetTotalVertexCount(), stats.GetTotalIndexCount());
 
         if (Input::IsKeyPressed(Key::Escape)) {
             Quit();
