@@ -60,44 +60,67 @@ namespace Humzer {
 
 		HUM_ASSERT(mainCamera, "Scene does not contain any cameras!");
 
+		// 2D RENDERER
+		
+#if HUM_DEBUG
+		Renderer2D::ResetStats();
+#endif
+
+		Renderer2D::BeginScene(*mainCamera, *cameraTransform);
+		{
+			auto group = m_Registry.group<SpriteRendererComponent>(entt::get<TransformComponent>);
+			for (auto entity : group) {
+				auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
+
+				if(sprite.Texture)
+					Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture, sprite.TilingFactor);
+				else
+					Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color);
+			}
+		}
+		Renderer2D::EndScene();
+		
+
+		// 3D RENDERER
 		Renderer3D::BeginScene(*mainCamera, *cameraTransform, *cameraPos);
-
-		if(m_SkyboxTexture)
-			Renderer3D::DrawSkybox(m_SkyboxTexture);
-
 		{
-			auto group = m_Registry.group<TransformComponent>(entt::get<PrimitiveRendererComponent>);
-			for (auto entity : group) {
-				auto& [transform, primitive] = group.get<TransformComponent, PrimitiveRendererComponent>(entity);
+			if (m_SkyboxTexture)
+				Renderer3D::DrawSkybox(m_SkyboxTexture);
 
-				switch (primitive.Shape)
-				{
-				case PrimitiveShape::CUBE:
-					Renderer3D::DrawCube(transform.GetTransform(), primitive.Color);
-					break;
-				case PrimitiveShape::QUAD:
-					Renderer3D::DrawPlane(transform.GetTransform(), primitive.Color);
-					break;
-				default:
-					break;
+			{
+				auto group = m_Registry.group<PrimitiveRendererComponent>(entt::get<TransformComponent>);
+				for (auto entity : group) {
+					auto& [transform, primitive] = group.get<TransformComponent, PrimitiveRendererComponent>(entity);
+
+					switch (primitive.Shape)
+					{
+					case PrimitiveShape::CUBE:
+						Renderer3D::DrawCube(transform.GetTransform(), primitive.Color);
+						break;
+					case PrimitiveShape::QUAD:
+						Renderer3D::DrawPlane(transform.GetTransform(), primitive.Color);
+						break;
+					default:
+						break;
+					}
+
 				}
+			}
 
+			{
+				auto group = m_Registry.group<MeshRendererComponent>(entt::get<TransformComponent>);
+				for (auto entity : group) {
+					auto& [transform, mesh] = group.get<TransformComponent, MeshRendererComponent>(entity);
+
+					if (mesh.Mesh) {
+						Renderer3D::DrawMesh(transform.GetTransform(), mesh.Mesh);
+					}
+
+				}
 			}
 		}
-
-		{
-			auto group = m_Registry.group<MeshRendererComponent>(entt::get<TransformComponent>);
-			for (auto entity : group) {
-				auto& [transform, mesh] = group.get<TransformComponent, MeshRendererComponent>(entity);
-
-				if (mesh.Mesh) {
-					Renderer3D::DrawMesh(transform.GetTransform(), mesh.Mesh);
-				}
-
-			}
-		}
-
 		Renderer3D::EndScene();
+		
 	}
 
 }

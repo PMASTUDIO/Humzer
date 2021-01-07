@@ -317,7 +317,7 @@ namespace Humzer {
 			static const uint32_t MaxQuads = 10000;
 			static const uint32_t MaxVertices = MaxQuads * 4;
 			static const uint32_t MaxIndices = MaxQuads * 6;
-			static const uint32_t MaxTextureSlots = 32; // @TODO: Render Caps
+			static const uint32_t MaxTextureSlots = 32; // #TODO: Render Caps
 
 			uint32_t QuadIndexCount = 0;
 			QuadVertex* QuadVertexBufferBase = nullptr;

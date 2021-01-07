@@ -18,7 +18,7 @@ public:
 			 "Resources/textures/sky/back.jpg",
 		 };
         skyboxTexture = TextureCube::Create(faces);*/
-		m_CheckerboardTexture = Texture2D::Create("Resources/textures/Checkerboard.png");
+		//m_CheckerboardTexture = Texture2D::Create("Resources/textures/Checkerboard.png");
     }
 
     ~Tester(){
@@ -30,9 +30,25 @@ public:
 
 		//mainScene->SetSkybox(skyboxTexture);
 
-		m_MainCamera = mainScene->CreateEntity("camera");
-		m_MainCamera.GetComponent<TransformComponent>().Translation = glm::vec3{ 0.0f, 0.0f, 0.0f };
-		m_MainCamera.AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Orthographic);
+		/*auto camera = mainScene->CreateEntity("camera");
+		camera.GetComponent<TransformComponent>().Translation = glm::vec3{ 0.0f, 0.0f, 0.0f };
+		camera.AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Orthographic);
+
+		auto redSquare = mainScene->CreateEntity("square1");
+		redSquare.GetComponent<TransformComponent>().Translation = glm::vec3{ 0.7f, 0.0f, 0.0f };
+		redSquare.GetComponent<TransformComponent>().Scale = glm::vec3{ 0.8f, 0.4f, 1.0f };
+		redSquare.AddComponent<SpriteRendererComponent>().Color = { 0.8f, 0.05f, 0.05f, 1.0f };
+
+		auto greenSquare = mainScene->CreateEntity("square2");
+		greenSquare.GetComponent<TransformComponent>().Translation = glm::vec3{ -0.3f, 0.0f, 0.0f };
+		greenSquare.GetComponent<TransformComponent>().Scale = glm::vec3{ 0.5f, 0.3f, 1.0f };
+		greenSquare.AddComponent<SpriteRendererComponent>().Color = { 0.0f, 0.8f, 0.05f, 1.0f };
+
+		auto checkerboard = mainScene->CreateEntity("checkerboard");
+		checkerboard.GetComponent<TransformComponent>().Translation = glm::vec3{ 0.0f, 0.0f, -0.1f };
+		checkerboard.GetComponent<TransformComponent>().Scale = glm::vec3{ 5.0f, 5.0f, 0.0f };
+		checkerboard.AddComponent<SpriteRendererComponent>().Texture = m_CheckerboardTexture;
+		checkerboard.GetComponent<SpriteRendererComponent>().TilingFactor = 10.0f;*/
 
 		/*auto cube = mainScene->CreateEntity("square");
 		cube.GetComponent<TransformComponent>().Translation = glm::vec3{ 5.0, 0.0, 0.0 };
@@ -43,46 +59,24 @@ public:
 		auto gun = mainScene->CreateEntity("gun");
 		gun.AddComponent<MeshRendererComponent>().Mesh = testMesh;
 		gun.GetComponent<TransformComponent>().Translation = { 2.0, 0.0, 0.0 };*/
-			
+
 			
         // TEMP TEST
 		SceneSerializer serializer(mainScene);
-        //serializer.Serialize("Resources/scenes/first.humscene");
-        //serializer.Deserialize("Resources/scenes/first.humscene");
+        //serializer.Serialize("Resources/scenes/Demo2D.humscene");
+        serializer.Deserialize("Resources/scenes/Demo2D.humscene");
+		//serializer.Deserialize("Resources/scenes/Demo3D.humscene");
     }
 
     void ClientUpdate(Humzer::Timestep dt) {
 
 		mainScene->OnUpdate(dt);
 
-		Humzer::Renderer2D::ResetStats();
-
-		Renderer2D::BeginScene(m_MainCamera.GetComponent<CameraComponent>().Camera, m_MainCamera.GetComponent<TransformComponent>().GetTransform());
-		Renderer2D::DrawQuad({ -1.0f, 0.0f }, { 0.8f, 0.8f }, { 0.8f, 0.2f, 0.3f, 1.0f });
-		Renderer2D::DrawQuad({ 0.5f, -0.5f }, { 0.5f, 0.75f }, { 0.2f, 0.3f, 0.8f, 1.0f });
-		Renderer2D::DrawQuad({ 0.0f, 0.0f, -0.1f }, { 10.0f, 10.0f }, m_CheckerboardTexture, 10.0f);
-		Renderer2D::DrawQuad({ 0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f }, m_CheckerboardTexture, 20.0f);
-
-		Renderer2D::EndScene();
-
-		Renderer2D::BeginScene(m_MainCamera.GetComponent<CameraComponent>().Camera, m_MainCamera.GetComponent<TransformComponent>().GetTransform());
-		for (float y = -5.0f; y < 5.0f; y += 0.4f) {
-			for (float x = -5.0f; x < 5.0f; x += 0.4f) {
-				glm::vec4 color = { (x + 5.0f) / 10.0f, 0.4f, (y + 5.0f) / 10.0f, 0.5f };
-				Renderer2D::DrawQuad({ x, y }, { 0.15f, 0.15f }, color);
-			}
-		}
-		Renderer2D::EndScene();
-
-		auto stats = Humzer::Renderer2D::GetStats();
-		HUM_CORE_INFO("Renderer2D Stats: Draw Calls: {0} - Quads: {1} - Vertices: {2} - Indices: {3}", stats.DrawCalls, stats.QuadCount, stats.GetTotalVertexCount(), stats.GetTotalIndexCount());
-
         if (Input::IsKeyPressed(Key::Escape)) {
             Quit();
         }
     }
 private:
-    Entity m_MainCamera;
     Ref<Scene> mainScene;
    /* Ref<TextureCube> skyboxTexture;*/
 	Ref<Texture2D> m_CheckerboardTexture;

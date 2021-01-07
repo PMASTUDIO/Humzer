@@ -126,6 +126,24 @@ namespace Humzer {
 			out << YAML::EndMap; // PrimitiveRendererComponent MAP
 		}
 
+		if (entity.HasComponent<SpriteRendererComponent>()) {
+			out << YAML::Key << "SpriteRendererComponent";
+			out << YAML::BeginMap; // SpriteRendererComponent MAP
+
+			auto& spriteRendererComponent = entity.GetComponent<SpriteRendererComponent>();
+			
+			
+			if(spriteRendererComponent.Texture)
+				out << YAML::Key << "TexturePath" << YAML::Value << spriteRendererComponent.Texture->GetPath();
+			else
+				out << YAML::Key << "Color" << YAML::Value << spriteRendererComponent.Color;
+
+			
+			out << YAML::Key << "TilingFactor" << YAML::Value << spriteRendererComponent.TilingFactor;
+
+			out << YAML::EndMap; // SpriteRendererComponent MAP
+		}
+
 		if (entity.HasComponent<MeshRendererComponent>()) {
 			out << YAML::Key << "MeshRendererComponent";
 			out << YAML::BeginMap; // MeshRendererComponent MAP
@@ -271,6 +289,22 @@ namespace Humzer {
 					auto& mrc = deserializedEntity.AddComponent<MeshRendererComponent>();
 					mrc.Mesh = MeshLibrary::Load(meshRendererComponent["AssetName"].as<std::string>(), meshRendererComponent["AssetPath"].as<std::string>());
 				}
+
+				auto spriteRendererComponent = entity["SpriteRendererComponent"];
+				if (spriteRendererComponent)
+				{
+					auto& src = deserializedEntity.AddComponent<SpriteRendererComponent>();
+					
+					auto texPath = spriteRendererComponent["TexturePath"];
+
+					if(texPath)
+						src.Texture = Texture2D::Create(texPath.as<std::string>());
+					else
+						src.Color = spriteRendererComponent["Color"].as<glm::vec4>();
+
+					src.TilingFactor = spriteRendererComponent["TilingFactor"].as<float>();
+				}
+
 
 				auto cameraComponent = entity["CameraComponent"];
 				if (cameraComponent)
