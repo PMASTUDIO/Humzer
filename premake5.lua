@@ -1,7 +1,7 @@
 workspace "HumzerWorkspace"
     architecture "x64"
     configurations { "Debug", "Release", "Dist" }
-    startproject "Tester"
+    startproject "Humzer-Editor"
 
 output_dir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
@@ -85,6 +85,87 @@ project "Humzer"
         defines { "HUM_DIST" }
         optimize "on"
 
+
+project "Humzer-Editor"
+        location "Editor"
+        kind "ConsoleApp"
+        language "C++"
+        cppdialect "C++17"
+        staticruntime "On"
+    
+        files { 
+            "Editor/src/**.h", 
+            "Editor/src/**.cpp" 
+        }
+    
+        targetdir ("bin/" .. output_dir .. "/%{prj.name}")
+        objdir ("bin-int/" .. output_dir .. "/${prj.name}")
+    
+        includedirs { 
+            "%{prj.name}/include",
+            "Humzer/vendor/spdlog/include",
+            "Humzer/src",
+            "%{IncludeDir.glm}",
+            "%{IncludeDir.assimp}",
+            "%{IncludeDir.entt}",
+            "%{IncludeDir.imgui}"
+        }
+    
+        links {
+            "Humzer",
+        }
+    
+        filter { "system:windows" }
+            systemversion "latest"
+    
+            defines {
+                "HUM_PLATFORM_WINDOWS",
+            }
+    
+    
+        filter { "configurations:Debug" }
+            defines { "HUM_DEBUG" }
+            symbols "on"
+    
+            links
+            {
+                "Humzer/vendor/assimp/bin/Debug/assimp-vc141-mtd.lib"
+            }
+    
+            postbuildcommands 
+            {
+                '{COPY} "../Humzer/vendor/assimp/bin/Debug/assimp-vc141-mtd.dll" "%{cfg.targetdir}"'
+            }
+    
+    
+        filter { "configurations:Release" }
+            defines { "HUM_RELEASE" }
+            optimize "On"
+    
+            links
+            {
+                "Humzer/vendor/assimp/bin/Release/assimp-vc141-mtd.lib"
+            }
+    
+            postbuildcommands 
+            {
+                '{COPY} "../Humzer/vendor/assimp/bin/Release/assimp-vc141-mtd.dll" "%{cfg.targetdir}"'
+            }
+        
+        filter { "configurations:Dist" }
+            defines { "HUM_DIST" }
+            optimize "On"
+    
+            links
+            {
+                "Humzer/vendor/assimp/bin/Release/assimp-vc141-mtd.lib"
+            }
+    
+            postbuildcommands 
+            {
+                '{COPY} "../Humzer/vendor/assimp/bin/Release/assimp-vc141-mtd.dll" "%{cfg.targetdir}"'
+            }
+    
 
 project "Tester"
     location "Tester"

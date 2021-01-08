@@ -1,6 +1,8 @@
 #include <Humzer/Humzer.h>
 #include "glm/ext/matrix_transform.hpp"
 
+#include <Humzer/Core/EntryPoint.h>
+
 using namespace Humzer;
 
 class Tester : public Humzer::Application {

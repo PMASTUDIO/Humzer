@@ -78,6 +78,9 @@
     <ClInclude Include="src\Humzer\Humzer.h">
       <Filter>src\Humzer</Filter>
     </ClInclude>
+    <ClInclude Include="src\Humzer\ImGui\ImGuiRuntime.h">
+      <Filter>src\Humzer\ImGui</Filter>
+    </ClInclude>
     <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLBuffer.h">
       <Filter>src\Humzer\Platform\OpenGL</Filter>
     </ClInclude>
@@ -153,7 +156,6 @@
     <ClInclude Include="src\humpch.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Humzer\ImGui\ImGuiRuntime.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Humzer\Core\Application.cpp">
@@ -169,6 +171,9 @@
       <Filter>src\Humzer\Events</Filter>
     </ClCompile>
     <ClCompile Include="src\Humzer\ImGui\ImGuiBuild.cpp">
+      <Filter>src\Humzer\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\ImGui\ImGuiRuntime.cpp">
       <Filter>src\Humzer\ImGui</Filter>
     </ClCompile>
     <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLBuffer.cpp">
@@ -246,6 +251,5 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Humzer\ImGui\ImGuiRuntime.cpp" />
   </ItemGroup>
 </Project>

@@ -25,5 +25,3 @@
 #include "Scene/Entity.h"
 #include "Scene/SceneSerializer.h"
 
-// ---- ENTRY POINT ----
-#include "Core/EntryPoint.h"
