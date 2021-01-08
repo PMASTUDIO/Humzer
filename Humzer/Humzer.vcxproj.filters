@@ -10,6 +10,12 @@
     <Filter Include="src\Humzer\Core">
       <UniqueIdentifier>{AF0EA6FA-1B9A-13BF-24AB-96B390B56FBF}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Humzer\Events">
+      <UniqueIdentifier>{FB878641-679E-84D7-B015-10F91C6B555F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="src\Humzer\ImGui">
+      <UniqueIdentifier>{61AAD24F-4DA3-F1A1-76D5-D626622DD1AD}</UniqueIdentifier>
+    </Filter>
     <Filter Include="src\Humzer\Platform">
       <UniqueIdentifier>{2B7A66D9-97DB-43E7-2049-8A998CA97AA6}</UniqueIdentifier>
     </Filter>
@@ -60,10 +66,22 @@
     <ClInclude Include="src\Humzer\Core\Window.h">
       <Filter>src\Humzer\Core</Filter>
     </ClInclude>
+    <ClInclude Include="src\Humzer\Events\Dispatcher.h">
+      <Filter>src\Humzer\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Events\Events.h">
+      <Filter>src\Humzer\Events</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Events\Subscriber.h">
+      <Filter>src\Humzer\Events</Filter>
+    </ClInclude>
     <ClInclude Include="src\Humzer\Humzer.h">
       <Filter>src\Humzer</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLBuffer.h">
+      <Filter>src\Humzer\Platform\OpenGL</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLFramebuffer.h">
       <Filter>src\Humzer\Platform\OpenGL</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLRendererAPI.h">
@@ -88,6 +106,9 @@
       <Filter>src\Humzer\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Renderer\Camera.h">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Humzer\Renderer\Framebuffer.h">
       <Filter>src\Humzer\Renderer</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Renderer\GraphicsContext.h">
@@ -132,11 +153,7 @@
     <ClInclude Include="src\humpch.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Humzer\Events\Events.h" />
-    <ClInclude Include="src\Humzer\Events\Subscriber.h" />
-    <ClInclude Include="src\Humzer\Events\Dispatcher.h" />
-    <ClInclude Include="src\Humzer\Platform\OpenGL\OpenGLFramebuffer.h" />
-    <ClInclude Include="src\Humzer\Renderer\Framebuffer.h" />
+    <ClInclude Include="src\Humzer\ImGui\ImGuiRuntime.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Humzer\Core\Application.cpp">
@@ -145,7 +162,19 @@
     <ClCompile Include="src\Humzer\Core\Log.cpp">
       <Filter>src\Humzer\Core</Filter>
     </ClCompile>
+    <ClCompile Include="src\Humzer\Events\Dispatcher.cpp">
+      <Filter>src\Humzer\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\Events\Subscriber.cpp">
+      <Filter>src\Humzer\Events</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\ImGui\ImGuiBuild.cpp">
+      <Filter>src\Humzer\ImGui</Filter>
+    </ClCompile>
     <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLBuffer.cpp">
+      <Filter>src\Humzer\Platform\OpenGL</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLFramebuffer.cpp">
       <Filter>src\Humzer\Platform\OpenGL</Filter>
     </ClCompile>
     <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLRendererAPI.cpp">
@@ -173,6 +202,9 @@
       <Filter>src\Humzer\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Humzer\Renderer\Camera.cpp">
+      <Filter>src\Humzer\Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Humzer\Renderer\Framebuffer.cpp">
       <Filter>src\Humzer\Renderer</Filter>
     </ClCompile>
     <ClCompile Include="src\Humzer\Renderer\Mesh.cpp">
@@ -214,9 +246,6 @@
     <ClCompile Include="vendor\stb_image\stb_image.cpp">
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
-    <ClCompile Include="src\Humzer\Events\Subscriber.cpp" />
-    <ClCompile Include="src\Humzer\Events\Dispatcher.cpp" />
-    <ClCompile Include="src\Humzer\Renderer\Framebuffer.cpp" />
-    <ClCompile Include="src\Humzer\Platform\OpenGL\OpenGLFramebuffer.cpp" />
+    <ClCompile Include="src\Humzer\ImGui\ImGuiRuntime.cpp" />
   </ItemGroup>
 </Project>

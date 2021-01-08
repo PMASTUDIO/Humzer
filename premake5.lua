@@ -14,6 +14,7 @@ IncludeDir["stb_image"] = "Humzer/vendor/stb_image"
 IncludeDir["assimp"] = "Humzer/vendor/assimp/include"
 IncludeDir["entt"] = "Humzer/vendor/entt/include"
 IncludeDir["yaml_cpp"] = "Humzer/vendor/yaml-cpp/include"
+IncludeDir["imgui"] = "Humzer/vendor/imgui"
 
 IncludeDir["lib_ovr"] = "Humzer/vendor/LibOVR/Include"
 
@@ -46,7 +47,8 @@ project "Humzer"
         "%{IncludeDir.lib_ovr}",
         "%{IncludeDir.assimp}",
         "%{IncludeDir.entt}",
-        "%{IncludeDir.yaml_cpp}"
+        "%{IncludeDir.yaml_cpp}",
+        "%{IncludeDir.imgui}"
     }
 
     libdirs {
@@ -60,6 +62,7 @@ project "Humzer"
         "opengl32.lib",
         "yaml-cpp",
         "LibOVR.lib",
+        "ImGui"
     }
 
     filter { "system:windows" }
@@ -104,11 +107,12 @@ project "Tester"
         "Humzer/src",
         "%{IncludeDir.glm}",
         "%{IncludeDir.assimp}",
-        "%{IncludeDir.entt}"
+        "%{IncludeDir.entt}",
+        "%{IncludeDir.imgui}"
     }
 
     links {
-        "Humzer"
+        "Humzer",
     }
 
     filter { "system:windows" }
@@ -166,3 +170,4 @@ project "Tester"
 group "Dependencies"
     include "Humzer/vendor/GLAD"
     include "Humzer/vendor/yaml-cpp"
+    include "Humzer/vendor/imgui"
