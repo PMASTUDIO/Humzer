@@ -10,6 +10,7 @@
 #include "..\Renderer\RenderCommand.h"
 #include "..\Renderer\Renderer.h"
 #include "..\Events\Dispatcher.h"
+#include "..\ImGui\ImGuiRuntime.h"
 
 
 namespace Humzer {
@@ -22,11 +23,16 @@ namespace Humzer {
 
         m_Window = std::unique_ptr<Window>(Window::Create(1280, 720, "Humzer Game Engine"));
 
+        GUIRuntime = new ImGuiRuntime();
+
         Dispatcher::Initialize();
 
 	}
 
-    Application::~Application(){}
+    Application::~Application(){
+        GUIRuntime->OnShutdown();
+        delete GUIRuntime;
+	}
 
     void Application::Run(){
 
@@ -35,6 +41,7 @@ namespace Humzer {
         Renderer2D::Init();
         Renderer3D::Init();
 
+        GUIRuntime->OnStart();
         ClientOnStart();
 
         while (m_Running) {
@@ -42,7 +49,9 @@ namespace Humzer {
 			Timestep timestep = time - m_LastFrameTime;
 			m_LastFrameTime = time;
 
+            GUIRuntime->Begin();
             ClientUpdate(timestep);
+            GUIRuntime->End();
 
             m_Window->OnUpdate();
         }

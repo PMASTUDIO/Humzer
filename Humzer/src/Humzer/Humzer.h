@@ -19,6 +19,8 @@
 #include "Renderer/Shader.h"
 #include "Renderer/Framebuffer.h"
 
+#include "ImGui/ImGuiRuntime.h"
+
 // ECS
 #include "Scene/Scene.h"
 #include "Scene/Components.h"

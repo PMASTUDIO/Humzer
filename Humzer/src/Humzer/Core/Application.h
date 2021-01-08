@@ -3,6 +3,8 @@
 #include "Core.h"
 #include "Window.h"
 
+namespace Humzer { class ImGuiRuntime; }
+
 // TESTING
 #include <Humzer\Renderer\Buffer.h>
 #include "..\Renderer\Camera.h"
@@ -34,6 +36,7 @@ namespace Humzer
         float m_LastFrameTime = 0.0f;
 
     private:
+        ImGuiRuntime* GUIRuntime;
         static Application* s_Instance;
     };
 

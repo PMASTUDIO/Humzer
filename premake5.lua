@@ -60,9 +60,14 @@ project "Humzer"
         "GLFW.lib",
         "GLAD",
         "opengl32.lib",
+        "ImGui",
         "yaml-cpp",
         "LibOVR.lib",
-        "ImGui"
+    }
+
+    defines {
+        "_CRT_SECURE_NO_WARNINGS",
+		"GLFW_INCLUDE_NONE"
     }
 
     filter { "system:windows" }
@@ -108,7 +113,7 @@ project "Humzer-Editor"
             "%{IncludeDir.glm}",
             "%{IncludeDir.assimp}",
             "%{IncludeDir.entt}",
-            "%{IncludeDir.imgui}"
+            "Humzer/vendor"
         }
     
         links {
@@ -189,7 +194,7 @@ project "Tester"
         "%{IncludeDir.glm}",
         "%{IncludeDir.assimp}",
         "%{IncludeDir.entt}",
-        "%{IncludeDir.imgui}"
+        "Humzer/vendor"
     }
 
     links {

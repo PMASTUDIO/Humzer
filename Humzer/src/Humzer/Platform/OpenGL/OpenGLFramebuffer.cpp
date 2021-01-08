@@ -13,10 +13,18 @@ namespace Humzer {
 	OpenGLFramebuffer::~OpenGLFramebuffer()
 	{
 		glDeleteFramebuffers(1, &m_ID);
+		glDeleteTextures(1, &m_ColorAttachment);
+		glDeleteTextures(1, &m_DepthAttachment);
 	}
 
 	void OpenGLFramebuffer::Invalidate()
 	{
+		if(m_ID){
+			glDeleteFramebuffers(1, &m_ID);
+			glDeleteTextures(1, &m_ColorAttachment);
+			glDeleteTextures(1, &m_DepthAttachment);
+		}
+
 		glCreateFramebuffers(1, &m_ID);
 		glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
 
@@ -44,11 +52,19 @@ namespace Humzer {
 	void OpenGLFramebuffer::Bind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
+		glViewport(0, 0, m_Specs.Width, m_Specs.Height);
 	}
 
 	void OpenGLFramebuffer::Unbind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void OpenGLFramebuffer::Resize(uint32_t width, uint32_t height)
+	{
+		m_Specs.Width = width;
+		m_Specs.Height = height;
+		Invalidate();
 	}
 
 }

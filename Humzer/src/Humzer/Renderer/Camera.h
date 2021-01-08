@@ -40,6 +40,7 @@ namespace Humzer {
 		void OnUpdate(Timestep ts);
 
 		void OnResize(void* windowsData);
+		void ResizeBounds(uint32_t width, uint32_t height);
 
 		/*const glm::mat4& GetViewMatrix() const { return m_ViewMatrix; }
 		glm::mat4 GetViewProjection() const { return m_ProjectionMatrix * m_ViewMatrix; }

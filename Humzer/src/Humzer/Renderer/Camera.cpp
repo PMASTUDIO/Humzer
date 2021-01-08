@@ -21,8 +21,6 @@ namespace Humzer {
 		glm::vec3 m_WorldUp = { 0.0f, 1.0f, 0.0f };
 		glm::vec3 m_CameraRight = { 1.0f, 0.0f, 0.0f };*/
 
-		Application::Get().GetWindow().CaptureMouse();
-
 		// LISTEN FOR RESIZE EVENTS
 		m_EventsSubscriber = new Subscriber(this);
 		m_EventsSubscriber->m_Method = std::bind(&SceneCamera::OnResize, this, std::placeholders::_1);
@@ -104,6 +102,12 @@ namespace Humzer {
 		glm::vec2& vec2Size = *(glm::vec2*)size;
 
 		m_AspectRatio = vec2Size.x / vec2Size.y;
+		UpdateMatrices();
+	}
+
+	void SceneCamera::ResizeBounds(uint32_t width, uint32_t height)
+	{
+		m_AspectRatio = width / height;
 		UpdateMatrices();
 	}
 
