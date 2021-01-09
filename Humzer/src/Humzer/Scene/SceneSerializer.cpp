@@ -167,9 +167,9 @@ namespace Humzer {
 			out << YAML::Key << "Camera" << YAML::Value;
 			out << YAML::BeginMap; // Camera
 			out << YAML::Key << "ProjectionType" << YAML::Value << (int)camera.GetProjectionType();
-			out << YAML::Key << "PerspectiveFOV" << YAML::Value << camera.GetFOV();
-			out << YAML::Key << "PerspectiveNear" << YAML::Value << camera.GetNear();
-			out << YAML::Key << "PerspectiveFar" << YAML::Value << camera.GetFar();
+			out << YAML::Key << "PerspectiveFOV" << YAML::Value << camera.GetPerspectiveFOV();
+			out << YAML::Key << "PerspectiveNear" << YAML::Value << camera.GetPerspectiveNear();
+			out << YAML::Key << "PerspectiveFar" << YAML::Value << camera.GetPerspectiveFar();
 			out << YAML::Key << "OrthographicSize" << YAML::Value << camera.GetOrthographicSize();
 			out << YAML::Key << "OrthographicNear" << YAML::Value << camera.GetOrthographicNearClip();
 			out << YAML::Key << "OrthographicFar" << YAML::Value << camera.GetOrthographicFarClip();
@@ -314,9 +314,9 @@ namespace Humzer {
 					auto& cameraProps = cameraComponent["Camera"];
 					cc.Camera.SetProjectionType((SceneCamera::ProjectionType)cameraProps["ProjectionType"].as<int>());
 
-					cc.Camera.SetFOV(cameraProps["PerspectiveFOV"].as<float>());
-					cc.Camera.SetNear(cameraProps["PerspectiveNear"].as<float>());
-					cc.Camera.SetFar(cameraProps["PerspectiveFar"].as<float>());
+					cc.Camera.SetPerspectiveFOV(cameraProps["PerspectiveFOV"].as<float>());
+					cc.Camera.SetPerspectiveNear(cameraProps["PerspectiveNear"].as<float>());
+					cc.Camera.SetPerspectiveFar(cameraProps["PerspectiveFar"].as<float>());
 
 					cc.Camera.SetOrthographicSize(cameraProps["OrthographicSize"].as<float>());
 					cc.Camera.SetOrthographicNearClip(cameraProps["OrthographicNear"].as<float>());
