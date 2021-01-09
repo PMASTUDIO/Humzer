@@ -129,6 +129,8 @@ namespace Humzer {
 				const char* projectionTypeStr[] = { "Perspective", "Orthographic" }; // Available options
 				const char* currentProjectionTypeString = projectionTypeStr[(int)camera.GetProjectionType()]; // Current value
 
+				ImGui::Checkbox("Primary", &cc.Primary);
+
 				if (ImGui::BeginCombo("Projection", currentProjectionTypeString)) {
 					for (int i = 0; i < 2; i++) {
 
@@ -195,7 +197,7 @@ namespace Humzer {
 
 					ImGui::Columns(2);
 
-					// SIZE
+					// FOV
 					ImGui::Text("FOV");
 					ImGui::NextColumn();
 					ImGui::PushItemWidth(-1);
@@ -243,12 +245,51 @@ namespace Humzer {
 			ImGui::Separator();
 		}
 
-		/*
+		if (entity.HasComponent<SpriteRendererComponent>()) {
+			auto& src = entity.GetComponent<SpriteRendererComponent>();
 
-		if (entity.HasComponent<TagComponent>()) {
+			if (ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Sprite Renderer"))
+			{
+				ImGui::Columns(2);
 
+				// COLOR
+				ImGui::Text("Color");
+				ImGui::NextColumn();
+				ImGui::PushItemWidth(-1);
+
+				ImGui::ColorEdit4("##Color", glm::value_ptr(src.Color), ImGuiColorEditFlags_DisplayRGB);
+
+				ImGui::PopItemWidth();
+				ImGui::NextColumn();
+
+				ImGui::Separator();
+
+				// PATH
+				ImGui::Text("Texture (WIP)");
+				ImGui::NextColumn();
+				ImGui::PushItemWidth(-1);
+
+				ImGui::Text(src.Texture ? src.Texture->GetPath().c_str() : "No Texture");
+
+				ImGui::PopItemWidth();
+				ImGui::NextColumn();
+
+				// TILING
+				ImGui::Text("Tiling Factor");
+				ImGui::NextColumn();
+				ImGui::PushItemWidth(-1);
+
+				ImGui::DragFloat("##Tiling Factor", &src.TilingFactor);
+
+				ImGui::PopItemWidth();
+				ImGui::NextColumn();
+
+				ImGui::Columns(1); // Reset to 1 column
+
+				ImGui::TreePop();
+			}
 		}
-
+		/*
 		if (entity.HasComponent<TagComponent>()) {
 
 		}
