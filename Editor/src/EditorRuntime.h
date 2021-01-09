@@ -22,6 +22,9 @@ namespace Humzer {
 		SceneCamera* m_Camera;
 
 		glm::vec2 m_ViewportSize;
+
+		// Panels
+		Ref<SceneHierarchyPannel> m_SceneHierarchyPannel;
 	};
 
 }

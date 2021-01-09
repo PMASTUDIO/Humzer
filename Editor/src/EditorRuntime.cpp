@@ -1,11 +1,14 @@
 #include "EditorRuntime.h"
 
 #include <imgui/imgui.h>
+#include "Pannels/SceneHierarchy.h"
 
 namespace Humzer {
 
 	EditorRuntime::EditorRuntime()
 	{
+		m_SceneHierarchyPannel = CreateRef<SceneHierarchyPannel>();
+
 		m_CheckerboardTexture = Texture2D::Create("Resources/textures/Checkerboard.png");
 
 		FramebufferSpecs fbSpecs;
@@ -49,7 +52,8 @@ namespace Humzer {
 		checkerboard.AddComponent<SpriteRendererComponent>().Texture = m_CheckerboardTexture;
 		checkerboard.GetComponent<SpriteRendererComponent>().TilingFactor = 10.0f;
 
-		
+		// Panels
+		m_SceneHierarchyPannel->SetContext(mainScene);
 	}
 
 	void EditorRuntime::OnUpdate(Timestep ts)
@@ -149,6 +153,8 @@ namespace Humzer {
 		ImGui::Text("Indices: %d", stats.GetTotalIndexCount());
 
 		ImGui::End();
+
+		m_SceneHierarchyPannel->OnImGuiRender();
 
 		ImGui::Begin("Viewport");
 		

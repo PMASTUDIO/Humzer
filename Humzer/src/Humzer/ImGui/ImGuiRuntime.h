@@ -12,6 +12,8 @@ namespace Humzer {
 		
 		void Begin();
 		void End();
+
+		void SetupTheme(bool bStyleDark_, float alpha_);
 	};
 
 }

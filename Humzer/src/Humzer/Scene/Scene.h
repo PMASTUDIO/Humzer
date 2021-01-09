@@ -28,6 +28,7 @@ namespace Humzer {
 
 		friend class Entity;
 		friend class SceneSerializer;
+		friend class SceneHierarchyPannel;
 	};
 
 }
