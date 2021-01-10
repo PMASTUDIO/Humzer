@@ -9,6 +9,7 @@
 
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
+#include "../../Editor/src/Helpers/IconsFontAwesome5.h"
 
 namespace Humzer {
 
@@ -37,6 +38,11 @@ namespace Humzer {
 
 		io.Fonts->AddFontFromFileTTF("Resources/fonts/Roboto/Roboto-Bold.ttf", 16.0f); // Font 0
 		io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/fonts/Roboto/Roboto-Regular.ttf", 16.0f); // Font 1
+
+		// merge in icons from Font Awesome
+		static const ImWchar icons_ranges[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
+		ImFontConfig icons_config; icons_config.MergeMode = true; icons_config.PixelSnapH = true;
+		io.FontDefault = io.Fonts->AddFontFromFileTTF("Resources/fonts/Font-Awesome/fa-solid-900.ttf", 16.0f, &icons_config, icons_ranges); // Merged icon fonts
 
 		ImGui::StyleColorsDark();
 

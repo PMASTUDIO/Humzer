@@ -7,6 +7,9 @@
 #include "Humzer/Scene/Components.h"
 #include "glm/gtc/type_ptr.inl"
 
+
+#include "../Helpers/IconsFontAwesome5.h"
+
 namespace Humzer {
 
 	SceneHierarchyPannel::SceneHierarchyPannel(const Ref<Scene>& scene)
@@ -21,7 +24,7 @@ namespace Humzer {
 
 	void SceneHierarchyPannel::OnImGuiRender()
 	{
-		ImGui::Begin("Scene Tree");
+		ImGui::Begin(ICON_FA_LIST" Scene Tree");
 
 		// Iterate through the scene entities
 		m_Context->m_Registry.each([&](auto entityID) {
@@ -42,7 +45,7 @@ namespace Humzer {
 
 		ImGui::End();
 
-		ImGui::Begin("Contextual Menu");
+		ImGui::Begin(ICON_FA_SEARCH" Contextual Menu");
 
 		if (m_Selected) {
 			DrawComponents(m_Selected);
@@ -103,7 +106,8 @@ namespace Humzer {
 			if (canBeRemoved) {	
 
 				ImGui::SameLine(contentRegionAvailable.x - lineHeight * 0.5f);
-				if (ImGui::Button("~", ImVec2{ lineHeight, lineHeight })) {
+
+				if (ImGui::Button(ICON_FA_ELLIPSIS_H, ImVec2{ lineHeight, lineHeight })) {
 					ImGui::OpenPopup("ComponentSettings");
 				}
 

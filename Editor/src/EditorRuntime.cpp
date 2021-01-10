@@ -2,6 +2,7 @@
 
 #include <imgui/imgui.h>
 #include "Pannels/SceneHierarchy.h"
+#include "Helpers/IconsFontAwesome5.h"
 
 namespace Humzer {
 
@@ -150,7 +151,7 @@ namespace Humzer {
 			ImGui::EndMenuBar();
 		}
 
-		ImGui::Begin("Stats");
+		ImGui::Begin(ICON_FA_INFO_CIRCLE" Stats");
 
 		auto stats = Renderer2D::GetStats();
 		ImGui::Text("2D Renderer Stats:");
