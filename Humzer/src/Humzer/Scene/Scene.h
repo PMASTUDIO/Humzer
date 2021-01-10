@@ -17,6 +17,7 @@ namespace Humzer {
 		void Init();
 
 		Entity CreateEntity(const std::string& name = std::string());
+		void DestroyEntity(Entity entity);
 
 		void SetSkybox(const Ref<TextureCube>& skybox);
 

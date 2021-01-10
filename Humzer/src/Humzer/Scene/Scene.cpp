@@ -33,6 +33,11 @@ namespace Humzer {
 		return entity;
 	}
 
+	void Scene::DestroyEntity(Entity entity)
+	{
+		m_Registry.destroy(entity);
+	}
+
 	void Scene::SetSkybox(const Ref<TextureCube>& skybox)
 	{
 		m_SkyboxTexture = skybox;
@@ -58,7 +63,9 @@ namespace Humzer {
 			}
 		}
 
-		HUM_ASSERT(mainCamera, "Scene does not contain any cameras!");
+		// HUM_ASSERT(mainCamera, "Scene does not contain any cameras!");
+		if (!mainCamera)
+			return;
 
 		// 2D RENDERER
 		

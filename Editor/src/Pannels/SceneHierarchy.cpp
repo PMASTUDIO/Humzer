@@ -33,12 +33,37 @@ namespace Humzer {
 		if (ImGui::IsMouseDown(0) && ImGui::IsWindowHovered())
 			m_Selected = {};
 
+		if (ImGui::BeginPopupContextWindow(0, 1, false)) { // Right clicked on empty space
+			if (ImGui::MenuItem("Create Entity"))
+				m_Context->CreateEntity("New Entity");
+
+			ImGui::EndPopup();
+		}
+
 		ImGui::End();
 
 		ImGui::Begin("Contextual Menu");
 
-		if (m_Selected)
+		if (m_Selected) {
 			DrawComponents(m_Selected);
+		
+			if (ImGui::Button("Add Component"))
+				ImGui::OpenPopup("AddComponent");
+
+			if (ImGui::BeginPopup("AddComponent")) {
+				if (ImGui::MenuItem("Camera")) {
+					m_Selected.AddComponent<CameraComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+
+				if (ImGui::MenuItem("Sprite Renderer")) {
+					m_Selected.AddComponent<SpriteRendererComponent>();
+					ImGui::CloseCurrentPopup();
+				}
+				
+				ImGui::EndPopup();
+			}
+		}
 
 		ImGui::End();
 	}
@@ -54,8 +79,23 @@ namespace Humzer {
 			m_Selected = entity;
 		}
 
+		bool entityDeleted = false;
+		if (ImGui::BeginPopupContextItem()) { // Right clicked on this item
+			if (ImGui::MenuItem("Delete Entity"))
+				entityDeleted = true;
+
+			ImGui::EndPopup();
+		}
+
 		if (expanded) {
 			ImGui::TreePop();
+		}
+
+		// ONLY DELETE ENTITIES AFTER GUI RENDERING AND CLEAR SELECTION CONTEXT
+		if (entityDeleted) {
+			m_Context->DestroyEntity(entity);
+			if (m_Selected == entity)
+				m_Selected = {};
 		}
 	}
 
@@ -133,11 +173,15 @@ namespace Humzer {
 			ImGui::Separator();
 		}
 
+		const ImGuiTreeNodeFlags treeNodeFlags = ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_AllowItemOverlap;
+
 		if (entity.HasComponent<TransformComponent>()) {
 			auto& position = entity.GetComponent<TransformComponent>().Translation;
 			auto& scale = entity.GetComponent<TransformComponent>().Scale;
 
-			if (ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Transform"))
+			bool open = ImGui::TreeNodeEx((void*)typeid(TransformComponent).hash_code(), treeNodeFlags, "Transform");
+
+			if (open)
 			{
 				DrawVec3Control("Translation", position);
 				DrawVec3Control("Scale", scale, 1.0f);
@@ -154,7 +198,7 @@ namespace Humzer {
 			auto& cc = entity.GetComponent<CameraComponent>();
 			auto& camera = cc.Camera;
 
-			if (ImGui::TreeNodeEx((void*)((uint32_t)entity | typeid(CameraComponent).hash_code()), ImGuiTreeNodeFlags_DefaultOpen, "Camera"))
+			if (ImGui::TreeNodeEx((void*)((uint32_t)entity | typeid(CameraComponent).hash_code()), treeNodeFlags, "Camera"))
 			{
 				const char* projectionTypeStr[] = { "Perspective", "Orthographic" }; // Available options
 				const char* currentProjectionTypeString = projectionTypeStr[(int)camera.GetProjectionType()]; // Current value
@@ -276,9 +320,25 @@ namespace Humzer {
 		}
 
 		if (entity.HasComponent<SpriteRendererComponent>()) {
+			ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2{ 2, 2 });
+			bool open = ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), treeNodeFlags, "Sprite Renderer");
+
+			ImGui::SameLine(ImGui::GetWindowWidth() - 25.0f);
+			if (ImGui::Button("~", ImVec2{ 20, 20 })) {
+				ImGui::OpenPopup("ComponentSettings");
+			}
+			ImGui::PopStyleVar();
+
+			bool removeComponent = false;
+			if (ImGui::BeginPopup("ComponentSettings")) {
+				if (ImGui::MenuItem("Remove Component"))
+					removeComponent = true;
+				ImGui::EndPopup();
+			}
+
 			auto& src = entity.GetComponent<SpriteRendererComponent>();
 
-			if (ImGui::TreeNodeEx((void*)typeid(SpriteRendererComponent).hash_code(), ImGuiTreeNodeFlags_DefaultOpen, "Sprite Renderer"))
+			if (open)
 			{
 				ImGui::Columns(2);
 
@@ -318,6 +378,9 @@ namespace Humzer {
 
 				ImGui::TreePop();
 			}
+
+			if (removeComponent)
+				entity.RemoveComponent<SpriteRendererComponent>();
 		}
 		/*
 		if (entity.HasComponent<TagComponent>()) {
