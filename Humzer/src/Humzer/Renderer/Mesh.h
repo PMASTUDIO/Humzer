@@ -48,6 +48,7 @@ namespace Humzer {
 	class HUMZER_API Mesh
 	{
 	public:
+		Mesh(std::string filename);
 		Mesh(std::string name, std::string filename);
 		~Mesh();
 

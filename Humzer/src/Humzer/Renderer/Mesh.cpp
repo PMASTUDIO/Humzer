@@ -63,6 +63,10 @@ namespace Humzer {
 		HUM_CORE_INFO("Loaded {0} meshes, with {1} vertices and {2} indices, from {3}, successfuly!", scene->mNumMeshes, m_StaticVertices.size(), m_Indices.size(), m_FilePath);
 	}
 
+	Mesh::Mesh(std::string filename) : Mesh(filename, filename)
+	{
+	}
+
 	Mesh::~Mesh()
 	{
 

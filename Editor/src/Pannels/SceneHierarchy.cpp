@@ -9,6 +9,7 @@
 
 
 #include "../Helpers/IconsFontAwesome5.h"
+#include "Humzer/Platform/PlatformUtils.h"
 
 namespace Humzer {
 
@@ -391,13 +392,23 @@ namespace Humzer {
 			ImGui::Separator();
 
 			// PATH
-			ImGui::Text("Texture (WIP)");
+			ImGui::Text("Texture");
 			ImGui::NextColumn();
 			ImGui::PushItemWidth(-1);
 
 			ImGui::Text(component.Texture ? component.Texture->GetPath().c_str() : "No Texture");
 			if (component.Texture) {
 				ImGui::Image((void*)component.Texture->GetRendererID(), ImVec2{ 50.0f, 50.0f });
+			}
+			if (ImGui::Button(ICON_FA_FOLDER_OPEN" Import")){
+				std::string resultPath = FileDialogs::OpenFile("Image file (*.png|*.jpg)\0*.png;.jpg\0");
+				if (!resultPath.empty()) {
+					component.Texture = Texture2D::Create(resultPath);
+				}
+				else {
+					HUM_CORE_TRACE("Texture importing aborted!");
+				}
+				
 			}
 
 			ImGui::PopItemWidth();
@@ -462,7 +473,17 @@ namespace Humzer {
 			ImGui::NextColumn();
 			ImGui::PushItemWidth(-1);
 
-			ImGui::Text(mesh->GetFilePath().c_str());
+			ImGui::Text(mesh ? mesh->GetFilePath().c_str() : "No mesh associated!");
+			if (ImGui::Button(ICON_FA_FOLDER_OPEN" Import")) {
+				std::string resultPath = FileDialogs::OpenFile("Mesh file (*.fbx|*.obj|*.dae|*.blend|*.3ds)\0*.fbx;.obj;.dae;.blend;.3ds\0");
+				if (!resultPath.empty()) {
+					component.Mesh = CreateRef<Mesh>(resultPath);
+				}
+				else {
+					HUM_CORE_TRACE("Texture importing aborted!");
+				}
+
+			}
 
 			ImGui::PopItemWidth();
 			ImGui::NextColumn();
@@ -470,18 +491,22 @@ namespace Humzer {
 			ImGui::Columns(1);
 			ImGui::Separator();
 
-			// TEXTURE
-			ImGui::Text("Textures");
+			if (mesh) {
+				// TEXTURE
+				ImGui::Text("Textures");
 
-			ImGui::Columns(2);
-			for (auto& texture : mesh->GetTexturesList()) {
-				ImGui::Text(texture->GetPath().c_str());
-				ImGui::NextColumn();
+				ImGui::Columns(2);
+				for (auto& texture : mesh->GetTexturesList()) {
+					if (texture) {
+						ImGui::Text(texture->GetPath().c_str());
+						ImGui::NextColumn();
 
-				ImGui::Image((void*)texture->GetRendererID(), ImVec2{ 50.0f, 50.0f });
-				ImGui::NextColumn();
+						ImGui::Image((void*)texture->GetRendererID(), ImVec2{ 50.0f, 50.0f });
+						ImGui::NextColumn();
+					}
+				}
+				ImGui::Columns(1);
 			}
-			ImGui::Columns(1);
 		});
 	}
 

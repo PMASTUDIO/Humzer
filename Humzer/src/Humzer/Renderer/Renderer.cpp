@@ -270,7 +270,8 @@ namespace Humzer {
 			mesh->m_MeshShader->SetInt("u_Material.shininess", 32.0f);
 
 			for (size_t i = 0; i < mesh->m_Textures.size(); i++) {
-				mesh->m_Textures[i]->Bind();
+				if(mesh->m_Textures[i])
+					mesh->m_Textures[i]->Bind();
 			}
 
 			// DRAWING
