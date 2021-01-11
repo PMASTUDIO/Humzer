@@ -27,6 +27,8 @@ namespace Humzer {
 
 		std::string& GetPath() override { return m_Path; }
 
+		unsigned int GetRendererID() override { return m_ID; }
+
 	private:
 		std::string m_Path;
 		uint32_t m_Width, m_Height;

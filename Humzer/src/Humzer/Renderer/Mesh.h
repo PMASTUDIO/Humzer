@@ -57,6 +57,8 @@ namespace Humzer {
 
 		inline Ref<Shader> GetMeshShader() { return m_MeshShader; }
 		inline const std::string& GetFilePath() const { return m_FilePath; }
+
+		inline std::vector<Ref<Texture2D>>& GetTexturesList() { return m_Textures; }
 	private:
 		void processMaterials(const aiScene* scene);
 		void processNode(aiNode* node, const aiScene* scene);

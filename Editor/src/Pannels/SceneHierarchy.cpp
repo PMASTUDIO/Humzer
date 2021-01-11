@@ -396,6 +396,9 @@ namespace Humzer {
 			ImGui::PushItemWidth(-1);
 
 			ImGui::Text(component.Texture ? component.Texture->GetPath().c_str() : "No Texture");
+			if (component.Texture) {
+				ImGui::Image((void*)component.Texture->GetRendererID(), ImVec2{ 50.0f, 50.0f });
+			}
 
 			ImGui::PopItemWidth();
 			ImGui::NextColumn();
@@ -464,7 +467,21 @@ namespace Humzer {
 			ImGui::PopItemWidth();
 			ImGui::NextColumn();
 
-			ImGui::Columns(1); // Reset to 1 column				
+			ImGui::Columns(1);
+			ImGui::Separator();
+
+			// TEXTURE
+			ImGui::Text("Textures");
+
+			ImGui::Columns(2);
+			for (auto& texture : mesh->GetTexturesList()) {
+				ImGui::Text(texture->GetPath().c_str());
+				ImGui::NextColumn();
+
+				ImGui::Image((void*)texture->GetRendererID(), ImVec2{ 50.0f, 50.0f });
+				ImGui::NextColumn();
+			}
+			ImGui::Columns(1);
 		});
 	}
 
