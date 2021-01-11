@@ -229,6 +229,16 @@ namespace Humzer {
 				ImGui::CloseCurrentPopup();
 			}
 
+			if (ImGui::MenuItem("Primitive Renderer (3D)")) {
+				m_Selected.AddComponent<PrimitiveRendererComponent>();
+				ImGui::CloseCurrentPopup();
+			}
+
+			if (ImGui::MenuItem("Mesh Renderer (3D)")) {
+				m_Selected.AddComponent<MeshRendererComponent>();
+				ImGui::CloseCurrentPopup();
+			}
+
 			ImGui::EndPopup();
 		}
 
@@ -403,6 +413,59 @@ namespace Humzer {
 			ImGui::Columns(1); // Reset to 1 column				
 		});
 
+		DrawComponent<PrimitiveRendererComponent>("Primitive Renderer (3D)", entity, [](auto& prc) {
+			const char* shapes[] = { "Cube", "Quad" }; // Available options
+			const char* currentShapeString = shapes[(int)prc.Shape]; // Current value
+
+			if (ImGui::BeginCombo("Shape", currentShapeString)) {
+				for (int i = 0; i < 2; i++) {
+
+					bool isSelected = shapes[i] == currentShapeString;
+					if (ImGui::Selectable(shapes[i], isSelected)) {
+						currentShapeString = shapes[i];
+						prc.Shape = (PrimitiveShape)i; // Set projection
+					}
+
+					if (isSelected)
+						ImGui::SetItemDefaultFocus(); // Set UI to selected
+				}
+
+				ImGui::EndCombo();
+			}
+
+			ImGui::Columns(2);
+
+			// COLOR
+			ImGui::Text("Color");
+			ImGui::NextColumn();
+			ImGui::PushItemWidth(-1);
+
+			ImGui::ColorEdit4("##Color", glm::value_ptr(prc.Color), ImGuiColorEditFlags_DisplayRGB);
+
+			ImGui::PopItemWidth();
+			ImGui::NextColumn();
+
+			ImGui::Columns(1);
+
+		});
+
+		DrawComponent<MeshRendererComponent>("Mesh Renderer (3D)", entity, [](auto& component) {
+			auto& mesh = component.Mesh;
+
+			ImGui::Columns(2);
+
+			// PATH
+			ImGui::Text("Mesh path");
+			ImGui::NextColumn();
+			ImGui::PushItemWidth(-1);
+
+			ImGui::Text(mesh->GetFilePath().c_str());
+
+			ImGui::PopItemWidth();
+			ImGui::NextColumn();
+
+			ImGui::Columns(1); // Reset to 1 column				
+		});
 	}
 
 }

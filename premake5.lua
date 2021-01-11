@@ -15,6 +15,7 @@ IncludeDir["assimp"] = "Humzer/vendor/assimp/include"
 IncludeDir["entt"] = "Humzer/vendor/entt/include"
 IncludeDir["yaml_cpp"] = "Humzer/vendor/yaml-cpp/include"
 IncludeDir["imgui"] = "Humzer/vendor/imgui"
+IncludeDir["imguizmo"] = "Humzer/vendor/ImGuizmo"
 
 IncludeDir["lib_ovr"] = "Humzer/vendor/LibOVR/Include"
 
@@ -31,7 +32,10 @@ project "Humzer"
     files { 
         "%{prj.name}/src/**.h", 
         "%{prj.name}/src/**.cpp" ,
-        "%{prj.name}/vendor/stb_image/**.cpp"
+        "%{prj.name}/vendor/stb_image/**.cpp",
+
+        "%{prj.name}/vendor/ImGuizmo/ImGuizmo.h",
+        "%{prj.name}/vendor/ImGuizmo/ImGuizmo.cpp",
     }
 
     targetdir ("bin/" .. output_dir .. "/%{prj.name}")
@@ -48,7 +52,8 @@ project "Humzer"
         "%{IncludeDir.assimp}",
         "%{IncludeDir.entt}",
         "%{IncludeDir.yaml_cpp}",
-        "%{IncludeDir.imgui}"
+        "%{IncludeDir.imgui}",
+        "%{IncludeDir.imguizmo}"
     }
 
     libdirs {
@@ -69,6 +74,9 @@ project "Humzer"
         "_CRT_SECURE_NO_WARNINGS",
 		"GLFW_INCLUDE_NONE"
     }
+
+    filter "files:Humzer/vendor/ImGuizmo/**.cpp"
+        flags { "NoPCH" }
 
     filter { "system:windows" }
         cppdialect "C++17"
@@ -113,7 +121,8 @@ project "Humzer-Editor"
             "%{IncludeDir.glm}",
             "%{IncludeDir.assimp}",
             "%{IncludeDir.entt}",
-            "Humzer/vendor"
+            "Humzer/vendor",
+            "%{IncludeDir.imguizmo}"
         }
     
         links {

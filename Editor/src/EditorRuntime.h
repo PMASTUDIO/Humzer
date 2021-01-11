@@ -19,10 +19,16 @@ namespace Humzer {
 		void NewScene();
 		void OpenScene();
 		void SaveSceneAs();
+
+		void RenderTools();
 	private:
 		Ref<Scene> m_ActiveScene;
 		Ref<Texture2D> m_CheckerboardTexture;
 		Ref<Framebuffer> m_Framebuffer;
+
+		int m_GuizmoOperation = -1; // No Guizmos
+		bool m_SnappingEnabled = false;
+		int m_TransformMode = 0;
 
 		glm::vec2 m_ViewportSize;
 

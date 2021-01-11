@@ -2,6 +2,8 @@
 #include "ImGuiRuntime.h"
 
 #include <imgui.h>
+#include <ImGuizmo.h>
+
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
@@ -10,6 +12,7 @@
 #include <GLFW/glfw3.h>
 #include <glad/glad.h>
 #include "../../Editor/src/Helpers/IconsFontAwesome5.h"
+
 
 namespace Humzer {
 
@@ -76,7 +79,7 @@ namespace Humzer {
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
-		// INIT GUIZMOS
+		ImGuizmo::BeginFrame();
 	}
 
 	void ImGuiRuntime::End()

@@ -23,6 +23,8 @@ namespace Humzer {
 
 		void OnViewportResize(uint32_t width, uint32_t height);
 		void OnUpdate(Timestep dt);
+
+		Entity GetPrimaryCamera();
 	private:
 		template<typename T>
 		void OnComponentAdded(Entity entity, T& component);

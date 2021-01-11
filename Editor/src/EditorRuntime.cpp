@@ -5,6 +5,10 @@
 #include "Helpers/IconsFontAwesome5.h"
 #include "Humzer/Platform/PlatformUtils.h"
 
+#include <ImGuizmo.h>
+#include "glm/gtc/type_ptr.hpp"
+#include "Humzer/Math/Math.h"
+
 namespace Humzer {
 
 	EditorRuntime::EditorRuntime()
@@ -187,6 +191,10 @@ namespace Humzer {
 
 		m_SceneHierarchyPannel->OnImGuiRender();
 
+		ImGui::Begin("Toolbox");
+		RenderTools();
+		ImGui::End();
+
 		ImGui::Begin("Viewport");
 		
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
@@ -194,6 +202,56 @@ namespace Humzer {
 
 		uint32_t textureId = m_Framebuffer->GetColorAttachment();
 		ImGui::Image((void*)textureId, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+		
+		// Guizmos
+		Entity selectedEntity = m_SceneHierarchyPannel->GetSelectedEntity();
+
+		if (selectedEntity && m_GuizmoOperation != -1) {
+			auto cameraEntity = m_ActiveScene->GetPrimaryCamera();
+			const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
+
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+
+			float windowWidth = (float)ImGui::GetWindowWidth();
+			float windowHeight = (float)ImGui::GetWindowHeight();
+			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+			// Camera
+			const glm::mat4& proj = camera.GetProjection();
+			glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+
+			// Entity transform
+			auto& tc = selectedEntity.GetComponent<TransformComponent>();
+			glm::mat4 transform = tc.GetTransform();
+
+			// Snapping
+			if(!m_SnappingEnabled)
+				m_SnappingEnabled = Input::IsKeyPressed(Key::LeftControl);
+			
+			float snapValue = 0.5f; // 0.5 Meters
+			if (m_GuizmoOperation == ImGuizmo::OPERATION::ROTATE)
+				snapValue = 45.0f;
+
+			float snapValues[3] = { snapValue, snapValue, snapValue }; // Same value for each axis
+
+			ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(proj), (ImGuizmo::OPERATION)m_GuizmoOperation, (ImGuizmo::MODE)m_TransformMode, glm::value_ptr(transform)
+			, nullptr, m_SnappingEnabled ? snapValues : nullptr);
+
+			if (ImGuizmo::IsUsing()) { // If there are changes
+
+				glm::vec3 translation, rotation, scale;
+				Math::DecomposeTransform(transform, translation, rotation, scale);
+
+				tc.Translation = translation;
+				tc.Scale = scale;
+
+				glm::vec3 deltaRotation = rotation - tc.Rotation;
+				tc.Rotation += deltaRotation; // Rotation should work as a delta (adding) or else we can end up with a gimball lock (limited rotation).
+			}
+		}
+
+
 		ImGui::End();
 
 		ImGui::End(); // Ending of dock space
@@ -251,6 +309,34 @@ namespace Humzer {
 		else {
 			HUM_CORE_ERROR("Scene could not be saved!");
 		}
+	}
+
+	void EditorRuntime::RenderTools()
+	{
+		if (ImGui::Button(ICON_FA_MOUSE_POINTER)) {
+			m_GuizmoOperation = -1;
+		}
+		ImGui::SameLine();
+
+		if (ImGui::Button(ICON_FA_ARROWS_ALT)) {
+			m_GuizmoOperation = (int)ImGuizmo::OPERATION::TRANSLATE;
+		}
+		ImGui::SameLine();
+
+		if (ImGui::Button(ICON_FA_SYNC_ALT)) {
+			m_GuizmoOperation = (int)ImGuizmo::OPERATION::ROTATE;
+		}
+		ImGui::SameLine();
+
+		if (ImGui::Button(ICON_FA_EXPAND_ARROWS_ALT)) {
+			m_GuizmoOperation = (int)ImGuizmo::OPERATION::SCALE;
+		}
+
+		ImGui::Checkbox("Snapping Enabled", &m_SnappingEnabled);
+		
+		ImGui::Text("Mode"); ImGui::SameLine();
+		ImGui::RadioButton("Local", &m_TransformMode, 0); ImGui::SameLine();
+		ImGui::RadioButton("World", &m_TransformMode, 1);
 	}
 
 }

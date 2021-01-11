@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Helpers">
+      <UniqueIdentifier>{D8389B9D-4418-1A39-4D30-A50FB98E809A}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pannels">
+      <UniqueIdentifier>{D6933BFC-4273-BA97-4B8B-456EB7E920F9}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\EditorRuntime.h" />
+    <ClInclude Include="src\Helpers\IconsFontAwesome5.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Helpers\IconsForkAwesome.h">
+      <Filter>Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Pannels\SceneHierarchy.h">
+      <Filter>Pannels</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\EditorApp.cpp" />
+    <ClCompile Include="src\EditorRuntime.cpp" />
+    <ClCompile Include="src\Pannels\SceneHierarchy.cpp">
+      <Filter>Pannels</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

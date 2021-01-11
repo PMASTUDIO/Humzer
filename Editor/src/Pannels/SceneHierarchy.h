@@ -13,6 +13,8 @@ namespace Humzer {
 		void SetContext(const Ref<Scene>& scene);
 
 		void OnImGuiRender();
+
+		Entity GetSelectedEntity() const { return m_Selected; }
 	private:
 		void DrawEntityNode(Entity entity);
 		void DrawComponents(Entity entity);
