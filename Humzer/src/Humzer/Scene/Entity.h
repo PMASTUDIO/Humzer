@@ -14,19 +14,15 @@ namespace Humzer {
 		
 		template<typename T, typename... Args>
 		T& AddComponent(Args&&... args) {
-			if (HasComponent<T>()) {
-				HUM_CORE_ERROR("Cannot add component: Entity already has component!");
-			}
 			HUM_ASSERT(!HasComponent<T>(), "Cannot add component: Entity already has component!");
+			T& component = m_Scene->m_Registry.emplace<T>(m_EntityHandle, std::forward<Args>(args)...);
+			m_Scene->OnComponentAdded(*this, component);
 
-			return m_Scene->m_Registry.emplace<T>(m_EntityHandle, std::forward<Args>(args)...);
+			return component;
 		}
 		
 		template<typename T>
 		T& GetComponent() {
-			if (!HasComponent<T>()) {
-				HUM_CORE_ERROR("Cannot get component: Entity does not has component!");
-			}
 			HUM_ASSERT(HasComponent<T>(), "Cannot get component: Entity does not has component!");
 
 			return m_Scene->m_Registry.get<T>(m_EntityHandle);

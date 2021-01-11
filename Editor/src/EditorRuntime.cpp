@@ -3,6 +3,7 @@
 #include <imgui/imgui.h>
 #include "Pannels/SceneHierarchy.h"
 #include "Helpers/IconsFontAwesome5.h"
+#include "Humzer/Platform/PlatformUtils.h"
 
 namespace Humzer {
 
@@ -27,44 +28,54 @@ namespace Humzer {
 	void EditorRuntime::OnStart()
 	{
 	
-		mainScene = CreateRef<Scene>();
+		m_ActiveScene = CreateRef<Scene>();
 
 		//mainScene->SetSkybox(skyboxTexture);
 
-		auto camera = mainScene->CreateEntity("camera");
+		/*auto camera = m_ActiveScene->CreateEntity("camera");
 		camera.GetComponent<TransformComponent>().Translation = glm::vec3{ 0.0f, 0.0f, 0.0f };
 		camera.AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Orthographic);
-
-		m_Camera = &camera.GetComponent<CameraComponent>().Camera;
-
-		auto redSquare = mainScene->CreateEntity("square1");
+		
+		auto redSquare = m_ActiveScene->CreateEntity("square1");
 		redSquare.GetComponent<TransformComponent>().Translation = glm::vec3{ 0.7f, 0.0f, 0.0f };
 		redSquare.GetComponent<TransformComponent>().Scale = glm::vec3{ 0.8f, 0.4f, 1.0f };
 		redSquare.AddComponent<SpriteRendererComponent>().Color = { 0.8f, 0.05f, 0.05f, 1.0f };
 
-		auto greenSquare = mainScene->CreateEntity("square2");
+		auto greenSquare = m_ActiveScene->CreateEntity("square2");
 		greenSquare.GetComponent<TransformComponent>().Translation = glm::vec3{ -0.3f, 0.0f, 0.0f };
 		greenSquare.GetComponent<TransformComponent>().Scale = glm::vec3{ 0.5f, 0.3f, 1.0f };
 		greenSquare.AddComponent<SpriteRendererComponent>().Color = { 0.0f, 0.8f, 0.05f, 1.0f };
 
-		auto checkerboard = mainScene->CreateEntity("checkerboard");
+		auto checkerboard = m_ActiveScene->CreateEntity("checkerboard");
 		checkerboard.GetComponent<TransformComponent>().Translation = glm::vec3{ 0.0f, 0.0f, -0.1f };
 		checkerboard.GetComponent<TransformComponent>().Scale = glm::vec3{ 5.0f, 5.0f, 0.0f };
 		checkerboard.AddComponent<SpriteRendererComponent>().Texture = m_CheckerboardTexture;
-		checkerboard.GetComponent<SpriteRendererComponent>().TilingFactor = 10.0f;
+		checkerboard.GetComponent<SpriteRendererComponent>().TilingFactor = 10.0f;*/
 
 		// Panels
-		m_SceneHierarchyPannel->SetContext(mainScene);
+		m_SceneHierarchyPannel->SetContext(m_ActiveScene);
 	}
 
 	void EditorRuntime::OnUpdate(Timestep ts)
 	{
+		KeyPressed();
+
+		FramebufferSpecs spec = m_Framebuffer->GetSpecs();
+		if (m_ViewportSize.x > 0.0f && m_ViewportSize.y > 0.0f &&
+			 (m_ViewportSize.x != spec.Width || m_ViewportSize.y != spec.Height)) {
+
+			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+
+			// m_Camera->ResizeBounds((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y); // #TODO: Resize editor camera
+		}
+
 		m_Framebuffer->Bind();
 
 		RenderCommand::SetClearColor({ 0.2f, 0.3f, 0.3f, 1.0f });
 		RenderCommand::Clear();
 
-		mainScene->OnUpdate(ts);
+		m_ActiveScene->OnUpdate(ts);
 
 		m_Framebuffer->Unbind();
 
@@ -145,6 +156,18 @@ namespace Humzer {
 		{
 			if (ImGui::BeginMenu("File"))
 			{
+				if (ImGui::MenuItem(ICON_FA_FOLDER_PLUS" New", "Ctrl+N")) {
+					NewScene();
+				}
+
+				if (ImGui::MenuItem(ICON_FA_FILE" Open...", "Ctrl+O")) {
+					OpenScene();
+				}
+
+				if (ImGui::MenuItem(ICON_FA_SAVE" Save As...", "Ctrl+Shift+S")) {
+					SaveSceneAs();
+				}
+
 				if (ImGui::MenuItem("Exit")) { Application::Get().Quit(); }
 				ImGui::EndMenu();
 			}
@@ -167,12 +190,7 @@ namespace Humzer {
 		ImGui::Begin("Viewport");
 		
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
-		if (m_ViewportSize.x != viewportPanelSize.x || m_ViewportSize.y != viewportPanelSize.y) {
-			m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
-			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-
-			m_Camera->ResizeBounds((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-		}
+		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
 		uint32_t textureId = m_Framebuffer->GetColorAttachment();
 		ImGui::Image((void*)textureId, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
@@ -180,6 +198,59 @@ namespace Humzer {
 
 		ImGui::End(); // Ending of dock space
 
+	}
+
+	void EditorRuntime::KeyPressed()
+	{
+		if (Input::IsKeyPressed(Key::LeftControl)) {
+			if (Input::IsKeyPressed(Key::O)) {
+				OpenScene();
+			}
+			if (Input::IsKeyPressed(Key::N)) {
+				NewScene();
+			}
+			if (Input::IsKeyPressed(Key::LeftShift)) {
+				if (Input::IsKeyPressed(Key::S)) {
+					SaveSceneAs();
+				}
+			}
+		}
+	}
+
+	void EditorRuntime::NewScene()
+	{
+		m_ActiveScene = CreateRef<Scene>(); // Create empty scene
+		m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+		m_SceneHierarchyPannel->SetContext(m_ActiveScene);
+	}
+
+	void EditorRuntime::OpenScene()
+	{
+		std::string filepath = FileDialogs::OpenFile("Scene file (*.humscene)\0*.humscene\0");
+		if (!filepath.empty()) {
+			m_ActiveScene = CreateRef<Scene>(); // Create empty scene
+			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_SceneHierarchyPannel->SetContext(m_ActiveScene);
+
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.Deserialize(filepath);
+		}
+		else {
+			HUM_CORE_ERROR("Scene could not be opened!");
+		}
+	}
+
+	void EditorRuntime::SaveSceneAs()
+	{
+		std::string filepath = FileDialogs::SaveFile("Scene file (*.humscene)\0*.humscene\0");
+
+		if (!filepath.empty()) {
+			SceneSerializer serializer(m_ActiveScene);
+			serializer.Serialize(filepath);
+		}
+		else {
+			HUM_CORE_ERROR("Scene could not be saved!");
+		}
 	}
 
 }

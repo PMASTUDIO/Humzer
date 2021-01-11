@@ -19,6 +19,7 @@ namespace Humzer {
 
 	void SceneHierarchyPannel::SetContext(const Ref<Scene>& scene)
 	{
+		m_Selected = {};
 		m_Context = scene;
 	}
 

@@ -14,12 +14,15 @@ namespace Humzer {
 		void OnShutdown();
 	private:
 		void ImGuiRender();
+		void KeyPressed();
+
+		void NewScene();
+		void OpenScene();
+		void SaveSceneAs();
 	private:
-		Ref<Scene> mainScene;
+		Ref<Scene> m_ActiveScene;
 		Ref<Texture2D> m_CheckerboardTexture;
 		Ref<Framebuffer> m_Framebuffer;
-
-		SceneCamera* m_Camera;
 
 		glm::vec2 m_ViewportSize;
 

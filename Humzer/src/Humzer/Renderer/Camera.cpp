@@ -44,6 +44,9 @@ namespace Humzer {
 
 	void SceneCamera::SetViewportSize(uint32_t width, uint32_t height)
 	{
+		if (height <= 0)
+			return;
+
 		m_AspectRatio = (float)width / (float)height;
 		UpdateMatrices();
 	}

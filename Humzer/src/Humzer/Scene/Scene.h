@@ -21,11 +21,17 @@ namespace Humzer {
 
 		void SetSkybox(const Ref<TextureCube>& skybox);
 
+		void OnViewportResize(uint32_t width, uint32_t height);
 		void OnUpdate(Timestep dt);
+	private:
+		template<typename T>
+		void OnComponentAdded(Entity entity, T& component);
 	private:
 		entt::registry m_Registry;
 
 		Ref<TextureCube> m_SkyboxTexture;
+
+		uint32_t m_ViewportWidth = 0, m_ViewportHeight = 0;
 
 		friend class Entity;
 		friend class SceneSerializer;
