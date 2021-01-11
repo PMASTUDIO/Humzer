@@ -34,27 +34,9 @@ namespace Humzer {
 	
 		m_ActiveScene = CreateRef<Scene>();
 
+		m_EditorCamera = EditorCamera(30.0f, 16.0f / 9.0f, 0.1f, 1000.0f); // Aspect ratio doesn't matter here
+
 		//mainScene->SetSkybox(skyboxTexture);
-
-		/*auto camera = m_ActiveScene->CreateEntity("camera");
-		camera.GetComponent<TransformComponent>().Translation = glm::vec3{ 0.0f, 0.0f, 0.0f };
-		camera.AddComponent<CameraComponent>().Camera.SetProjectionType(SceneCamera::ProjectionType::Orthographic);
-		
-		auto redSquare = m_ActiveScene->CreateEntity("square1");
-		redSquare.GetComponent<TransformComponent>().Translation = glm::vec3{ 0.7f, 0.0f, 0.0f };
-		redSquare.GetComponent<TransformComponent>().Scale = glm::vec3{ 0.8f, 0.4f, 1.0f };
-		redSquare.AddComponent<SpriteRendererComponent>().Color = { 0.8f, 0.05f, 0.05f, 1.0f };
-
-		auto greenSquare = m_ActiveScene->CreateEntity("square2");
-		greenSquare.GetComponent<TransformComponent>().Translation = glm::vec3{ -0.3f, 0.0f, 0.0f };
-		greenSquare.GetComponent<TransformComponent>().Scale = glm::vec3{ 0.5f, 0.3f, 1.0f };
-		greenSquare.AddComponent<SpriteRendererComponent>().Color = { 0.0f, 0.8f, 0.05f, 1.0f };
-
-		auto checkerboard = m_ActiveScene->CreateEntity("checkerboard");
-		checkerboard.GetComponent<TransformComponent>().Translation = glm::vec3{ 0.0f, 0.0f, -0.1f };
-		checkerboard.GetComponent<TransformComponent>().Scale = glm::vec3{ 5.0f, 5.0f, 0.0f };
-		checkerboard.AddComponent<SpriteRendererComponent>().Texture = m_CheckerboardTexture;
-		checkerboard.GetComponent<SpriteRendererComponent>().TilingFactor = 10.0f;*/
 
 		// Panels
 		m_SceneHierarchyPannel->SetContext(m_ActiveScene);
@@ -69,17 +51,24 @@ namespace Humzer {
 			 (m_ViewportSize.x != spec.Width || m_ViewportSize.y != spec.Height)) {
 
 			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+
+			// Editor camera update
+			m_EditorCamera.SetViewportSize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+
 			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 
 			// m_Camera->ResizeBounds((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y); // #TODO: Resize editor camera
 		}
 
-		m_Framebuffer->Bind();
+		
+		m_EditorCamera.OnUpdate(ts);
 
+		m_Framebuffer->Bind();
 		RenderCommand::SetClearColor({ 0.2f, 0.3f, 0.3f, 1.0f });
 		RenderCommand::Clear();
 
-		m_ActiveScene->OnUpdate(ts);
+		// Update editor scene
+		m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
 
 		m_Framebuffer->Unbind();
 
@@ -207,8 +196,9 @@ namespace Humzer {
 		Entity selectedEntity = m_SceneHierarchyPannel->GetSelectedEntity();
 
 		if (selectedEntity && m_GuizmoOperation != -1) {
-			auto cameraEntity = m_ActiveScene->GetPrimaryCamera();
-			const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;
+			// Runtime camera
+			/*auto cameraEntity = m_ActiveScene->GetPrimaryCamera();
+			const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;*/
 
 			ImGuizmo::SetOrthographic(false);
 			ImGuizmo::SetDrawlist();
@@ -217,9 +207,13 @@ namespace Humzer {
 			float windowHeight = (float)ImGui::GetWindowHeight();
 			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
 
-			// Camera
-			const glm::mat4& proj = camera.GetProjection();
-			glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());
+			// Runtime Camera
+			/*const glm::mat4& proj = camera.GetProjection();
+			glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());*/
+
+			// EDITOR CAMERA
+			const glm::mat4& proj = m_EditorCamera.GetProjection();
+			glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
 
 			// Entity transform
 			auto& tc = selectedEntity.GetComponent<TransformComponent>();

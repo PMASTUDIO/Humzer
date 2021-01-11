@@ -81,7 +81,7 @@ public:
 		RenderCommand::SetClearColor({ 0.2f, 0.3f, 0.3f, 1.0f });
 		RenderCommand::Clear();
 
-		mainScene->OnUpdate(dt);
+		mainScene->OnUpdateRuntime(dt);
 
 		m_Framebuffer->Unbind();
 

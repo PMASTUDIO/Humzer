@@ -5,6 +5,7 @@
 #include "Shader.h"
 #include "Camera.h"
 #include "Mesh.h"
+#include "EditorCamera.h"
 
 namespace Humzer { class Texture2D; }
 
@@ -42,6 +43,7 @@ namespace Humzer {
 		static void Shutdown();
 
 		static void BeginScene(Camera& camera, const glm::mat4& transform, const glm::vec3 cameraPos);
+		static void BeginScene(const EditorCamera& camera);
 		static void EndScene();
 
 		// IMMEDIATE RENDERER
@@ -71,6 +73,7 @@ namespace Humzer {
 		static void Shutdown();
 
 		static void BeginScene(const Camera& camera, const glm::mat4& camTransform);
+		static void BeginScene(const EditorCamera& camera);
 		static void EndScene();
 		
 		static void Flush();

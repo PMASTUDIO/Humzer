@@ -37,7 +37,7 @@ namespace Humzer {
 		}*/
 		HUM_ASSERT(Renderer::GetShaderLibrary());
 
-		m_MeshShader = Renderer::GetShaderLibrary()->Get("mesh_base");
+		// m_MeshShader = Renderer::GetShaderLibrary()->Get("mesh_base");
 
 		processNode(scene->mRootNode, scene);
 
@@ -58,7 +58,7 @@ namespace Humzer {
 		m_VertexArray->SetIndexBuffer(ib);
 		m_Scene = scene;
 
-		m_MeshShader->SetInt("u_Material.diffuse", 0);
+		// m_MeshShader->SetInt("u_Material.diffuse", 0);
 
 		HUM_CORE_INFO("Loaded {0} meshes, with {1} vertices and {2} indices, from {3}, successfuly!", scene->mNumMeshes, m_StaticVertices.size(), m_Indices.size(), m_FilePath);
 	}
@@ -77,24 +77,24 @@ namespace Humzer {
 		return m_Name;
 	}
 
-	void Mesh::Render(Timestep ts, Camera& camera, const glm::mat4& transform /*= glm::mat4(1.0f)*/)
-	{
-		// SHADER SET UP
-		m_MeshShader->Bind();
+	//void Mesh::Render(Timestep ts, Camera& camera, const glm::mat4& transform /*= glm::mat4(1.0f)*/)
+	//{
+	//	// SHADER SET UP
+	//	m_MeshShader->Bind();
 
-		m_MeshShader->SetMat4("u_ViewProjection", camera.GetProjection());
+	//	m_MeshShader->SetMat4("u_ViewProjection", camera.GetProjection());
 
-		glm::mat4 transformTest = glm::translate(glm::mat4(1.0), { 0.0, 0.0, 0.0 }) * glm::scale(glm::mat4(1.0), { 1.0, 1.0, 1.0 });
-		m_MeshShader->SetMat4("u_Transform", transformTest);
+	//	glm::mat4 transformTest = glm::translate(glm::mat4(1.0), { 0.0, 0.0, 0.0 }) * glm::scale(glm::mat4(1.0), { 1.0, 1.0, 1.0 });
+	//	m_MeshShader->SetMat4("u_Transform", transformTest);
 
-		for (size_t i = 0; i < m_Textures.size(); i++) {
-			m_Textures[i]->Bind();
-		}
+	//	for (size_t i = 0; i < m_Textures.size(); i++) {
+	//		m_Textures[i]->Bind();
+	//	}
 
-		// DRAWING
-		m_VertexArray->Bind();
-		RenderCommand::DrawIndexed(m_VertexArray);
-	}
+	//	// DRAWING
+	//	m_VertexArray->Bind();
+	//	RenderCommand::DrawIndexed(m_VertexArray);
+	//}
 
 	void Mesh::processMaterials(const aiScene* scene)
 	{
@@ -217,7 +217,7 @@ namespace Humzer {
 
 	Humzer::Ref<Humzer::Mesh> MeshLibrary::Get(const std::string& name)
 	{
-		HUM_ASSERT(s_Meshes.find(name) != s_Meshes.end(), "Shader with the requested name do not exists in shader library!");
+		HUM_ASSERT(s_Meshes.find(name) != s_Meshes.end(), "Mesh with the requested name do not exists in mesh library!");
 		return s_Meshes[name];
 	}
 

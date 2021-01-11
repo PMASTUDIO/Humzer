@@ -1,6 +1,7 @@
 #pragma once
 
 #include <Humzer/Humzer.h>
+#include "Humzer/Renderer/EditorCamera.h"
 
 namespace Humzer {
 
@@ -29,6 +30,8 @@ namespace Humzer {
 		int m_GuizmoOperation = -1; // No Guizmos
 		bool m_SnappingEnabled = false;
 		int m_TransformMode = 0;
+
+		EditorCamera m_EditorCamera;
 
 		glm::vec2 m_ViewportSize;
 

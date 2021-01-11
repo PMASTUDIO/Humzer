@@ -2,6 +2,7 @@
 
 #include <entt.hpp>
 #include "../Core/Timestep.h"
+#include "../Renderer/EditorCamera.h"
 
 namespace Humzer { class TextureCube; }
 
@@ -22,7 +23,9 @@ namespace Humzer {
 		void SetSkybox(const Ref<TextureCube>& skybox);
 
 		void OnViewportResize(uint32_t width, uint32_t height);
-		void OnUpdate(Timestep dt);
+		
+		void OnUpdateRuntime(Timestep dt);
+		void OnUpdateEditor(Timestep dt, EditorCamera& editorCamera);
 
 		Entity GetPrimaryCamera();
 	private:

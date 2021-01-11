@@ -54,9 +54,9 @@ namespace Humzer {
 
 		const std::string& GetName();
 
-		void Render(Timestep ts, Camera& camera, const glm::mat4& transform = glm::mat4(1.0f));
+		//void Render(Timestep ts, Camera& camera, const glm::mat4& transform = glm::mat4(1.0f));
 
-		inline Ref<Shader> GetMeshShader() { return m_MeshShader; }
+		/*inline Ref<Shader> GetMeshShader() { return m_MeshShader; }*/
 		inline const std::string& GetFilePath() const { return m_FilePath; }
 
 		inline std::vector<Ref<Texture2D>>& GetTexturesList() { return m_Textures; }
@@ -68,7 +68,7 @@ namespace Humzer {
 		std::string m_FilePath;
 		std::string m_Name;
 
-		Ref<Shader> m_MeshShader;
+		/*Ref<Shader> m_MeshShader;*/
 
 		Scope<Assimp::Importer> m_Importer;
 

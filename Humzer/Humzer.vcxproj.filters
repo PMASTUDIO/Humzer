@@ -166,6 +166,7 @@
       <Filter>vendor\ImGuizmo</Filter>
     </ClInclude>
     <ClInclude Include="src\Humzer\Math\Math.h" />
+    <ClInclude Include="src\Humzer\Renderer\EditorCamera.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Humzer\Core\Application.cpp">
@@ -268,5 +269,6 @@
       <Filter>vendor\stb_image</Filter>
     </ClCompile>
     <ClCompile Include="src\Humzer\Math\Math.cpp" />
+    <ClCompile Include="src\Humzer\Renderer\EditorCamera.cpp" />
   </ItemGroup>
 </Project>

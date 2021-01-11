@@ -63,6 +63,7 @@ namespace Humzer {
 			Ref<Shader> m_FlatColorShader;
 			Ref<Shader> m_TexturedShader;
 			Ref<Shader> m_SkyboxShader;
+			Ref<Shader> m_MeshShader;
 		};
 
 		static Renderer3DStorage* s_Data;
@@ -119,13 +120,16 @@ namespace Humzer {
 			s_Data->m_FlatColorShader = Renderer::GetShaderLibrary()->Load("flat_color", "Resources/shaders/flat_colored.vs", "Resources/shaders/flat_colored.fs");
 			s_Data->m_TexturedShader = Renderer::GetShaderLibrary()->Load("textured", "Resources/shaders/textured_shader.vs", "Resources/shaders/textured_shader.fs");
 			s_Data->m_SkyboxShader = Renderer::GetShaderLibrary()->Load("skybox", "Resources/shaders/skybox.vs", "Resources/shaders/skybox.fs");
-			Renderer::GetShaderLibrary()->Load("mesh_base", "Resources/shaders/mesh_base_shader.vs", "Resources/shaders/mesh_base_shader.fs");
+			s_Data->m_MeshShader = Renderer::GetShaderLibrary()->Load("mesh_base", "Resources/shaders/mesh_base_shader.vs", "Resources/shaders/mesh_base_shader.fs");
 			
 			s_Data->m_TexturedShader->Bind();
 			s_Data->m_TexturedShader->SetInt("u_Texture", 0); // BIND TEXTURE SLOT
 
 			s_Data->m_SkyboxShader->Bind();
 			s_Data->m_SkyboxShader->SetInt("u_Skybox", 0); // BIND TEXTURE SLOT
+
+			s_Data->m_MeshShader->Bind();
+			s_Data->m_MeshShader->SetInt("u_Material.diffuse", 0);
 		}
 
 		void Renderer3D::Shutdown()
@@ -159,11 +163,53 @@ namespace Humzer {
 			s_Data->m_TexturedShader->SetMat4("u_ViewProjection", viewProj);
 			s_Data->m_TexturedShader->SetMat4("u_Transform", glm::mat4(1.0));
 
+			// MESH SHADER
+			s_Data->m_MeshShader->Bind();
+			s_Data->m_MeshShader->SetMat4("u_ViewProjection", viewProj);
+			s_Data->m_MeshShader->SetMat4("u_Transform", glm::mat4(1.0));
+			s_Data->m_MeshShader->SetFloat3("u_ViewPos", cameraPos);
+
 			// SKYBOX SHADER
 			s_Data->m_SkyboxShader->Bind();
 			glm::mat4 view = glm::mat4(glm::mat3(glm::inverse(transform)));
 			s_Data->m_SkyboxShader->SetMat4("u_ViewProjection", camera.GetProjection() * view);
 			
+		}
+
+		void Renderer3D::BeginScene(const EditorCamera& camera)
+		{
+			s_SceneCamera = &(Camera)camera;
+
+			glm::mat4 viewProj = camera.GetViewProjection();
+
+			s_Data->m_CameraTranslation = camera.GetPosition();
+			s_Data->m_CameraTransform = glm::translate(glm::mat4(1.0), camera.GetPosition());
+
+			s_Data->m_FlatColorShader->Bind();
+			s_Data->m_FlatColorShader->SetMat4("u_ViewProjection", viewProj);
+			s_Data->m_FlatColorShader->SetMat4("u_Transform", glm::mat4(1.0));
+			s_Data->m_FlatColorShader->SetFloat3("u_ViewPos", camera.GetPosition());
+
+			// TEMPORARY (BEFORE MATERIAL):
+			s_Data->m_FlatColorShader->SetFloat3("u_Material.ambient", glm::vec3(1.0f, 0.5f, 0.31f));
+			s_Data->m_FlatColorShader->SetFloat3("u_Material.diffuse", glm::vec3(1.0f, 0.5f, 0.31f));
+			s_Data->m_FlatColorShader->SetFloat3("u_Material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
+			s_Data->m_FlatColorShader->SetInt("u_Material.shininess", 32.0f);
+
+			s_Data->m_TexturedShader->Bind();
+			s_Data->m_TexturedShader->SetMat4("u_ViewProjection", viewProj);
+			s_Data->m_TexturedShader->SetMat4("u_Transform", glm::mat4(1.0));
+
+			// MESH SHADER
+			s_Data->m_MeshShader->Bind();
+			s_Data->m_MeshShader->SetMat4("u_ViewProjection", viewProj);
+			s_Data->m_MeshShader->SetMat4("u_Transform", glm::mat4(1.0));
+			s_Data->m_MeshShader->SetFloat3("u_ViewPos", camera.GetPosition());
+
+			// SKYBOX SHADER
+			s_Data->m_SkyboxShader->Bind();
+			glm::mat4 view = glm::mat4(glm::mat3(camera.GetViewMatrix()));
+			s_Data->m_SkyboxShader->SetMat4("u_ViewProjection", camera.GetProjection() * view);
 		}
 
 		void Renderer3D::EndScene()
@@ -257,17 +303,13 @@ namespace Humzer {
 
 		void Renderer3D::DrawMesh(const glm::mat4& transform, Ref<Mesh> mesh)
 		{
-			glm::mat4 viewProj = s_SceneCamera->GetProjection() * glm::inverse(s_Data->m_CameraTransform);
-
 			// SHADER SET UP
-			mesh->m_MeshShader->Bind();
-			mesh->m_MeshShader->SetMat4("u_ViewProjection", viewProj);
-			mesh->m_MeshShader->SetMat4("u_Transform", transform);
-			mesh->m_MeshShader->SetFloat3("u_ViewPos", s_Data->m_CameraTranslation); // #TODO: Add proper cam position
+			s_Data->m_MeshShader->Bind();
+			s_Data->m_MeshShader->SetMat4("u_Transform", transform);
 
 			// BEFORE MATERIAL SYSTEM
-			mesh->m_MeshShader->SetFloat3("u_Material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
-			mesh->m_MeshShader->SetInt("u_Material.shininess", 32.0f);
+			s_Data->m_MeshShader->SetFloat3("u_Material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
+			s_Data->m_MeshShader->SetInt("u_Material.shininess", 32.0f);
 
 			for (size_t i = 0; i < mesh->m_Textures.size(); i++) {
 				if(mesh->m_Textures[i])
@@ -285,17 +327,16 @@ namespace Humzer {
 			glm::mat4 transform = glm::translate(glm::mat4(1.0), position) * glm::scale(glm::mat4(1.0), scale);
 
 			// SHADER SET UP
-			mesh->m_MeshShader->Bind();
-			mesh->m_MeshShader->SetMat4("u_ViewProjection", s_SceneCamera->GetProjection()); // #TODO: Add proper view projection matrix
-			mesh->m_MeshShader->SetMat4("u_Transform", transform);
-			mesh->m_MeshShader->SetFloat3("u_ViewPos", { 0, 4, 20 }); // #TODO: Add proper cam position
+			s_Data->m_MeshShader->Bind();
+			s_Data->m_MeshShader->SetMat4("u_Transform", transform);
 
 			// BEFORE MATERIAL SYSTEM
-			mesh->m_MeshShader->SetFloat3("u_Material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
-			mesh->m_MeshShader->SetInt("u_Material.shininess", 32.0f);
+			s_Data->m_MeshShader->SetFloat3("u_Material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
+			s_Data->m_MeshShader->SetInt("u_Material.shininess", 32.0f);
 
 			for (size_t i = 0; i < mesh->m_Textures.size(); i++) {
-				mesh->m_Textures[i]->Bind();
+				if (mesh->m_Textures[i])
+					mesh->m_Textures[i]->Bind();
 			}
 
 			// DRAWING
@@ -413,6 +454,19 @@ namespace Humzer {
 		void Renderer2D::BeginScene(const Camera& camera, const glm::mat4& camTransform)
 		{
 			glm::mat4 viewProj = camera.GetProjection() * glm::inverse(camTransform);
+
+			s_Data2D->TextureShader->Bind();
+			s_Data2D->TextureShader->SetMat4("u_ViewProjection", viewProj);
+
+			// Start Batch
+			s_Data2D->QuadVertexBufferPtr = s_Data2D->QuadVertexBufferBase;
+			s_Data2D->QuadIndexCount = 0;
+			s_Data2D->TextureSlotIndex = 1; // Since 0 will always be white texture
+		}
+
+		void Renderer2D::BeginScene(const EditorCamera& camera)
+		{
+			glm::mat4 viewProj = camera.GetViewProjection();
 
 			s_Data2D->TextureShader->Bind();
 			s_Data2D->TextureShader->SetMat4("u_ViewProjection", viewProj);
