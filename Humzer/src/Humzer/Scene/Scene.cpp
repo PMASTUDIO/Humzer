@@ -4,6 +4,7 @@
 #include "../Renderer/Renderer.h"
 #include "Entity.h"
 #include "../Renderer/Texture.h"
+#include "glad/glad.h"
 
 namespace Humzer {
 
@@ -91,10 +92,10 @@ namespace Humzer {
 			for (auto entity : group) {
 				auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
-				if(sprite.Texture)
-					Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture, sprite.TilingFactor);
+				if (sprite.Texture)
+					Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture, (uint32_t)entity, sprite.TilingFactor);
 				else
-					Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color);
+					Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color, (uint32_t)entity);
 			}
 		}
 		Renderer2D::EndScene();
@@ -114,10 +115,10 @@ namespace Humzer {
 					switch (primitive.Shape)
 					{
 					case PrimitiveShape::CUBE:
-						Renderer3D::DrawCube(transform.GetTransform(), primitive.Color);
+						Renderer3D::DrawCube(transform.GetTransform(), primitive.Color, (uint32_t)entity);
 						break;
 					case PrimitiveShape::QUAD:
-						Renderer3D::DrawPlane(transform.GetTransform(), primitive.Color);
+						Renderer3D::DrawPlane(transform.GetTransform(), primitive.Color, (uint32_t)entity);
 						break;
 					default:
 						break;
@@ -132,7 +133,7 @@ namespace Humzer {
 					auto& [transform, mesh] = group.get<TransformComponent, MeshRendererComponent>(entity);
 
 					if (mesh.Mesh) {
-						Renderer3D::DrawMesh(transform.GetTransform(), mesh.Mesh);
+						Renderer3D::DrawMesh(transform.GetTransform(), mesh.Mesh, (uint32_t)entity);
 					}
 
 				}
@@ -147,25 +148,27 @@ namespace Humzer {
 #if HUM_DEBUG
 		Renderer2D::ResetStats();
 #endif
-
-		Renderer2D::BeginScene(editorCamera);
 		{
+			Renderer2D::BeginScene(editorCamera);
+		
 			auto group = m_Registry.group<SpriteRendererComponent>(entt::get<TransformComponent>);
 			for (auto entity : group) {
 				auto& [transform, sprite] = group.get<TransformComponent, SpriteRendererComponent>(entity);
 
 				if (sprite.Texture)
-					Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture, sprite.TilingFactor);
+					Renderer2D::DrawQuad(transform.GetTransform(), sprite.Texture, (uint32_t)entity, sprite.TilingFactor);
 				else
-					Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color);
+					Renderer2D::DrawQuad(transform.GetTransform(), sprite.Color, (uint32_t)entity);
 			}
+		
+			Renderer2D::EndScene();
 		}
-		Renderer2D::EndScene();
 
 
 		// 3D RENDERER
-		Renderer3D::BeginScene(editorCamera);
 		{
+			Renderer3D::BeginScene(editorCamera);
+		
 			if (m_SkyboxTexture)
 				Renderer3D::DrawSkybox(m_SkyboxTexture);
 
@@ -177,10 +180,10 @@ namespace Humzer {
 					switch (primitive.Shape)
 					{
 					case PrimitiveShape::CUBE:
-						Renderer3D::DrawCube(transform.GetTransform(), primitive.Color);
+						Renderer3D::DrawCube(transform.GetTransform(), primitive.Color, (uint32_t)entity);
 						break;
 					case PrimitiveShape::QUAD:
-						Renderer3D::DrawPlane(transform.GetTransform(), primitive.Color);
+						Renderer3D::DrawPlane(transform.GetTransform(), primitive.Color, (uint32_t)entity);
 						break;
 					default:
 						break;
@@ -195,13 +198,23 @@ namespace Humzer {
 					auto& [transform, mesh] = group.get<TransformComponent, MeshRendererComponent>(entity);
 
 					if (mesh.Mesh) {
-						Renderer3D::DrawMesh(transform.GetTransform(), mesh.Mesh);
+						Renderer3D::DrawMesh(transform.GetTransform(), mesh.Mesh, (uint32_t)entity);
 					}
 
 				}
 			}
+		
+			Renderer3D::EndScene();
 		}
-		Renderer3D::EndScene();
+	}
+
+	int Scene::Pixel(int mouseX, int mouseY)
+	{
+		// #TEMP
+		glReadBuffer(GL_COLOR_ATTACHMENT1);
+		int pixeData;
+		glReadPixels(mouseX, mouseY, 1, 1, GL_RED_INTEGER, GL_INT, &pixeData);
+		return pixeData;
 	}
 
 	Humzer::Entity Scene::GetPrimaryCamera()

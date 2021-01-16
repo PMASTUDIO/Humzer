@@ -22,10 +22,16 @@ namespace Humzer {
 		void SaveSceneAs();
 
 		void RenderTools();
+
+		void GuizmosRender();
+
+		std::pair<float, float> GetMouseViewportSpace();
 	private:
 		Ref<Scene> m_ActiveScene;
 		Ref<Texture2D> m_CheckerboardTexture;
+
 		Ref<Framebuffer> m_Framebuffer;
+		Ref<Framebuffer> m_IDFramebuffer;
 
 		int m_GuizmoOperation = -1; // No Guizmos
 		bool m_SnappingEnabled = false;
@@ -33,7 +39,10 @@ namespace Humzer {
 
 		EditorCamera m_EditorCamera;
 
+		Entity m_HoveredEntity;
+
 		glm::vec2 m_ViewportSize;
+		glm::vec2 m_ViewportBounds[2] = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 
 		// Panels
 		Ref<SceneHierarchyPannel> m_SceneHierarchyPannel;

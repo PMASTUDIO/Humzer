@@ -22,6 +22,7 @@ namespace Humzer {
 	private:
 		unsigned int m_ID = 0;
 		uint32_t m_ColorAttachment = 0, m_DepthAttachment = 0;
+		uint32_t m_IDBufferAttachment = 0;
 		FramebufferSpecs m_Specs;
 	};
 

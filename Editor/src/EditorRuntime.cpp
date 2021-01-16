@@ -8,6 +8,7 @@
 #include <ImGuizmo.h>
 #include "glm/gtc/type_ptr.hpp"
 #include "Humzer/Math/Math.h"
+#include "Humzer/Scene/Entity.h"
 
 namespace Humzer {
 
@@ -21,6 +22,7 @@ namespace Humzer {
 		fbSpecs.Width = 1280;
 		fbSpecs.Height = 720;
 
+		m_IDFramebuffer = Framebuffer::Create(fbSpecs);
 		m_Framebuffer = Framebuffer::Create(fbSpecs);
 	}
 
@@ -51,6 +53,7 @@ namespace Humzer {
 			 (m_ViewportSize.x != spec.Width || m_ViewportSize.y != spec.Height)) {
 
 			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
+			m_IDFramebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 
 			// Editor camera update
 			m_EditorCamera.SetViewportSize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
@@ -63,13 +66,33 @@ namespace Humzer {
 		
 		m_EditorCamera.OnUpdate(ts);
 
+		// #TEMP
 		m_Framebuffer->Bind();
 		RenderCommand::SetClearColor({ 0.2f, 0.3f, 0.3f, 1.0f });
 		RenderCommand::Clear();
+		m_Framebuffer->Bind(); // Rebinding just to clear color attachment1 (entity id)
 
 		// Update editor scene
 		m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
 
+
+		auto [mx, my] = ImGui::GetMousePos();
+		mx -= m_ViewportBounds[0].x;
+		my -= m_ViewportBounds[0].y;
+		my = m_ViewportSize.y - my;
+
+		int mouseX = (int)mx, mouseY = (int)my;
+
+		if (mouseX >= 0 && mouseY >= 0 && mouseX < m_ViewportSize.x && mouseY < m_ViewportSize.y) {
+			int pixel = m_ActiveScene->Pixel(mx, my);
+			m_HoveredEntity = pixel == -1 ? Entity() : Entity((entt::entity)pixel, m_ActiveScene.get());
+		
+			if (Input::IsMouseButtonPressed(Mouse::ButtonLeft) && !ImGuizmo::IsUsing() && !ImGuizmo::IsOver() && !Input::IsKeyPressed(Key::LeftAlt)) {
+				m_SceneHierarchyPannel->SetSelectedEntity(m_HoveredEntity);
+			}
+		
+		}
+		
 		m_Framebuffer->Unbind();
 
 		ImGuiRender();
@@ -189,63 +212,23 @@ namespace Humzer {
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
 		m_ViewportSize = { viewportPanelSize.x, viewportPanelSize.y };
 
+		auto viewportOffset = ImGui::GetCursorPos();
+
 		uint32_t textureId = m_Framebuffer->GetColorAttachment();
 		ImGui::Image((void*)textureId, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
+
+		auto windowSize = ImGui::GetWindowSize();
+		ImVec2 minBound = ImGui::GetWindowPos();
+		minBound.x += viewportOffset.x;
+		minBound.y += viewportOffset.y;
+
+		ImVec2 maxBound = {minBound.x + windowSize.x, minBound.y + windowSize.y };
+
+		m_ViewportBounds[0] = { minBound.x, minBound.y };
+		m_ViewportBounds[1] = { maxBound.x, maxBound.y };
+
+		GuizmosRender();
 		
-		// Guizmos
-		Entity selectedEntity = m_SceneHierarchyPannel->GetSelectedEntity();
-
-		if (selectedEntity && m_GuizmoOperation != -1) {
-			// Runtime camera
-			/*auto cameraEntity = m_ActiveScene->GetPrimaryCamera();
-			const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;*/
-
-			ImGuizmo::SetOrthographic(false);
-			ImGuizmo::SetDrawlist();
-
-			float windowWidth = (float)ImGui::GetWindowWidth();
-			float windowHeight = (float)ImGui::GetWindowHeight();
-			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
-
-			// Runtime Camera
-			/*const glm::mat4& proj = camera.GetProjection();
-			glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());*/
-
-			// EDITOR CAMERA
-			const glm::mat4& proj = m_EditorCamera.GetProjection();
-			glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
-
-			// Entity transform
-			auto& tc = selectedEntity.GetComponent<TransformComponent>();
-			glm::mat4 transform = tc.GetTransform();
-
-			// Snapping
-			if(!m_SnappingEnabled)
-				m_SnappingEnabled = Input::IsKeyPressed(Key::LeftControl);
-			
-			float snapValue = 0.5f; // 0.5 Meters
-			if (m_GuizmoOperation == ImGuizmo::OPERATION::ROTATE)
-				snapValue = 45.0f;
-
-			float snapValues[3] = { snapValue, snapValue, snapValue }; // Same value for each axis
-
-			ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(proj), (ImGuizmo::OPERATION)m_GuizmoOperation, (ImGuizmo::MODE)m_TransformMode, glm::value_ptr(transform)
-			, nullptr, m_SnappingEnabled ? snapValues : nullptr);
-
-			if (ImGuizmo::IsUsing()) { // If there are changes
-
-				glm::vec3 translation, rotation, scale;
-				Math::DecomposeTransform(transform, translation, rotation, scale);
-
-				tc.Translation = translation;
-				tc.Scale = scale;
-
-				glm::vec3 deltaRotation = rotation - tc.Rotation;
-				tc.Rotation += deltaRotation; // Rotation should work as a delta (adding) or else we can end up with a gimball lock (limited rotation).
-			}
-		}
-
-
 		ImGui::End();
 
 		ImGui::End(); // Ending of dock space
@@ -267,6 +250,7 @@ namespace Humzer {
 				}
 			}
 		}
+
 	}
 
 	void EditorRuntime::NewScene()
@@ -307,6 +291,12 @@ namespace Humzer {
 
 	void EditorRuntime::RenderTools()
 	{
+		std::string name = "Null";
+		if ((entt::entity)m_HoveredEntity != entt::null) {
+			name = m_HoveredEntity.GetComponent<TagComponent>().Tag;
+		}
+		ImGui::Text("Hovered entity: %s", name.c_str());
+
 		if (ImGui::Button(ICON_FA_MOUSE_POINTER)) {
 			m_GuizmoOperation = -1;
 		}
@@ -331,6 +321,76 @@ namespace Humzer {
 		ImGui::Text("Mode"); ImGui::SameLine();
 		ImGui::RadioButton("Local", &m_TransformMode, 0); ImGui::SameLine();
 		ImGui::RadioButton("World", &m_TransformMode, 1);
+	}
+
+	void EditorRuntime::GuizmosRender()
+	{
+		// Guizmos
+		Entity selectedEntity = m_SceneHierarchyPannel->GetSelectedEntity();
+
+		if (selectedEntity && m_GuizmoOperation != -1) {
+			// Runtime camera
+			/*auto cameraEntity = m_ActiveScene->GetPrimaryCamera();
+			const auto& camera = cameraEntity.GetComponent<CameraComponent>().Camera;*/
+
+			ImGuizmo::SetOrthographic(false);
+			ImGuizmo::SetDrawlist();
+
+			float windowWidth = (float)ImGui::GetWindowWidth();
+			float windowHeight = (float)ImGui::GetWindowHeight();
+			ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, windowWidth, windowHeight);
+
+			// Runtime Camera
+			/*const glm::mat4& proj = camera.GetProjection();
+			glm::mat4 cameraView = glm::inverse(cameraEntity.GetComponent<TransformComponent>().GetTransform());*/
+
+			// EDITOR CAMERA
+			const glm::mat4& proj = m_EditorCamera.GetProjection();
+			glm::mat4 cameraView = m_EditorCamera.GetViewMatrix();
+
+			// Entity transform
+			auto& tc = selectedEntity.GetComponent<TransformComponent>();
+			glm::mat4 transform = tc.GetTransform();
+
+			// Snapping
+			if (!m_SnappingEnabled)
+				m_SnappingEnabled = Input::IsKeyPressed(Key::LeftControl);
+
+			float snapValue = 0.5f; // 0.5 Meters
+			if (m_GuizmoOperation == ImGuizmo::OPERATION::ROTATE)
+				snapValue = 45.0f;
+
+			float snapValues[3] = { snapValue, snapValue, snapValue }; // Same value for each axis
+
+			ImGuizmo::Manipulate(glm::value_ptr(cameraView), glm::value_ptr(proj), (ImGuizmo::OPERATION)m_GuizmoOperation, (ImGuizmo::MODE)m_TransformMode, glm::value_ptr(transform)
+				, nullptr, m_SnappingEnabled ? snapValues : nullptr);
+
+			if (ImGuizmo::IsUsing()) { // If there are changes
+
+				glm::vec3 translation, rotation, scale;
+				Math::DecomposeTransform(transform, translation, rotation, scale);
+
+				tc.Translation = translation;
+				tc.Scale = scale;
+
+				glm::vec3 deltaRotation = rotation - tc.Rotation;
+				tc.Rotation += deltaRotation; // Rotation should work as a delta (adding) or else we can end up with a gimball lock (limited rotation).
+			}
+		}
+
+	}
+
+	std::pair<float, float> EditorRuntime::GetMouseViewportSpace()
+	{
+		auto [mx, my] = ImGui::GetMousePos();
+		mx -= m_ViewportBounds[0].x;
+		my -= m_ViewportBounds[0].y;
+
+		auto viewportWidth = m_ViewportBounds[1].x - m_ViewportBounds[0].x;
+		auto viewportHeight = m_ViewportBounds[1].y - m_ViewportBounds[0].y;
+
+		//return { (mx / m_ViewportSize.x) * 2.0f - 1.0f, ((my / m_ViewportSize.y) * 2.0f - 1.0f) * -1.0f };
+		return { (mx / viewportWidth) * 2.0f - 1.0f, ((my / viewportHeight) * 2.0f - 1.0f) * -1.0f };
 	}
 
 }

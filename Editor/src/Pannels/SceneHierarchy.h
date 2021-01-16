@@ -14,6 +14,7 @@ namespace Humzer {
 
 		void OnImGuiRender();
 
+		void SetSelectedEntity(Entity entity) { m_Selected = entity; }
 		Entity GetSelectedEntity() const { return m_Selected; }
 	private:
 		void DrawEntityNode(Entity entity);

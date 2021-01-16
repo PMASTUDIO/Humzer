@@ -121,7 +121,7 @@ namespace Humzer {
 			s_Data->m_TexturedShader = Renderer::GetShaderLibrary()->Load("textured", "Resources/shaders/textured_shader.vs", "Resources/shaders/textured_shader.fs");
 			s_Data->m_SkyboxShader = Renderer::GetShaderLibrary()->Load("skybox", "Resources/shaders/skybox.vs", "Resources/shaders/skybox.fs");
 			s_Data->m_MeshShader = Renderer::GetShaderLibrary()->Load("mesh_base", "Resources/shaders/mesh_base_shader.vs", "Resources/shaders/mesh_base_shader.fs");
-			
+
 			s_Data->m_TexturedShader->Bind();
 			s_Data->m_TexturedShader->SetInt("u_Texture", 0); // BIND TEXTURE SLOT
 
@@ -217,10 +217,11 @@ namespace Humzer {
 
 		}
 
-		void Renderer3D::DrawPlane(const glm::mat4 transform, const glm::vec4& color)
+		void Renderer3D::DrawPlane(const glm::mat4 transform, const glm::vec4& color, uint32_t entityID)
 		{
 			s_Data->m_FlatColorShader->Bind();
 			s_Data->m_FlatColorShader->SetFloat4("u_Color", color);
+			s_Data->m_FlatColorShader->SetInt("u_ObjectID", entityID);
 
 			s_Data->m_FlatColorShader->SetMat4("u_Transform", transform);
 
@@ -253,10 +254,11 @@ namespace Humzer {
 			RenderCommand::DrawIndexed(s_Data->PlaneVAO);
 		}
 
-		void Renderer3D::DrawCube(const glm::mat4 transform, const glm::vec4& color)
+		void Renderer3D::DrawCube(const glm::mat4 transform, const glm::vec4& color, uint32_t entityID)
 		{
 			s_Data->m_FlatColorShader->Bind();
 			s_Data->m_FlatColorShader->SetFloat4("u_Color", color);
+			s_Data->m_FlatColorShader->SetInt("u_ObjectID", entityID);
 
 			s_Data->m_FlatColorShader->SetMat4("u_Transform", transform);
 
@@ -301,11 +303,12 @@ namespace Humzer {
 			RenderCommand::EnableDepthMask();
 		}
 
-		void Renderer3D::DrawMesh(const glm::mat4& transform, Ref<Mesh> mesh)
+		void Renderer3D::DrawMesh(const glm::mat4& transform, Ref<Mesh> mesh, uint32_t entityID)
 		{
 			// SHADER SET UP
 			s_Data->m_MeshShader->Bind();
 			s_Data->m_MeshShader->SetMat4("u_Transform", transform);
+			s_Data->m_MeshShader->SetInt("u_ObjectID", entityID);
 
 			// BEFORE MATERIAL SYSTEM
 			s_Data->m_MeshShader->SetFloat3("u_Material.specular", glm::vec3(0.5f, 0.5f, 0.5f));
@@ -352,6 +355,7 @@ namespace Humzer {
 			glm::vec2 TexCoord;
 			float TexIndex;
 			float TilingFactor;
+			uint32_t ObjectID;
 		};
 
 		struct Renderer2DStorage
@@ -396,6 +400,7 @@ namespace Humzer {
 				{ ShaderDataType::Float2, "a_TexCoord" },
 				{ ShaderDataType::Float, "a_TexIndex"},
 				{ ShaderDataType::Float, "a_TilingFactor"},
+				{ ShaderDataType::Int, "a_ObjectID" },
 			});
 			s_Data2D->QuadVertexArray->AddVertexBuffer(s_Data2D->QuadVertexBuffer);
 
@@ -514,7 +519,7 @@ namespace Humzer {
 		}
 
 		// DRAW COLORED QUAD WITH TRANSFORM
-		void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color)
+		void Renderer2D::DrawQuad(const glm::mat4& transform, const glm::vec4& color, uint32_t entityID)
 		{
 			constexpr glm::vec2 textureCoords[] = { { 0.0f, 0.0f }, { 1.0f, 0.0f }, { 1.0f, 1.0f }, { 0.0f, 1.0f } };
 			constexpr size_t quadVertexCount = 4;
@@ -530,7 +535,10 @@ namespace Humzer {
 				s_Data2D->QuadVertexBufferPtr->Color = color;
 				s_Data2D->QuadVertexBufferPtr->TexCoord = textureCoords[i];
 				s_Data2D->QuadVertexBufferPtr->TexIndex = texIndex;
+
 				s_Data2D->QuadVertexBufferPtr->TilingFactor = 1.0f;
+				s_Data2D->QuadVertexBufferPtr->ObjectID = entityID;
+
 				s_Data2D->QuadVertexBufferPtr++;
 			}
 
@@ -550,17 +558,17 @@ namespace Humzer {
 
 		void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
 		{
-			DrawQuad({ position.x, position.y, 0.0f }, size, color);
+			DrawQuad({ position.x, position.y, 0.0f }, size, color); // #TEMP
 		}
 
 		void Renderer2D::DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color)
 		{
 			glm::mat4 transform = glm::translate(glm::mat4(1.0f), position) * glm::scale(glm::mat4(1.0f), { size.x, size.y, 1.0f });
-			DrawQuad(transform, color);
+			DrawQuad(transform, color, 0); // #TEMP
 ;		}
 
 		// DRAW TEXTURED QUAD WITH TRANSFORM
-		void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor /*= 1.0f*/)
+		void Renderer2D::DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, uint32_t entityID, float tilingFactor /*= 1.0f*/)
 		{
 			constexpr glm::vec4 color = { 1.0f, 1.0f, 1.0f, 1.0f };
 
@@ -591,7 +599,10 @@ namespace Humzer {
 				s_Data2D->QuadVertexBufferPtr->Color = color;
 				s_Data2D->QuadVertexBufferPtr->TexCoord = textureCoords[i];
 				s_Data2D->QuadVertexBufferPtr->TexIndex = texIndex;
+
 				s_Data2D->QuadVertexBufferPtr->TilingFactor = tilingFactor;
+				s_Data2D->QuadVertexBufferPtr->ObjectID = entityID;
+
 				s_Data2D->QuadVertexBufferPtr++;
 			}
 

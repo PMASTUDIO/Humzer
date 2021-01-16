@@ -1,11 +1,14 @@
 #version 450 core
 			
-out vec4 color;
+layout(location = 0) out vec4 color;
+layout(location = 1) out int o_IDBuffer;
 
 in vec3 v_Normals;
 in vec3 v_FragPos;
 
 uniform vec4 u_Color;
+
+uniform int u_ObjectID;
 
 // PHONG LIGHTING UNIFORMS
 uniform vec3 u_ViewPos;
@@ -41,4 +44,5 @@ void main()
     vec3 result = (ambient + diffuse + specular) * vec3(u_Color.xyz);
 
     color = vec4(result, 1.0);
+    o_IDBuffer = u_ObjectID;
 }

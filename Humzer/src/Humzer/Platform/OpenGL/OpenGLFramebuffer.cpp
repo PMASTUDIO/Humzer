@@ -37,6 +37,18 @@ namespace Humzer {
 
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorAttachment, 0);
 
+		// ID Buffer Attachment
+		glCreateTextures(GL_TEXTURE_2D, 1, &m_IDBufferAttachment);
+		glBindTexture(GL_TEXTURE_2D, m_IDBufferAttachment);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_R32I, m_Specs.Width, m_Specs.Height, 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, nullptr);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_IDBufferAttachment, 0);
+
+		GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
+		glDrawBuffers(2, drawBuffers);
+
 		// Create texture for Depth (Depth Attachment)
 		glCreateTextures(GL_TEXTURE_2D, 1, &m_DepthAttachment);
 		glBindTexture(GL_TEXTURE_2D, m_DepthAttachment);
@@ -53,6 +65,9 @@ namespace Humzer {
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
 		glViewport(0, 0, m_Specs.Width, m_Specs.Height);
+
+		int clearValue = -1;
+		glClearTexImage(m_IDBufferAttachment, 0, GL_RED_INTEGER, GL_INT, &clearValue);
 	}
 
 	void OpenGLFramebuffer::Unbind()

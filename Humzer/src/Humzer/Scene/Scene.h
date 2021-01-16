@@ -3,6 +3,7 @@
 #include <entt.hpp>
 #include "../Core/Timestep.h"
 #include "../Renderer/EditorCamera.h"
+#include "../Renderer/Framebuffer.h"
 
 namespace Humzer { class TextureCube; }
 
@@ -26,6 +27,8 @@ namespace Humzer {
 		
 		void OnUpdateRuntime(Timestep dt);
 		void OnUpdateEditor(Timestep dt, EditorCamera& editorCamera);
+
+		int Pixel(int mouseX, int mouseY);
 
 		Entity GetPrimaryCamera();
 	private:

@@ -31,14 +31,32 @@ void Humzer::OpenGLVertexArray::AddVertexBuffer(const Ref<VertexBuffer>& vertexB
 	const auto& layout = vertexBuffer->GetLayout();
 	for (const auto& element : layout)
 	{
-		glEnableVertexAttribArray(m_VertexBufferIndex);
-		glVertexAttribPointer(m_VertexBufferIndex,
-			element.GetComponentCount(),
-			ShaderDataTypeToOpenGLBaseType(element.Type),
-			element.Normalized ? GL_TRUE : GL_FALSE,
-			layout.GetStride(),
-			(const void*)element.Offset);
-		m_VertexBufferIndex++;
+		switch (element.Type)
+		{
+		case ShaderDataType::Int:
+		case ShaderDataType::Int2:
+		case ShaderDataType::Int3:
+		case ShaderDataType::Int4:
+			glEnableVertexAttribArray(m_VertexBufferIndex);
+			glVertexAttribIPointer(m_VertexBufferIndex,
+				element.GetComponentCount(),
+				ShaderDataTypeToOpenGLBaseType(element.Type),
+				layout.GetStride(),
+				(const void*)element.Offset);
+			m_VertexBufferIndex++;
+			break;
+		default:
+			glEnableVertexAttribArray(m_VertexBufferIndex);
+			glVertexAttribPointer(m_VertexBufferIndex,
+				element.GetComponentCount(),
+				ShaderDataTypeToOpenGLBaseType(element.Type),
+				element.Normalized ? GL_TRUE : GL_FALSE,
+				layout.GetStride(),
+				(const void*)element.Offset);
+			m_VertexBufferIndex++;
+			break;
+		}
+		
 	}
 
 	m_VertexBuffers.push_back(vertexBuffer);

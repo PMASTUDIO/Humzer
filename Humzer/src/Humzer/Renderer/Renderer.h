@@ -47,17 +47,17 @@ namespace Humzer {
 		static void EndScene();
 
 		// IMMEDIATE RENDERER
-		static void DrawPlane(const glm::mat4 transform, const glm::vec4& color);
+		static void DrawPlane(const glm::mat4 transform, const glm::vec4& color, uint32_t entityID);
 		static void DrawPlane(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
 		static void DrawPlane(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture);
 
-		static void DrawCube(const glm::mat4 transform, const glm::vec4& color);
+		static void DrawCube(const glm::mat4 transform, const glm::vec4& color, uint32_t entityID);
 		static void DrawCube(const glm::vec3& position, const glm::vec3& size, const glm::vec4& color);
 		static void DrawCube(const glm::vec3& position, const glm::vec3& size, const Ref<Texture2D>& texture);
 
 		static void DrawSkybox(const Ref<TextureCube>& texture);
 
-		static void DrawMesh(const glm::mat4& transform, Ref<Mesh> mesh);
+		static void DrawMesh(const glm::mat4& transform, Ref<Mesh> mesh, uint32_t entityID);
 
 		[[deprecated("Transforms should be passed in mat4 form")]]
 		static void DrawMesh(Ref<Mesh> mesh, const glm::vec3& position, const glm::vec3& scale);
@@ -79,11 +79,11 @@ namespace Humzer {
 		static void Flush();
 
 		// Primitives
-		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color);
+		static void DrawQuad(const glm::mat4& transform, const glm::vec4& color, uint32_t entityID);
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const glm::vec4& color);
 
-		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, float tilingFactor = 1.0f);
+		static void DrawQuad(const glm::mat4& transform, const Ref<Texture2D>& texture, uint32_t entityID, float tilingFactor = 1.0f);
 		static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor = 1.0f);
 		static void DrawQuad(const glm::vec3& position, const glm::vec2& size, const Ref<Texture2D>& texture, float tilingFactor = 1.0f);
 

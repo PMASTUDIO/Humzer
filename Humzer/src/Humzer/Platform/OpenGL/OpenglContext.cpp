@@ -16,6 +16,8 @@ static void glDebugOutput(GLenum source, GLenum type, unsigned int id, GLenum se
 	// ignore non-significant error/warning codes
 	if (id == 131169 || id == 131185 || id == 131218 || id == 131204) return;
 
+	if (severity == GL_DEBUG_SEVERITY_LOW || severity == GL_DEBUG_SEVERITY_NOTIFICATION) return;
+
 	HUM_CORE_ERROR("---------------");
 	HUM_CORE_ERROR("Debug message ({0}) : {1}", id, message);
 
@@ -46,8 +48,8 @@ static void glDebugOutput(GLenum source, GLenum type, unsigned int id, GLenum se
 	{
 	case GL_DEBUG_SEVERITY_HIGH:         HUM_CORE_ERROR("Severity: high"); break;
 	case GL_DEBUG_SEVERITY_MEDIUM:       HUM_CORE_ERROR("Severity: medium"); break;
-	case GL_DEBUG_SEVERITY_LOW:          HUM_CORE_ERROR("Severity: low"); break;
-	case GL_DEBUG_SEVERITY_NOTIFICATION: HUM_CORE_ERROR("Severity: notification"); break;
+	case GL_DEBUG_SEVERITY_LOW:          HUM_CORE_ERROR("Severity: low"); return;
+	case GL_DEBUG_SEVERITY_NOTIFICATION: HUM_CORE_ERROR("Severity: notification"); return;
 	};
 }
 
