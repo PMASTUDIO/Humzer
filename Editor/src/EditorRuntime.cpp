@@ -19,10 +19,10 @@ namespace Humzer {
 		m_CheckerboardTexture = Texture2D::Create("Resources/textures/Checkerboard.png");
 
 		FramebufferSpecs fbSpecs;
+		fbSpecs.Attachments = { FramebufferTextureFormat::RGBA8, FramebufferTextureFormat::R32I, FramebufferTextureFormat::Depth };
 		fbSpecs.Width = 1280;
 		fbSpecs.Height = 720;
 
-		m_IDFramebuffer = Framebuffer::Create(fbSpecs);
 		m_Framebuffer = Framebuffer::Create(fbSpecs);
 	}
 
@@ -53,14 +53,13 @@ namespace Humzer {
 			 (m_ViewportSize.x != spec.Width || m_ViewportSize.y != spec.Height)) {
 
 			m_Framebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
-			m_IDFramebuffer->Resize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 
 			// Editor camera update
 			m_EditorCamera.SetViewportSize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 
 			m_ActiveScene->OnViewportResize((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 
-			// m_Camera->ResizeBounds((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y); // #TODO: Resize editor camera
+			// m_Camera->ResizeBounds((uint32_t)m_ViewportSize.x, (uint32_t)m_ViewportSize.y);
 		}
 
 		

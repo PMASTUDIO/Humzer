@@ -7,7 +7,7 @@ using namespace Humzer;
 
 class Tester : public Humzer::Application {
 public:
-	Tester() /*: basicCam(45.0f, 1280.0f / 720.0f, 0.1f, 1000.0f, glm::vec3(0.0f, 4.0f, 20.0f), true)*/ {
+	Tester() {
 		/*std::vector<std::string> faces{
 			 "Resources/textures/sky/right.jpg",
 			 "Resources/textures/sky/left.jpg",
@@ -18,12 +18,6 @@ public:
 		 };
         skyboxTexture = TextureCube::Create(faces);*/
 		m_CheckerboardTexture = Texture2D::Create("Resources/textures/Checkerboard.png");
-
-		FramebufferSpecs fbSpecs;
-		fbSpecs.Width = 1280;
-		fbSpecs.Height = 720;
-
-		m_Framebuffer = Framebuffer::Create(fbSpecs);
     }
 
     ~Tester(){
@@ -65,25 +59,13 @@ public:
 		auto gun = mainScene->CreateEntity("gun");
 		gun.AddComponent<MeshRendererComponent>().Mesh = testMesh;
 		gun.GetComponent<TransformComponent>().Translation = { 2.0, 0.0, 0.0 };*/
-
-			
-        // TEMP TEST
-		SceneSerializer serializer(mainScene);
-        //serializer.Serialize("Resources/scenes/Demo2D.humscene");
-        //serializer.Deserialize("Resources/scenes/Demo2D.humscene");
-		//serializer.Deserialize("Resources/scenes/Demo3D.humscene");
     }
 
     void ClientUpdate(Humzer::Timestep dt) {
-
-		m_Framebuffer->Bind();
-
 		RenderCommand::SetClearColor({ 0.2f, 0.3f, 0.3f, 1.0f });
 		RenderCommand::Clear();
 
 		mainScene->OnUpdateRuntime(dt);
-
-		m_Framebuffer->Unbind();
 
         if (Input::IsKeyPressed(Key::Escape)) {
             Quit();
@@ -93,7 +75,6 @@ private:
     Ref<Scene> mainScene;
    /* Ref<TextureCube> skyboxTexture;*/
 	Ref<Texture2D> m_CheckerboardTexture;
-	Ref<Framebuffer> m_Framebuffer;
 };
 
 Humzer::Application* Humzer::CreateApplication() {

@@ -55,6 +55,7 @@ static void glDebugOutput(GLenum source, GLenum type, unsigned int id, GLenum se
 
 bool Humzer::OpenGLContext::Init()
 {
+
 	glfwMakeContextCurrent(m_Window);
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
 		HUM_CORE_FATAL("Could not intialize GLAD!");

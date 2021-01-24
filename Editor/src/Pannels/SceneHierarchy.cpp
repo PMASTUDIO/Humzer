@@ -475,7 +475,7 @@ namespace Humzer {
 
 			ImGui::Text(mesh ? mesh->GetFilePath().c_str() : "No mesh associated!");
 			if (ImGui::Button(ICON_FA_FOLDER_OPEN" Import")) {
-				std::string resultPath = FileDialogs::OpenFile("Mesh file (*.fbx|*.obj|*.dae|*.blend|*.3ds)\0*.fbx;.obj;.dae;.blend;.3ds\0");
+				std::string resultPath = FileDialogs::OpenFile("FBX Format (*.fbx)\0*.fbx\0GL Transmission Format (*.gltf)\0*.gltf\0Obj format (*.obj)\0*.obj\0");
 				if (!resultPath.empty()) {
 					component.Mesh = CreateRef<Mesh>(resultPath);
 				}

@@ -31,7 +31,6 @@ namespace Humzer {
 		Ref<Texture2D> m_CheckerboardTexture;
 
 		Ref<Framebuffer> m_Framebuffer;
-		Ref<Framebuffer> m_IDFramebuffer;
 
 		int m_GuizmoOperation = -1; // No Guizmos
 		bool m_SnappingEnabled = false;

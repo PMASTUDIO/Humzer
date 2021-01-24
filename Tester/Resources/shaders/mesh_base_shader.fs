@@ -1,10 +1,13 @@
 #version 450 core
 			
 layout(location = 0) out vec4 color;
+layout(location = 1) out int o_IDBuffer;
 
 in vec2 v_TexCoord;
 in vec3 v_Normals;
 in vec3 v_FragPos;
+
+uniform int u_ObjectID;
 
 // PHONG STUFF
 struct Material {
@@ -40,4 +43,5 @@ void main()
     // color = vec4(v_TexCoord, 0.0, 1.0); // -- UV Viz
     // color = texture(u_Texture, v_TexCoord);
     color = vec4(result, 1.0);
+    o_IDBuffer = u_ObjectID;
 }
