@@ -30,13 +30,13 @@ namespace Humzer {
 			glBindTexture(TextureTarget(multisampled), id);
 		}
 
-		static void AttachColorTexture(uint32_t id, int samples, GLenum format, GLenum accessFormat, uint32_t width, uint32_t height, int index) {
+		static void AttachColorTexture(uint32_t id, int samples, GLenum accessFormat, GLenum format, uint32_t width, uint32_t height, int index) {
 			bool multisampled = samples > 1;
 			if (multisampled) {
 				glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, samples, format, width, height, GL_FALSE);
 			}
 			else {
-				glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, accessFormat, GL_UNSIGNED_BYTE, nullptr);
+				glTexImage2D(GL_TEXTURE_2D, 0, accessFormat, width, height, 0, format, GL_UNSIGNED_BYTE, nullptr);
 				
 				// #TODO: Filtering
 				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -67,7 +67,28 @@ namespace Humzer {
 
 			glFramebufferTexture2D(GL_FRAMEBUFFER, attachmentType, TextureTarget(multisampled), id, 0);
 		}
+
+		static GLenum HumFBTextureToGl(FramebufferTextureFormat humFormat) {
+
+			switch (humFormat)
+			{
+			case Humzer::FramebufferTextureFormat::None:
+				return GL_NONE;
+			case Humzer::FramebufferTextureFormat::RGBA8:
+				return GL_RGBA8;
+			case Humzer::FramebufferTextureFormat::R32I:
+				return GL_RED_INTEGER;
+			case Humzer::FramebufferTextureFormat::DEPTH24STENCIL8:
+				return GL_DEPTH24_STENCIL8;
+			}
+
+			HUM_ASSERT(false);
+			return 0;
+		}
+
 	}
+
+	
 
 	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpecs& spec) : m_Specs(spec)
 	{
@@ -145,38 +166,10 @@ namespace Humzer {
 			glDrawBuffers(m_ColorAttachments.size(), buffers);
 		}
 		else if(m_ColorAttachments.empty()) {
-			// Only depth-pass (Usefull for shadow mapping).
+			// Only depth-pass (Useful for shadow mapping).
 			glDrawBuffer(GL_NONE);
 		}
 
-		//// Create empty texture and set it up (Color Attachment)
-		//glCreateTextures(GL_TEXTURE_2D, 1, &m_ColorAttachment);
-		//glBindTexture(GL_TEXTURE_2D, m_ColorAttachment);
-		//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, m_Specs.Width, m_Specs.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorAttachment, 0);
-
-		//// ID Buffer Attachment
-		//glCreateTextures(GL_TEXTURE_2D, 1, &m_IDBufferAttachment);
-		//glBindTexture(GL_TEXTURE_2D, m_IDBufferAttachment);
-		//glTexImage2D(GL_TEXTURE_2D, 0, GL_R32I, m_Specs.Width, m_Specs.Height, 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, nullptr);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-		//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-		//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_IDBufferAttachment, 0);
-
-		//GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1 };
-		//glDrawBuffers(2, drawBuffers);
-
-		//// Create texture for Depth (Depth Attachment)
-		//glCreateTextures(GL_TEXTURE_2D, 1, &m_DepthAttachment);
-		//glBindTexture(GL_TEXTURE_2D, m_DepthAttachment);
-		//glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, m_Specs.Width, m_Specs.Height, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr);
-		//
-		//glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, m_DepthAttachment, 0);
-		
 		HUM_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Framebuffer is incomplete!");
 
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -186,9 +179,6 @@ namespace Humzer {
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, m_ID);
 		glViewport(0, 0, m_Specs.Width, m_Specs.Height);
-
-		int clearValue = -1;
-		glClearTexImage(m_IDBufferAttachment, 0, GL_RED_INTEGER, GL_INT, &clearValue);
 	}
 
 	void OpenGLFramebuffer::Unbind()
@@ -196,11 +186,31 @@ namespace Humzer {
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
+	int OpenGLFramebuffer::ReadPixel(uint32_t attachmentIndex, int x, int y) const
+	{
+		HUM_ASSERT(attachmentIndex < m_ColorAttachments.size());
+		
+		glReadBuffer(GL_COLOR_ATTACHMENT0 + attachmentIndex);
+
+		int pixelData;
+		glReadPixels(x, y, 1, 1, GL_RED_INTEGER, GL_INT, &pixelData);
+
+		return pixelData;
+	}
+
 	void OpenGLFramebuffer::Resize(uint32_t width, uint32_t height)
 	{
 		m_Specs.Width = width;
 		m_Specs.Height = height;
 		Invalidate();
+	}
+
+	void OpenGLFramebuffer::ClearAttachment(uint32_t index, int value)
+	{
+		HUM_ASSERT(index < m_ColorAttachments.size());
+
+		auto& spec = m_ColorAttachmentsSpecs[index];
+		glClearTexImage(m_ColorAttachments[index], 0, Utils::HumFBTextureToGl(spec.TextureFormat), GL_INT, &value);
 	}
 
 }

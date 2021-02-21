@@ -28,8 +28,6 @@ namespace Humzer {
 		void OnUpdateRuntime(Timestep dt);
 		void OnUpdateEditor(Timestep dt, EditorCamera& editorCamera);
 
-		int Pixel(int mouseX, int mouseY);
-
 		Entity GetPrimaryCamera();
 	private:
 		template<typename T>

@@ -208,15 +208,6 @@ namespace Humzer {
 		}
 	}
 
-	int Scene::Pixel(int mouseX, int mouseY)
-	{
-		// #TEMP
-		glReadBuffer(GL_COLOR_ATTACHMENT1);
-		int pixeData;
-		glReadPixels(mouseX, mouseY, 1, 1, GL_RED_INTEGER, GL_INT, &pixeData);
-		return pixeData;
-	}
-
 	Humzer::Entity Scene::GetPrimaryCamera()
 	{
 		auto view = m_Registry.view<CameraComponent>();

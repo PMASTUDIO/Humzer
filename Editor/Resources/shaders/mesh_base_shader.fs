@@ -43,5 +43,6 @@ void main()
     // color = vec4(v_TexCoord, 0.0, 1.0); // -- UV Viz
     // color = texture(u_Texture, v_TexCoord);
     color = vec4(result, 1.0);
+
     o_IDBuffer = u_ObjectID;
 }

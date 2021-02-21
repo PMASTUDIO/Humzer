@@ -17,7 +17,11 @@ namespace Humzer {
 
 		uint32_t GetColorAttachment(uint32_t index = 0) const override { HUM_ASSERT(index < m_ColorAttachments.size(), "There is no exisiting index in color attachments"); return m_ColorAttachments[index]; }
 
+		int ReadPixel(uint32_t attachmentIndex, int x, int y) const override;
+
 		void Resize(uint32_t width, uint32_t height) override;
+
+		void ClearAttachment(uint32_t index, int value) override;
 
 	private:
 		unsigned int m_ID = 0;

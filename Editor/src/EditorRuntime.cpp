@@ -65,11 +65,12 @@ namespace Humzer {
 		
 		m_EditorCamera.OnUpdate(ts);
 
-		// #TEMP
 		m_Framebuffer->Bind();
 		RenderCommand::SetClearColor({ 0.2f, 0.3f, 0.3f, 1.0f });
 		RenderCommand::Clear();
-		m_Framebuffer->Bind(); // Rebinding just to clear color attachment1 (entity id)
+
+		// Clear entity ID attachment to -1
+		m_Framebuffer->ClearAttachment(1, -1);
 
 		// Update editor scene
 		m_ActiveScene->OnUpdateEditor(ts, m_EditorCamera);
@@ -82,8 +83,10 @@ namespace Humzer {
 
 		int mouseX = (int)mx, mouseY = (int)my;
 
+		m_Framebuffer->Bind();
 		if (mouseX >= 0 && mouseY >= 0 && mouseX < m_ViewportSize.x && mouseY < m_ViewportSize.y) {
-			int pixel = m_ActiveScene->Pixel(mx, my);
+			int pixel = m_Framebuffer->ReadPixel(1, mx, my);
+
 			m_HoveredEntity = pixel == -1 ? Entity() : Entity((entt::entity)pixel, m_ActiveScene.get());
 		
 			if (Input::IsMouseButtonPressed(Mouse::ButtonLeft) && !ImGuizmo::IsUsing() && !ImGuizmo::IsOver() && !Input::IsKeyPressed(Key::LeftAlt)) {
@@ -206,6 +209,7 @@ namespace Humzer {
 		RenderTools();
 		ImGui::End();
 
+		// Viewport
 		ImGui::Begin("Viewport");
 		
 		ImVec2 viewportPanelSize = ImGui::GetContentRegionAvail();
@@ -213,6 +217,7 @@ namespace Humzer {
 
 		auto viewportOffset = ImGui::GetCursorPos();
 
+		// Draw engine image from framebuffer
 		uint32_t textureId = m_Framebuffer->GetColorAttachment();
 		ImGui::Image((void*)textureId, ImVec2{ m_ViewportSize.x, m_ViewportSize.y }, ImVec2{ 0, 1 }, ImVec2{ 1, 0 });
 
@@ -222,7 +227,6 @@ namespace Humzer {
 		minBound.y += viewportOffset.y;
 
 		ImVec2 maxBound = {minBound.x + windowSize.x, minBound.y + windowSize.y };
-
 		m_ViewportBounds[0] = { minBound.x, minBound.y };
 		m_ViewportBounds[1] = { maxBound.x, maxBound.y };
 
